@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TourSmith · AI tour manager powered by Qloo</title>
+  <meta name="description" content="TourSmith routes and packages a live tour for comedians, musicians and creators using Qloo's taste graph: which cities, which opener, which local partners, and what to say in each city." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;900&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231C1F3F'/%3E%3Cpath d='M6 22 L13 12 L19 18 L26 8' stroke='%23F4C21B' stroke-width='4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="/" aria-label="TourSmith home">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M5 23 L13 12 L19 18 L27 7" /></svg>
+      <span>TourSmith</span>
+    </a>
+    <p class="tagline">Your AI tour manager. Every routing call backed by Qloo's taste graph.</p>
+    <span id="mode" class="mode" hidden></span>
+  </header>
+
+  <main class="shell">
+    <aside class="rail">
+      <form id="plan" class="plan" autocomplete="off">
+        <h1>Plan a tour</h1>
+        <label class="field">
+          <span>Headliner</span>
+          <input id="act" name="act" required maxlength="80" placeholder="A comedian, musician or creator" />
+        </label>
+
+        <fieldset class="field">
+          <legend>Region</legend>
+          <div id="regions" class="chips" role="radiogroup"></div>
+        </fieldset>
+
+        <label class="field">
+          <span>Number of stops <output id="stopsOut">5</output></span>
+          <input id="stops" type="range" min="3" max="8" value="5" />
+        </label>
+
+        <details class="more">
+          <summary>Openers and notes</summary>
+          <label class="field">
+            <span>Openers you're considering <small>(comma separated, optional)</small></span>
+            <input id="openers" maxlength="240" placeholder="Names TourSmith should rank" />
+          </label>
+          <label class="field">
+            <span>Notes for the agent <small>(optional)</small></span>
+            <textarea id="notes" rows="2" maxlength="240" placeholder="Room size, crowd, timing, places to avoid"></textarea>
+          </label>
+        </details>
+
+        <button id="go" class="go" type="submit">Plan the tour</button>
+        <div class="presets" id="presets"></div>
+      </form>
+
+      <section class="log" aria-live="polite">
+        <h2>What the agent is doing</h2>
+        <p id="logEmpty" class="muted">Each Qloo call the agent makes shows up here with what it asked and what came back.</p>
+        <ol id="steps" class="steps"></ol>
+      </section>
+    </aside>
+
+    <section class="stage">
+      <div class="mapwrap">
+        <div id="map" role="img" aria-label="Map of candidate cities, Qloo heat and the chosen route"></div>
+        <div class="legend">
+          <span><i class="k route"></i>Route</span>
+          <span><i class="k city"></i>Candidate city, sized by fan score</span>
+          <span><i class="k heat"></i>Qloo heat for this act</span>
+        </div>
+      </div>
+
+      <div id="empty" class="empty">
+        <p class="big">Where are your fans, really?</p>
+        <p>Type a headliner and a region. TourSmith finds where their audience over-indexes, cuts the weak markets, ranks openers city by city, finds local venues, brands and podcasts the same fans love, and writes copy for each night.</p>
+        <div id="saved" class="saved"></div>
+      </div>
+
+      <article id="tour" class="tour" hidden>
+        <div class="poster">
+          <div class="poster-head">
+            <img id="actImg" alt="" hidden />
+            <div>
+              <p id="actKind" class="kind"></p>
+              <h2 id="actName"></h2>
+              <p id="brief" class="brief"></p>
+            </div>
+          </div>
+          <ol id="route" class="route"></ol>
+          <div id="dropped" class="dropped"></div>
+          <div class="actions" id="actions" hidden>
+            <button type="button" id="share" class="ghost">Copy share link</button>
+            <button type="button" id="print" class="ghost">Print or save as PDF</button>
+          </div>
+        </div>
+
+        <section class="panel" id="fans">
+          <h3>The audience</h3>
+          <div class="fans-grid">
+            <div>
+              <h4>What defines the fan base</h4>
+              <ul id="tags" class="bars"></ul>
+            </div>
+            <div>
+              <h4>Who they are</h4>
+              <div id="demo" class="demo"></div>
+            </div>
+            <div>
+              <h4>Momentum, last 20 weeks</h4>
+              <div id="trend" class="trend"></div>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel" id="openersPanel" hidden>
+          <h3>Who should open</h3>
+          <p class="muted">Qloo ranked the same shortlist against this headliner's audience in every city. Lower average position is better; scores from separate cities aren't compared directly.</p>
+          <div class="tablewrap"><table id="openerTable" class="matrix"></table></div>
+          <div id="compare" class="compare"></div>
+        </section>
+
+        <section class="panel" id="askPanel" hidden>
+          <h3>Ask your tour manager</h3>
+          <p class="muted">Follow-up questions are answered by an agent that calls Qloo live, for example "a late-night food spot in Chicago these fans love" or "who else could open in Glasgow?".</p>
+          <div id="chat" class="chat"></div>
+          <form id="ask" class="ask">
+            <input id="question" maxlength="500" placeholder="Ask about any stop, opener or partner" />
+            <button type="submit">Ask</button>
+          </form>
+        </section>
+
+        <p class="fineprint">Qloo results describe aggregate audience affinities, not individuals. TourSmith's scores are its own interpretation of Qloo's heatmap affinity (75%) and popularity (25%).</p>
+      </article>
+    </section>
+  </main>
+
+  <template id="stopTpl">
+    <li class="stop">
+      <button class="stop-row" type="button" aria-expanded="false">
+        <span class="n"></span>
+        <span class="city"></span>
+        <span class="opener"></span>
+        <span class="score"></span>
+      </button>
+      <div class="stop-body" hidden></div>
+    </li>
+  </template>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+  <script src="/app.js" type="module"></script>
+</body>
+</html>

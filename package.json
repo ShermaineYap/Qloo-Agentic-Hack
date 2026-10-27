@@ -1,0 +1,24 @@
+{
+  "name": "toursmith",
+  "version": "1.0.0",
+  "private": true,
+  "description": "TourSmith: an AI tour manager that routes and packages a live tour using Qloo's taste graph.",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "scripts": {
+    "start": "node --env-file-if-exists=.env server/index.js",
+    "dev": "node --env-file-if-exists=.env --watch server/index.js",
+    "mock": "QLOO_MOCK=1 node server/index.js",
+    "warm": "node --env-file-if-exists=.env scripts/warm.js",
+    "check": "node --env-file-if-exists=.env scripts/check.js"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^1.3.0",
+    "@modelcontextprotocol/sdk": "^1.30.1",
+    "express": "^4.22.3",
+    "openai": "^7.45.1"
+  }
+}

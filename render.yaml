@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: toursmith
+    runtime: docker
+    plan: starter # free instances sleep after 15 min idle; judges would wait ~50s on first load
+    healthCheckPath: /healthz
+    envVars:
+      - key: QLOO_API_KEY
+        sync: false
+      - key: ANTHROPIC_API_KEY
+        sync: false
