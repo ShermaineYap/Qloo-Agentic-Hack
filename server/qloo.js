@@ -1,11 +1,16 @@
 // Qloo access layer.
 //
-// TourSmith talks to Qloo only through the official `qloo mcp` server from
+// TourSmith talks to Qloo through the official `qloo mcp` server from
 // @qloo/qloo-harness (the supported surface for the hackathon). This module
 // starts that stdio server once, exposes its tool list to the LLM agents, and
 // wraps every call with: a disk cache (protects the event quota and makes the
 // judges' demo instant), a small concurrency limit, and an explicit mock mode
 // for local development before a key is issued.
+//
+// One call goes to the Insights API directly: the region-wide heatmap. The
+// harness caps heatmaps at 20 cells and takes only a place name, while the
+// API returns the full grid (thousands of cells) for a WKT boundary. That is
+// what makes city scores comparable across a whole tour region.
 
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
@@ -18,6 +23,8 @@ import { mockCall } from "./mock.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const CACHE_DIR = process.env.CACHE_DIR || path.join(ROOT, "data", "cache");
+
+const API_BASE = (process.env.QLOO_BASE_URL || "https://api.qloo.com").replace(/\/+$/, "");
 
 export const QLOO_TOOL_NAMES = [
   "qloo_describe",
@@ -200,4 +207,61 @@ export function entityTypeShort(urn) {
 export function candidatesOf(envelope) {
   const issues = envelope?.resolution?.issues ?? [];
   return issues.flatMap((i) => (i.candidates ?? []).map((c) => ({ input: i.input, ...c })));
+}
+
+// --- region heatmap (Insights API, urn:heatmap) ---------------------------
+// Returns { points: [{lat,lng,affinity,affinity_rank,popularity}], cached, mock, ms, status, summary }.
+export async function regionHeatmap(entityId, wkt) {
+  const t0 = Date.now();
+  const args = { entity: entityId, wkt };
+  const hit = await cacheGet("insights_heatmap", args);
+  if (hit) return { ...hit.envelope, cached: true, ms: Date.now() - t0 };
+  if (mode !== "live" || !process.env.QLOO_API_KEY) {
+    const env = mockCall("region_heatmap", args);
+    return { ...env, cached: false, mock: true, ms: Date.now() - t0 };
+  }
+  const params = new URLSearchParams({
+    "filter.type": "urn:heatmap",
+    "signal.interests.entities": entityId,
+    "filter.location": wkt,
+    take: "50",
+  });
+  await acquire();
+  try {
+    let res;
+    for (let attempt = 0; attempt < 3; attempt++) {
+      res = await fetch(`${API_BASE}/v2/insights?${params}`, {
+        headers: { "x-api-key": process.env.QLOO_API_KEY, accept: "application/json" },
+        signal: AbortSignal.timeout(90000),
+      });
+      if (res.status !== 429 && res.status < 500) break;
+      await new Promise((r) => setTimeout(r, 1500 * (attempt + 1)));
+    }
+    if (!res.ok) {
+      return { status: "error", summary: `Qloo heatmap request failed (HTTP ${res.status})`, points: [], cached: false, mock: false, ms: Date.now() - t0 };
+    }
+    const body = await res.json();
+    const cells = Array.isArray(body?.results?.heatmap) ? body.results.heatmap : [];
+    const points = cells
+      .map((c) => ({
+        lat: c.location?.latitude,
+        lng: c.location?.longitude,
+        affinity: c.query?.affinity,
+        affinity_rank: c.query?.affinity_rank,
+        popularity: c.query?.popularity,
+      }))
+      .filter((p) => typeof p.lat === "number" && typeof p.lng === "number" && typeof p.affinity === "number");
+    const envelope = {
+      status: points.length ? "ok" : "empty",
+      summary: `${points.length} heatmap cells`,
+      points,
+      provenance: { endpoint: "/v2/insights", query: Object.fromEntries(params) },
+    };
+    if (points.length) await cachePut("insights_heatmap", args, envelope);
+    return { ...envelope, cached: false, mock: false, ms: Date.now() - t0 };
+  } catch (err) {
+    return { status: "error", summary: err.message, points: [], cached: false, mock: false, ms: Date.now() - t0 };
+  } finally {
+    release();
+  }
 }

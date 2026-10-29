@@ -1,9 +1,12 @@
-// Touring markets per region. Each city is a candidate stop; TourSmith scores
-// every candidate with Qloo's heatmap (qloo_where_popular) and keeps the best.
-// `query` is the natural-language location Qloo resolves; lat/lng is for the map.
+// Touring markets per region. Each city is a candidate stop. TourSmith pulls
+// one Qloo heatmap for the whole region (the `wkt` boundary) and scores every
+// city from the grid cells around it, so scores are comparable across cities.
+// `query` is the natural-language location Qloo resolves for per-city
+// recommendations; lat/lng anchors the city on the heat grid and the map.
 
 export const REGIONS = {
   us: {
+    wkt: "POLYGON((-125 24, -66 24, -66 49.5, -125 49.5, -125 24))",
     label: "United States",
     within: "United States",
     center: [39.5, -98.35],
@@ -28,6 +31,7 @@ export const REGIONS = {
     ],
   },
   uk: {
+    wkt: "POLYGON((-11 49.8, 2 49.8, 2 59, -11 59, -11 49.8))",
     label: "UK & Ireland",
     within: "United Kingdom",
     center: [54.0, -3.5],
@@ -48,6 +52,7 @@ export const REGIONS = {
     ],
   },
   apac: {
+    wkt: "POLYGON((95 22, 180 22, 180 -48, 95 -48, 95 22))",
     label: "Southeast Asia & Australia",
     within: "Southeast Asia",
     center: [-5, 120],
@@ -68,6 +73,7 @@ export const REGIONS = {
     ],
   },
   eu: {
+    wkt: "POLYGON((-10 36, 25 36, 25 61, -10 61, -10 36))",
     label: "Continental Europe",
     within: "Europe",
     center: [50, 10],
@@ -88,6 +94,7 @@ export const REGIONS = {
     ],
   },
   ca: {
+    wkt: "POLYGON((-141 42, -52 42, -52 60, -141 60, -141 42))",
     label: "Canada",
     within: "Canada",
     center: [52, -100],
@@ -105,6 +112,30 @@ export const REGIONS = {
   },
 };
 
+// Score each city from the region heat grid.
+// affinity: Qloo's measure of how strongly this act over-indexes in a cell
+// versus everything else people there engage with, ranked across the whole
+// region grid. score = 100 × mean of the top 3 cells within RADIUS_KM.
+// popularity: how dense the act's signal is in those cells (a scene-size proxy).
+export const RADIUS_KM = 50;
+export function scoreCities(cities, points) {
+  return cities.map((city) => {
+    const near = points.filter((p) => haversineKm(city, p) <= RADIUS_KM);
+    if (!near.length) return { ...city, score: null, affinity: null, popularity: null, cells: 0, note: "No Qloo heat signal near this city" };
+    const top = near.map((p) => p.affinity).sort((a, b) => b - a).slice(0, 3);
+    const affinity = top.reduce((a, b) => a + b, 0) / top.length;
+    const pops = near.map((p) => p.popularity).filter((v) => typeof v === "number");
+    const popularity = pops.length ? pops.reduce((a, b) => a + b, 0) / pops.length : null;
+    return {
+      ...city,
+      score: Math.round(affinity * 100),
+      affinity: Number(affinity.toFixed(3)),
+      popularity: popularity === null ? null : Number(popularity.toFixed(3)),
+      cells: near.length,
+    };
+  });
+}
+
 export function regionList() {
   return Object.entries(REGIONS).map(([id, r]) => ({
     id,
@@ -115,27 +146,37 @@ export function regionList() {
   }));
 }
 
-// Order stops so the route doesn't zig-zag: greedy nearest-neighbour from the
-// westernmost stop. Good enough for 3–10 stops; a promoter will adjust dates.
+// Order stops so the route doesn't zig-zag: nearest-neighbour from every
+// possible starting city, keeping the shortest total path. Plenty for 3–8
+// stops; a promoter still sets the actual dates.
 export function orderRoute(stops) {
   if (stops.length <= 2) return stops;
-  const remaining = [...stops];
-  remaining.sort((a, b) => a.lng - b.lng);
-  const route = [remaining.shift()];
-  while (remaining.length) {
-    const last = route[route.length - 1];
-    let best = 0;
-    let bestD = Infinity;
-    remaining.forEach((c, i) => {
-      const d = haversineKm(last, c);
-      if (d < bestD) {
-        bestD = d;
-        best = i;
-      }
-    });
-    route.push(remaining.splice(best, 1)[0]);
+  let best = null;
+  let bestKm = Infinity;
+  for (let start = 0; start < stops.length; start++) {
+    const remaining = stops.filter((_, i) => i !== start);
+    const route = [stops[start]];
+    let km = 0;
+    while (remaining.length) {
+      const last = route[route.length - 1];
+      let idx = 0;
+      let d = Infinity;
+      remaining.forEach((c, i) => {
+        const dd = haversineKm(last, c);
+        if (dd < d) {
+          d = dd;
+          idx = i;
+        }
+      });
+      km += d;
+      route.push(remaining.splice(idx, 1)[0]);
+    }
+    if (km < bestKm) {
+      bestKm = km;
+      best = route;
+    }
   }
-  return route;
+  return best;
 }
 
 export function haversineKm(a, b) {

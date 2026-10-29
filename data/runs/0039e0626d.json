@@ -1,0 +1,7258 @@
+{
+ "id": "0039e0626d",
+ "created_at": "2026-10-29T17:37:02.329Z",
+ "input": {
+  "id": "comedy-us",
+  "label": "US comedy tour",
+  "act": "Nate Bargatze",
+  "actType": "person",
+  "region": "us",
+  "stops": 6,
+  "notes": "Theatre-sized rooms, clean comedy, family-friendly crowd"
+ },
+ "region": {
+  "id": "us",
+  "label": "United States",
+  "center": [
+   39.5,
+   -98.35
+  ],
+  "zoom": 4
+ },
+ "llm": {
+  "provider": "gemini",
+  "model": "gemini-3.5-flash"
+ },
+ "mock": false,
+ "steps": [
+  {
+   "id": "s1",
+   "phase": "act",
+   "label": "Find \"Nate Bargatze\" in Qloo's taste graph",
+   "tool": "qloo_describe",
+   "args": {
+    "entity": "Nate Bargatze",
+    "type": "person"
+   },
+   "status": "ok",
+   "summary": "1 results",
+   "result_count": 1,
+   "cached": true,
+   "mock": false,
+   "ms": 2,
+   "request": {
+    "entity_ids": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ]
+   }
+  },
+  {
+   "id": "s2",
+   "phase": "route",
+   "label": "Heatmap of Nate Bargatze's fans across United States",
+   "tool": "qloo heatmap",
+   "args": {
+    "entity": "Nate Bargatze",
+    "boundary": "United States"
+   },
+   "status": "ok",
+   "summary": "7,783 grid cells, each with an affinity and popularity score",
+   "cached": true,
+   "ms": 13,
+   "request": {
+    "filter.type": "urn:heatmap",
+    "signal.interests.entities": "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32",
+    "filter.location": "POLYGON((-125 24, -66 24, -66 49.5, -125 49.5, -125 24))",
+    "take": "50"
+   }
+  },
+  {
+   "id": "s3",
+   "phase": "route",
+   "label": "Scored 16 markets from the grid: Nashville leads (100), New York trails (55).",
+   "tool": "agent",
+   "status": "done"
+  },
+  {
+   "id": "s4",
+   "phase": "audience",
+   "label": "What concepts define this act's fan base?",
+   "tool": "qloo_entity_tags",
+   "args": {
+    "entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "limit": 20
+   },
+   "status": "ok",
+   "summary": "20 results",
+   "result_count": 20,
+   "cached": true,
+   "mock": false,
+   "ms": 9,
+   "request": {
+    "filter.type": "urn:tag",
+    "signal.interests.entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "take": 20
+   }
+  },
+  {
+   "id": "s5",
+   "phase": "audience",
+   "label": "Who are the fans? (age and gender skew)",
+   "tool": "qloo_audience_demographics",
+   "args": {
+    "entity": "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+   },
+   "status": "ok",
+   "summary": "1 results",
+   "result_count": 1,
+   "cached": true,
+   "mock": false,
+   "ms": 8,
+   "request": {
+    "filter.type": "urn:demographics",
+    "signal.interests.entities": "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32",
+    "take": 10
+   }
+  },
+  {
+   "id": "s6",
+   "phase": "audience",
+   "label": "Is the act rising or fading?",
+   "tool": "qloo_trends",
+   "args": {
+    "entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "entity_type": "person",
+    "start_date": "2026-06-11",
+    "end_date": "2026-10-29",
+    "limit": 20
+   },
+   "status": "ok",
+   "summary": "1 results",
+   "result_count": 1,
+   "cached": true,
+   "mock": false,
+   "ms": 9,
+   "request": {
+    "filter.type": "urn:entity:person",
+    "filter.start_date": "2026-06-11",
+    "filter.end_date": "2026-10-29",
+    "signal.interests.entities": "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32",
+    "take": 20
+   }
+  },
+  {
+   "id": "s7",
+   "phase": "route",
+   "label": "The top routing prioritizes high-affinity heartland and western markets where Nate Bargatze's clean, everyman persona strongly over-indexes against local baselines. Massive coastal markets like New York (55 score) and Los Angeles (61 score) show severe affinity drop-offs despite high overall population density, indicating lower relative demand for family-friendly stand-up.",
+   "tool": "agent",
+   "status": "done"
+  },
+  {
+   "id": "s18",
+   "phase": "stops",
+   "label": "Denver: comedians these fans also love (opener pool)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "person",
+    "signals": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal_location": "Denver",
+    "limit": 15
+   },
+   "status": "ok",
+   "summary": "15 results",
+   "result_count": 15,
+   "cached": true,
+   "mock": false,
+   "ms": 8,
+   "request": {
+    "filter.type": "urn:entity:person",
+    "take": 15,
+    "signal.interests.entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal.location.query": "Denver",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s19",
+   "phase": "stops",
+   "label": "Denver: comedy clubs with high fan affinity",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "place",
+    "signals": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "filter_location": "Denver",
+    "include_tags": [
+     "urn:tag:category:place:comedy_club"
+    ],
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": true,
+   "mock": false,
+   "ms": 8,
+   "request": {
+    "filter.type": "urn:entity:place",
+    "take": 5,
+    "signal.interests.entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "filter.location.query": "Denver",
+    "filter.tags": [
+     "urn:tag:category:place:comedy_club"
+    ],
+    "operator.filter.tags": "union",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s20",
+   "phase": "stops",
+   "label": "Denver: bars and restaurants these fans love (pre-show, after-party)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "place",
+    "signals": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "filter_location": "Denver",
+    "include_tags": [
+     "urn:tag:category:place:bar",
+     "urn:tag:category:place:restaurant"
+    ],
+    "include_tags_operator": "union",
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": true,
+   "mock": false,
+   "ms": 8,
+   "request": {
+    "filter.type": "urn:entity:place",
+    "take": 5,
+    "signal.interests.entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "filter.location.query": "Denver",
+    "filter.tags": [
+     "urn:tag:category:place:bar",
+     "urn:tag:category:place:restaurant"
+    ],
+    "operator.filter.tags": "union",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s21",
+   "phase": "stops",
+   "label": "Denver: brands this audience over-indexes on (sponsors)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "brand",
+    "signals": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal_location": "Denver",
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": true,
+   "mock": false,
+   "ms": 8,
+   "request": {
+    "filter.type": "urn:entity:brand",
+    "take": 5,
+    "signal.interests.entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal.location.query": "Denver",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s22",
+   "phase": "stops",
+   "label": "Denver: podcasts for local PR",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "podcast",
+    "signals": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal_location": "Denver",
+    "limit": 4
+   },
+   "status": "ok",
+   "summary": "4 results",
+   "result_count": 4,
+   "cached": true,
+   "mock": false,
+   "ms": 8,
+   "request": {
+    "filter.type": "urn:entity:podcast",
+    "take": 4,
+    "signal.interests.entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal.location.query": "Denver",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s28",
+   "phase": "stops",
+   "label": "Nashville: comedians these fans also love (opener pool)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "person",
+    "signals": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal_location": "Nashville",
+    "limit": 15
+   },
+   "status": "ok",
+   "summary": "15 results",
+   "result_count": 15,
+   "cached": true,
+   "mock": false,
+   "ms": 9,
+   "request": {
+    "filter.type": "urn:entity:person",
+    "take": 15,
+    "signal.interests.entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal.location.query": "Nashville",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s29",
+   "phase": "stops",
+   "label": "Nashville: comedy clubs with high fan affinity",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "place",
+    "signals": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "filter_location": "Nashville",
+    "include_tags": [
+     "urn:tag:category:place:comedy_club"
+    ],
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "2 results",
+   "result_count": 2,
+   "cached": true,
+   "mock": false,
+   "ms": 9,
+   "request": {
+    "filter.type": "urn:entity:place",
+    "take": 5,
+    "signal.interests.entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "filter.location.query": "Nashville",
+    "filter.tags": [
+     "urn:tag:category:place:comedy_club"
+    ],
+    "operator.filter.tags": "union",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s30",
+   "phase": "stops",
+   "label": "Nashville: bars and restaurants these fans love (pre-show, after-party)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "place",
+    "signals": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "filter_location": "Nashville",
+    "include_tags": [
+     "urn:tag:category:place:bar",
+     "urn:tag:category:place:restaurant"
+    ],
+    "include_tags_operator": "union",
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": true,
+   "mock": false,
+   "ms": 9,
+   "request": {
+    "filter.type": "urn:entity:place",
+    "take": 5,
+    "signal.interests.entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "filter.location.query": "Nashville",
+    "filter.tags": [
+     "urn:tag:category:place:bar",
+     "urn:tag:category:place:restaurant"
+    ],
+    "operator.filter.tags": "union",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s31",
+   "phase": "stops",
+   "label": "Nashville: brands this audience over-indexes on (sponsors)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "brand",
+    "signals": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal_location": "Nashville",
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": true,
+   "mock": false,
+   "ms": 10,
+   "request": {
+    "filter.type": "urn:entity:brand",
+    "take": 5,
+    "signal.interests.entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal.location.query": "Nashville",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s32",
+   "phase": "stops",
+   "label": "Nashville: podcasts for local PR",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "podcast",
+    "signals": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal_location": "Nashville",
+    "limit": 4
+   },
+   "status": "ok",
+   "summary": "4 results",
+   "result_count": 4,
+   "cached": true,
+   "mock": false,
+   "ms": 10,
+   "request": {
+    "filter.type": "urn:entity:podcast",
+    "take": 4,
+    "signal.interests.entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal.location.query": "Nashville",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s33",
+   "phase": "stops",
+   "label": "Austin: comedians these fans also love (opener pool)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "person",
+    "signals": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal_location": "Austin, Texas",
+    "limit": 15
+   },
+   "status": "ok",
+   "summary": "15 results",
+   "result_count": 15,
+   "cached": true,
+   "mock": false,
+   "ms": 10,
+   "request": {
+    "filter.type": "urn:entity:person",
+    "take": 15,
+    "signal.interests.entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal.location.query": "Austin, Texas",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s34",
+   "phase": "stops",
+   "label": "Austin: comedy clubs with high fan affinity",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "place",
+    "signals": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "filter_location": "Austin, Texas",
+    "include_tags": [
+     "urn:tag:category:place:comedy_club"
+    ],
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": true,
+   "mock": false,
+   "ms": 10,
+   "request": {
+    "filter.type": "urn:entity:place",
+    "take": 5,
+    "signal.interests.entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "filter.location.query": "Austin, Texas",
+    "filter.tags": [
+     "urn:tag:category:place:comedy_club"
+    ],
+    "operator.filter.tags": "union",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s35",
+   "phase": "stops",
+   "label": "Austin: bars and restaurants these fans love (pre-show, after-party)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "place",
+    "signals": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "filter_location": "Austin, Texas",
+    "include_tags": [
+     "urn:tag:category:place:bar",
+     "urn:tag:category:place:restaurant"
+    ],
+    "include_tags_operator": "union",
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": true,
+   "mock": false,
+   "ms": 10,
+   "request": {
+    "filter.type": "urn:entity:place",
+    "take": 5,
+    "signal.interests.entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "filter.location.query": "Austin, Texas",
+    "filter.tags": [
+     "urn:tag:category:place:bar",
+     "urn:tag:category:place:restaurant"
+    ],
+    "operator.filter.tags": "union",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s36",
+   "phase": "stops",
+   "label": "Austin: brands this audience over-indexes on (sponsors)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "brand",
+    "signals": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal_location": "Austin, Texas",
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": true,
+   "mock": false,
+   "ms": 10,
+   "request": {
+    "filter.type": "urn:entity:brand",
+    "take": 5,
+    "signal.interests.entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal.location.query": "Austin, Texas",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s37",
+   "phase": "stops",
+   "label": "Austin: podcasts for local PR",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "podcast",
+    "signals": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal_location": "Austin, Texas",
+    "limit": 4
+   },
+   "status": "ok",
+   "summary": "4 results",
+   "result_count": 4,
+   "cached": true,
+   "mock": false,
+   "ms": 10,
+   "request": {
+    "filter.type": "urn:entity:podcast",
+    "take": 4,
+    "signal.interests.entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal.location.query": "Austin, Texas",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s9",
+   "phase": "stops",
+   "label": "Phoenix: comedy clubs with high fan affinity",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "place",
+    "signals": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "filter_location": "Phoenix, Arizona",
+    "include_tags": [
+     "urn:tag:category:place:comedy_club"
+    ],
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "3 results",
+   "result_count": 3,
+   "cached": false,
+   "mock": false,
+   "ms": 447,
+   "request": {
+    "filter.type": "urn:entity:place",
+    "take": 5,
+    "signal.interests.entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "filter.location.query": "Phoenix, Arizona",
+    "filter.tags": [
+     "urn:tag:category:place:comedy_club"
+    ],
+    "operator.filter.tags": "union",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s10",
+   "phase": "stops",
+   "label": "Phoenix: bars and restaurants these fans love (pre-show, after-party)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "place",
+    "signals": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "filter_location": "Phoenix, Arizona",
+    "include_tags": [
+     "urn:tag:category:place:bar",
+     "urn:tag:category:place:restaurant"
+    ],
+    "include_tags_operator": "union",
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": false,
+   "mock": false,
+   "ms": 744,
+   "request": {
+    "filter.type": "urn:entity:place",
+    "take": 5,
+    "signal.interests.entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "filter.location.query": "Phoenix, Arizona",
+    "filter.tags": [
+     "urn:tag:category:place:bar",
+     "urn:tag:category:place:restaurant"
+    ],
+    "operator.filter.tags": "union",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s11",
+   "phase": "stops",
+   "label": "Phoenix: brands this audience over-indexes on (sponsors)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "brand",
+    "signals": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal_location": "Phoenix, Arizona",
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": false,
+   "mock": false,
+   "ms": 1468,
+   "request": {
+    "filter.type": "urn:entity:brand",
+    "take": 5,
+    "signal.interests.entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal.location.query": "Phoenix, Arizona",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s12",
+   "phase": "stops",
+   "label": "Phoenix: podcasts for local PR",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "podcast",
+    "signals": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal_location": "Phoenix, Arizona",
+    "limit": 4
+   },
+   "status": "ok",
+   "summary": "4 results",
+   "result_count": 4,
+   "cached": false,
+   "mock": false,
+   "ms": 1590,
+   "request": {
+    "filter.type": "urn:entity:podcast",
+    "take": 4,
+    "signal.interests.entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal.location.query": "Phoenix, Arizona",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s14",
+   "phase": "stops",
+   "label": "Salt Lake City: comedy clubs with high fan affinity",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "place",
+    "signals": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "filter_location": "Salt Lake City",
+    "include_tags": [
+     "urn:tag:category:place:comedy_club"
+    ],
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "1 results",
+   "result_count": 1,
+   "cached": false,
+   "mock": false,
+   "ms": 1863,
+   "request": {
+    "filter.type": "urn:entity:place",
+    "take": 5,
+    "signal.interests.entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "filter.location.query": "Salt Lake City",
+    "filter.tags": [
+     "urn:tag:category:place:comedy_club"
+    ],
+    "operator.filter.tags": "union",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s15",
+   "phase": "stops",
+   "label": "Salt Lake City: bars and restaurants these fans love (pre-show, after-party)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "place",
+    "signals": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "filter_location": "Salt Lake City",
+    "include_tags": [
+     "urn:tag:category:place:bar",
+     "urn:tag:category:place:restaurant"
+    ],
+    "include_tags_operator": "union",
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": false,
+   "mock": false,
+   "ms": 2183,
+   "request": {
+    "filter.type": "urn:entity:place",
+    "take": 5,
+    "signal.interests.entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "filter.location.query": "Salt Lake City",
+    "filter.tags": [
+     "urn:tag:category:place:bar",
+     "urn:tag:category:place:restaurant"
+    ],
+    "operator.filter.tags": "union",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s8",
+   "phase": "stops",
+   "label": "Phoenix: comedians these fans also love (opener pool)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "person",
+    "signals": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal_location": "Phoenix, Arizona",
+    "limit": 15
+   },
+   "status": "ok",
+   "summary": "15 results",
+   "result_count": 15,
+   "cached": false,
+   "mock": false,
+   "ms": 2673,
+   "request": {
+    "filter.type": "urn:entity:person",
+    "take": 15,
+    "signal.interests.entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal.location.query": "Phoenix, Arizona",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s16",
+   "phase": "stops",
+   "label": "Salt Lake City: brands this audience over-indexes on (sponsors)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "brand",
+    "signals": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal_location": "Salt Lake City",
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": false,
+   "mock": false,
+   "ms": 2872,
+   "request": {
+    "filter.type": "urn:entity:brand",
+    "take": 5,
+    "signal.interests.entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal.location.query": "Salt Lake City",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s17",
+   "phase": "stops",
+   "label": "Salt Lake City: podcasts for local PR",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "podcast",
+    "signals": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal_location": "Salt Lake City",
+    "limit": 4
+   },
+   "status": "ok",
+   "summary": "4 results",
+   "result_count": 4,
+   "cached": false,
+   "mock": false,
+   "ms": 2878,
+   "request": {
+    "filter.type": "urn:entity:podcast",
+    "take": 4,
+    "signal.interests.entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal.location.query": "Salt Lake City",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s24",
+   "phase": "stops",
+   "label": "Kansas City: comedy clubs with high fan affinity",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "place",
+    "signals": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "filter_location": "Kansas City, Missouri",
+    "include_tags": [
+     "urn:tag:category:place:comedy_club"
+    ],
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "0 results",
+   "result_count": 0,
+   "cached": false,
+   "mock": false,
+   "ms": 3046,
+   "request": {
+    "filter.type": "urn:entity:place",
+    "take": 5,
+    "signal.interests.entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "filter.location.query": "Kansas City, Missouri",
+    "filter.tags": [
+     "urn:tag:category:place:comedy_club"
+    ],
+    "operator.filter.tags": "union",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s25",
+   "phase": "stops",
+   "label": "Kansas City: bars and restaurants these fans love (pre-show, after-party)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "place",
+    "signals": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "filter_location": "Kansas City, Missouri",
+    "include_tags": [
+     "urn:tag:category:place:bar",
+     "urn:tag:category:place:restaurant"
+    ],
+    "include_tags_operator": "union",
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": false,
+   "mock": false,
+   "ms": 3418,
+   "request": {
+    "filter.type": "urn:entity:place",
+    "take": 5,
+    "signal.interests.entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "filter.location.query": "Kansas City, Missouri",
+    "filter.tags": [
+     "urn:tag:category:place:bar",
+     "urn:tag:category:place:restaurant"
+    ],
+    "operator.filter.tags": "union",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s13",
+   "phase": "stops",
+   "label": "Salt Lake City: comedians these fans also love (opener pool)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "person",
+    "signals": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal_location": "Salt Lake City",
+    "limit": 15
+   },
+   "status": "ok",
+   "summary": "15 results",
+   "result_count": 15,
+   "cached": false,
+   "mock": false,
+   "ms": 3879,
+   "request": {
+    "filter.type": "urn:entity:person",
+    "take": 15,
+    "signal.interests.entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal.location.query": "Salt Lake City",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s26",
+   "phase": "stops",
+   "label": "Kansas City: brands this audience over-indexes on (sponsors)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "brand",
+    "signals": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal_location": "Kansas City, Missouri",
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": false,
+   "mock": false,
+   "ms": 4033,
+   "request": {
+    "filter.type": "urn:entity:brand",
+    "take": 5,
+    "signal.interests.entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal.location.query": "Kansas City, Missouri",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s27",
+   "phase": "stops",
+   "label": "Kansas City: podcasts for local PR",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "podcast",
+    "signals": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal_location": "Kansas City, Missouri",
+    "limit": 4
+   },
+   "status": "ok",
+   "summary": "4 results",
+   "result_count": 4,
+   "cached": false,
+   "mock": false,
+   "ms": 4046,
+   "request": {
+    "filter.type": "urn:entity:podcast",
+    "take": 4,
+    "signal.interests.entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal.location.query": "Kansas City, Missouri",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s23",
+   "phase": "stops",
+   "label": "Kansas City: comedians these fans also love (opener pool)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "person",
+    "signals": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal_location": "Kansas City, Missouri",
+    "limit": 15
+   },
+   "status": "ok",
+   "summary": "15 results",
+   "result_count": 15,
+   "cached": false,
+   "mock": false,
+   "ms": 4998,
+   "request": {
+    "filter.type": "urn:entity:person",
+    "take": 15,
+    "signal.interests.entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal.location.query": "Kansas City, Missouri",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s38",
+   "phase": "openers",
+   "label": "Shortlisted 8 opener candidates with less Qloo popularity than Nate Bargatze, so the bill stays headliner-led.",
+   "tool": "agent",
+   "status": "done"
+  },
+  {
+   "id": "s39",
+   "phase": "openers",
+   "label": "Phoenix: rank the opener shortlist for this crowd",
+   "tool": "qloo_rank",
+   "args": {
+    "options": [
+     "AA7E0314-0231-48D6-B53E-60F5303D443A",
+     "F71871FF-3A92-4756-BFBD-B1E187434710",
+     "01FAA997-13B8-456A-8DBF-5EC0F6EE06CF",
+     "F44C9634-A445-4C85-951F-4497111FDED9",
+     "853277C9-2A52-43A6-BFA1-7B89C019B927",
+     "B6D77A0C-770B-4176-B482-2DA63CC3B566",
+     "77395141-8BEE-42B4-8091-9382A8EEF563",
+     "FE46E1BE-1671-426A-8328-6D8FC0D7DCF1"
+    ],
+    "option_type": "person",
+    "signals": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal_location": "Phoenix, Arizona"
+   },
+   "status": "ok",
+   "summary": "8 results",
+   "result_count": 8,
+   "cached": false,
+   "mock": false,
+   "ms": 2539,
+   "request": {
+    "filter.type": "urn:entity:person",
+    "filter.results.entities": [
+     "AA7E0314-0231-48D6-B53E-60F5303D443A",
+     "F71871FF-3A92-4756-BFBD-B1E187434710",
+     "01FAA997-13B8-456A-8DBF-5EC0F6EE06CF",
+     "F44C9634-A445-4C85-951F-4497111FDED9",
+     "853277C9-2A52-43A6-BFA1-7B89C019B927",
+     "B6D77A0C-770B-4176-B482-2DA63CC3B566",
+     "77395141-8BEE-42B4-8091-9382A8EEF563",
+     "FE46E1BE-1671-426A-8328-6D8FC0D7DCF1"
+    ],
+    "take": 8,
+    "signal.interests.entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal.location.query": "Phoenix, Arizona"
+   }
+  },
+  {
+   "id": "s41",
+   "phase": "openers",
+   "label": "Denver: rank the opener shortlist for this crowd",
+   "tool": "qloo_rank",
+   "args": {
+    "options": [
+     "AA7E0314-0231-48D6-B53E-60F5303D443A",
+     "F71871FF-3A92-4756-BFBD-B1E187434710",
+     "01FAA997-13B8-456A-8DBF-5EC0F6EE06CF",
+     "F44C9634-A445-4C85-951F-4497111FDED9",
+     "853277C9-2A52-43A6-BFA1-7B89C019B927",
+     "B6D77A0C-770B-4176-B482-2DA63CC3B566",
+     "77395141-8BEE-42B4-8091-9382A8EEF563",
+     "FE46E1BE-1671-426A-8328-6D8FC0D7DCF1"
+    ],
+    "option_type": "person",
+    "signals": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal_location": "Denver"
+   },
+   "status": "ok",
+   "summary": "8 results",
+   "result_count": 8,
+   "cached": false,
+   "mock": false,
+   "ms": 2583,
+   "request": {
+    "filter.type": "urn:entity:person",
+    "filter.results.entities": [
+     "AA7E0314-0231-48D6-B53E-60F5303D443A",
+     "F71871FF-3A92-4756-BFBD-B1E187434710",
+     "01FAA997-13B8-456A-8DBF-5EC0F6EE06CF",
+     "F44C9634-A445-4C85-951F-4497111FDED9",
+     "853277C9-2A52-43A6-BFA1-7B89C019B927",
+     "B6D77A0C-770B-4176-B482-2DA63CC3B566",
+     "77395141-8BEE-42B4-8091-9382A8EEF563",
+     "FE46E1BE-1671-426A-8328-6D8FC0D7DCF1"
+    ],
+    "take": 8,
+    "signal.interests.entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal.location.query": "Denver"
+   }
+  },
+  {
+   "id": "s40",
+   "phase": "openers",
+   "label": "Salt Lake City: rank the opener shortlist for this crowd",
+   "tool": "qloo_rank",
+   "args": {
+    "options": [
+     "AA7E0314-0231-48D6-B53E-60F5303D443A",
+     "F71871FF-3A92-4756-BFBD-B1E187434710",
+     "01FAA997-13B8-456A-8DBF-5EC0F6EE06CF",
+     "F44C9634-A445-4C85-951F-4497111FDED9",
+     "853277C9-2A52-43A6-BFA1-7B89C019B927",
+     "B6D77A0C-770B-4176-B482-2DA63CC3B566",
+     "77395141-8BEE-42B4-8091-9382A8EEF563",
+     "FE46E1BE-1671-426A-8328-6D8FC0D7DCF1"
+    ],
+    "option_type": "person",
+    "signals": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal_location": "Salt Lake City"
+   },
+   "status": "ok",
+   "summary": "8 results",
+   "result_count": 8,
+   "cached": false,
+   "mock": false,
+   "ms": 2590,
+   "request": {
+    "filter.type": "urn:entity:person",
+    "filter.results.entities": [
+     "AA7E0314-0231-48D6-B53E-60F5303D443A",
+     "F71871FF-3A92-4756-BFBD-B1E187434710",
+     "01FAA997-13B8-456A-8DBF-5EC0F6EE06CF",
+     "F44C9634-A445-4C85-951F-4497111FDED9",
+     "853277C9-2A52-43A6-BFA1-7B89C019B927",
+     "B6D77A0C-770B-4176-B482-2DA63CC3B566",
+     "77395141-8BEE-42B4-8091-9382A8EEF563",
+     "FE46E1BE-1671-426A-8328-6D8FC0D7DCF1"
+    ],
+    "take": 8,
+    "signal.interests.entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal.location.query": "Salt Lake City"
+   }
+  },
+  {
+   "id": "s43",
+   "phase": "openers",
+   "label": "Nashville: rank the opener shortlist for this crowd",
+   "tool": "qloo_rank",
+   "args": {
+    "options": [
+     "AA7E0314-0231-48D6-B53E-60F5303D443A",
+     "F71871FF-3A92-4756-BFBD-B1E187434710",
+     "01FAA997-13B8-456A-8DBF-5EC0F6EE06CF",
+     "F44C9634-A445-4C85-951F-4497111FDED9",
+     "853277C9-2A52-43A6-BFA1-7B89C019B927",
+     "B6D77A0C-770B-4176-B482-2DA63CC3B566",
+     "77395141-8BEE-42B4-8091-9382A8EEF563",
+     "FE46E1BE-1671-426A-8328-6D8FC0D7DCF1"
+    ],
+    "option_type": "person",
+    "signals": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal_location": "Nashville"
+   },
+   "status": "ok",
+   "summary": "8 results",
+   "result_count": 8,
+   "cached": false,
+   "mock": false,
+   "ms": 2682,
+   "request": {
+    "filter.type": "urn:entity:person",
+    "filter.results.entities": [
+     "AA7E0314-0231-48D6-B53E-60F5303D443A",
+     "F71871FF-3A92-4756-BFBD-B1E187434710",
+     "01FAA997-13B8-456A-8DBF-5EC0F6EE06CF",
+     "F44C9634-A445-4C85-951F-4497111FDED9",
+     "853277C9-2A52-43A6-BFA1-7B89C019B927",
+     "B6D77A0C-770B-4176-B482-2DA63CC3B566",
+     "77395141-8BEE-42B4-8091-9382A8EEF563",
+     "FE46E1BE-1671-426A-8328-6D8FC0D7DCF1"
+    ],
+    "take": 8,
+    "signal.interests.entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal.location.query": "Nashville"
+   }
+  },
+  {
+   "id": "s42",
+   "phase": "openers",
+   "label": "Kansas City: rank the opener shortlist for this crowd",
+   "tool": "qloo_rank",
+   "args": {
+    "options": [
+     "AA7E0314-0231-48D6-B53E-60F5303D443A",
+     "F71871FF-3A92-4756-BFBD-B1E187434710",
+     "01FAA997-13B8-456A-8DBF-5EC0F6EE06CF",
+     "F44C9634-A445-4C85-951F-4497111FDED9",
+     "853277C9-2A52-43A6-BFA1-7B89C019B927",
+     "B6D77A0C-770B-4176-B482-2DA63CC3B566",
+     "77395141-8BEE-42B4-8091-9382A8EEF563",
+     "FE46E1BE-1671-426A-8328-6D8FC0D7DCF1"
+    ],
+    "option_type": "person",
+    "signals": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal_location": "Kansas City, Missouri"
+   },
+   "status": "ok",
+   "summary": "8 results",
+   "result_count": 8,
+   "cached": false,
+   "mock": false,
+   "ms": 2684,
+   "request": {
+    "filter.type": "urn:entity:person",
+    "filter.results.entities": [
+     "AA7E0314-0231-48D6-B53E-60F5303D443A",
+     "F71871FF-3A92-4756-BFBD-B1E187434710",
+     "01FAA997-13B8-456A-8DBF-5EC0F6EE06CF",
+     "F44C9634-A445-4C85-951F-4497111FDED9",
+     "853277C9-2A52-43A6-BFA1-7B89C019B927",
+     "B6D77A0C-770B-4176-B482-2DA63CC3B566",
+     "77395141-8BEE-42B4-8091-9382A8EEF563",
+     "FE46E1BE-1671-426A-8328-6D8FC0D7DCF1"
+    ],
+    "take": 8,
+    "signal.interests.entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal.location.query": "Kansas City, Missouri"
+   }
+  },
+  {
+   "id": "s44",
+   "phase": "openers",
+   "label": "Austin: rank the opener shortlist for this crowd",
+   "tool": "qloo_rank",
+   "args": {
+    "options": [
+     "AA7E0314-0231-48D6-B53E-60F5303D443A",
+     "F71871FF-3A92-4756-BFBD-B1E187434710",
+     "01FAA997-13B8-456A-8DBF-5EC0F6EE06CF",
+     "F44C9634-A445-4C85-951F-4497111FDED9",
+     "853277C9-2A52-43A6-BFA1-7B89C019B927",
+     "B6D77A0C-770B-4176-B482-2DA63CC3B566",
+     "77395141-8BEE-42B4-8091-9382A8EEF563",
+     "FE46E1BE-1671-426A-8328-6D8FC0D7DCF1"
+    ],
+    "option_type": "person",
+    "signals": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal_location": "Austin, Texas"
+   },
+   "status": "ok",
+   "summary": "8 results",
+   "result_count": 8,
+   "cached": false,
+   "mock": false,
+   "ms": 2715,
+   "request": {
+    "filter.type": "urn:entity:person",
+    "filter.results.entities": [
+     "AA7E0314-0231-48D6-B53E-60F5303D443A",
+     "F71871FF-3A92-4756-BFBD-B1E187434710",
+     "01FAA997-13B8-456A-8DBF-5EC0F6EE06CF",
+     "F44C9634-A445-4C85-951F-4497111FDED9",
+     "853277C9-2A52-43A6-BFA1-7B89C019B927",
+     "B6D77A0C-770B-4176-B482-2DA63CC3B566",
+     "77395141-8BEE-42B4-8091-9382A8EEF563",
+     "FE46E1BE-1671-426A-8328-6D8FC0D7DCF1"
+    ],
+    "take": 8,
+    "signal.interests.entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "signal.location.query": "Austin, Texas"
+   }
+  },
+  {
+   "id": "s45",
+   "phase": "openers",
+   "label": "Shared taste: Nate Bargatze fans vs Sam Morril fans",
+   "tool": "qloo_compare_audiences",
+   "args": {
+    "group_a": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "group_b": [
+     "AA7E0314-0231-48D6-B53E-60F5303D443A"
+    ],
+    "limit": 20
+   },
+   "status": "ok",
+   "summary": "0 results",
+   "cached": true,
+   "mock": false,
+   "ms": 0,
+   "request": {
+    "a.signal.interests.entities": [
+     "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32"
+    ],
+    "b.signal.interests.entities": [
+     "AA7E0314-0231-48D6-B53E-60F5303D443A"
+    ],
+    "take": 20
+   }
+  }
+ ],
+ "calls": 42,
+ "act": {
+  "id": "A8941EEB-BCD7-4D71-9DF6-28893DC1AF32",
+  "name": "Nate Bargatze",
+  "kind": "person",
+  "popularity": 0.8763712070971179,
+  "description": "American comedian",
+  "image": "https://images.qloo.com/i/A8941EEB-BCD7-4D71-9DF6-28893DC1AF32-420x-auto.jpg"
+ },
+ "heat": [
+  {
+   "lat": 35.9473,
+   "lng": -86.6602,
+   "affinity": 1,
+   "popularity": 0.988
+  },
+  {
+   "lat": 35.9473,
+   "lng": -87.0117,
+   "affinity": 0.9999,
+   "popularity": 0.99
+  },
+  {
+   "lat": 35.7715,
+   "lng": -86.3086,
+   "affinity": 0.9997,
+   "popularity": 0.965
+  },
+  {
+   "lat": 36.2988,
+   "lng": -86.6602,
+   "affinity": 0.9996,
+   "popularity": 0.991
+  },
+  {
+   "lat": 36.123,
+   "lng": -87.0117,
+   "affinity": 0.9995,
+   "popularity": 0.989
+  },
+  {
+   "lat": 35.2441,
+   "lng": -85.957,
+   "affinity": 0.9994,
+   "popularity": 0.905
+  },
+  {
+   "lat": 36.123,
+   "lng": -86.3086,
+   "affinity": 0.9992,
+   "popularity": 0.941
+  },
+  {
+   "lat": 35.7715,
+   "lng": -87.0117,
+   "affinity": 0.9991,
+   "popularity": 0.945
+  },
+  {
+   "lat": 35.4199,
+   "lng": -85.957,
+   "affinity": 0.999,
+   "popularity": 0.936
+  },
+  {
+   "lat": 35.9473,
+   "lng": -86.3086,
+   "affinity": 0.9988,
+   "popularity": 0.926
+  },
+  {
+   "lat": 35.5957,
+   "lng": -87.0117,
+   "affinity": 0.9987,
+   "popularity": 0.91
+  },
+  {
+   "lat": 35.9473,
+   "lng": -85.957,
+   "affinity": 0.9986,
+   "popularity": 0.977
+  },
+  {
+   "lat": 36.4746,
+   "lng": -86.6602,
+   "affinity": 0.9985,
+   "popularity": 0.87
+  },
+  {
+   "lat": 36.2988,
+   "lng": -86.3086,
+   "affinity": 0.9983,
+   "popularity": 0.87
+  },
+  {
+   "lat": 36.123,
+   "lng": -86.6602,
+   "affinity": 0.9982,
+   "popularity": 1
+  },
+  {
+   "lat": 35.7715,
+   "lng": -86.6602,
+   "affinity": 0.9981,
+   "popularity": 0.96
+  },
+  {
+   "lat": 35.2441,
+   "lng": -85.6055,
+   "affinity": 0.9979,
+   "popularity": 0.836
+  },
+  {
+   "lat": 35.2441,
+   "lng": -86.3086,
+   "affinity": 0.9978,
+   "popularity": 0.883
+  },
+  {
+   "lat": 36.123,
+   "lng": -85.957,
+   "affinity": 0.9977,
+   "popularity": 0.868
+  },
+  {
+   "lat": 35.5957,
+   "lng": -82.4414,
+   "affinity": 0.9976,
+   "popularity": 0.996
+  },
+  {
+   "lat": 36.4746,
+   "lng": -87.0117,
+   "affinity": 0.9974,
+   "popularity": 0.853
+  },
+  {
+   "lat": 36.4746,
+   "lng": -86.3086,
+   "affinity": 0.9973,
+   "popularity": 0.875
+  },
+  {
+   "lat": 35.4199,
+   "lng": -86.3086,
+   "affinity": 0.9972,
+   "popularity": 0.862
+  },
+  {
+   "lat": 35.7715,
+   "lng": -85.6055,
+   "affinity": 0.997,
+   "popularity": 0.884
+  },
+  {
+   "lat": 35.0684,
+   "lng": -85.2539,
+   "affinity": 0.9969,
+   "popularity": 0.994
+  },
+  {
+   "lat": 36.123,
+   "lng": -85.6055,
+   "affinity": 0.9968,
+   "popularity": 0.933
+  },
+  {
+   "lat": 35.9473,
+   "lng": -83.8477,
+   "affinity": 0.9967,
+   "popularity": 0.99
+  },
+  {
+   "lat": 35.5957,
+   "lng": -83.4961,
+   "affinity": 0.9965,
+   "popularity": 0.953
+  },
+  {
+   "lat": 36.2988,
+   "lng": -87.0117,
+   "affinity": 0.9964,
+   "popularity": 0.872
+  },
+  {
+   "lat": 35.4199,
+   "lng": -85.6055,
+   "affinity": 0.9963,
+   "popularity": 0.83
+  },
+  {
+   "lat": 35.5957,
+   "lng": -86.6602,
+   "affinity": 0.9961,
+   "popularity": 0.785
+  },
+  {
+   "lat": 35.0684,
+   "lng": -85.6055,
+   "affinity": 0.996,
+   "popularity": 0.873
+  },
+  {
+   "lat": 40.6934,
+   "lng": -111.9727,
+   "affinity": 0.9959,
+   "popularity": 0.993
+  },
+  {
+   "lat": 35.5957,
+   "lng": -86.3086,
+   "affinity": 0.9958,
+   "popularity": 0.779
+  },
+  {
+   "lat": 43.8574,
+   "lng": -103.5352,
+   "affinity": 0.9956,
+   "popularity": 0.952
+  },
+  {
+   "lat": 35.7715,
+   "lng": -83.8477,
+   "affinity": 0.9955,
+   "popularity": 0.937
+  },
+  {
+   "lat": 35.7715,
+   "lng": -85.2539,
+   "affinity": 0.9954,
+   "popularity": 0.632
+  },
+  {
+   "lat": 35.2441,
+   "lng": -83.4961,
+   "affinity": 0.9952,
+   "popularity": 0.879
+  },
+  {
+   "lat": 40.6934,
+   "lng": -111.6211,
+   "affinity": 0.9951,
+   "popularity": 0.989
+  },
+  {
+   "lat": 35.9473,
+   "lng": -84.9023,
+   "affinity": 0.995,
+   "popularity": 0.852
+  },
+  {
+   "lat": 39.8145,
+   "lng": -104.9414,
+   "affinity": 0.9949,
+   "popularity": 0.998
+  },
+  {
+   "lat": 35.4199,
+   "lng": -83.4961,
+   "affinity": 0.9947,
+   "popularity": 0.892
+  },
+  {
+   "lat": 35.7715,
+   "lng": -83.1445,
+   "affinity": 0.9946,
+   "popularity": 0.865
+  },
+  {
+   "lat": 35.9473,
+   "lng": -84.1992,
+   "affinity": 0.9945,
+   "popularity": 0.947
+  },
+  {
+   "lat": 35.2441,
+   "lng": -87.0117,
+   "affinity": 0.9943,
+   "popularity": 0.677
+  },
+  {
+   "lat": 35.5957,
+   "lng": -85.2539,
+   "affinity": 0.9942,
+   "popularity": 0.801
+  },
+  {
+   "lat": 43.5059,
+   "lng": -110.918,
+   "affinity": 0.9941,
+   "popularity": 0.971
+  },
+  {
+   "lat": 40.8691,
+   "lng": -111.9727,
+   "affinity": 0.994,
+   "popularity": 0.964
+  },
+  {
+   "lat": 39.8145,
+   "lng": -104.5898,
+   "affinity": 0.9938,
+   "popularity": 0.982
+  },
+  {
+   "lat": 36.123,
+   "lng": -87.3633,
+   "affinity": 0.9937,
+   "popularity": 0.875
+  },
+  {
+   "lat": 36.2988,
+   "lng": -85.957,
+   "affinity": 0.9936,
+   "popularity": 0.662
+  },
+  {
+   "lat": 38.9355,
+   "lng": -104.9414,
+   "affinity": 0.9934,
+   "popularity": 0.988
+  },
+  {
+   "lat": 40.3418,
+   "lng": -111.6211,
+   "affinity": 0.9933,
+   "popularity": 0.972
+  },
+  {
+   "lat": 35.0684,
+   "lng": -84.5508,
+   "affinity": 0.9932,
+   "popularity": 0.894
+  },
+  {
+   "lat": 35.5957,
+   "lng": -83.8477,
+   "affinity": 0.9931,
+   "popularity": 0.9
+  },
+  {
+   "lat": 35.2441,
+   "lng": -85.2539,
+   "affinity": 0.9929,
+   "popularity": 0.835
+  },
+  {
+   "lat": 35.5957,
+   "lng": -83.1445,
+   "affinity": 0.9928,
+   "popularity": 0.896
+  },
+  {
+   "lat": 37.1777,
+   "lng": -113.7305,
+   "affinity": 0.9927,
+   "popularity": 0.955
+  },
+  {
+   "lat": 36.123,
+   "lng": -111.9727,
+   "affinity": 0.9925,
+   "popularity": 0.989
+  },
+  {
+   "lat": 44.7363,
+   "lng": -111.2695,
+   "affinity": 0.9924,
+   "popularity": 0.884
+  },
+  {
+   "lat": 39.4629,
+   "lng": -111.6211,
+   "affinity": 0.9923,
+   "popularity": 0.958
+  },
+  {
+   "lat": 36.2988,
+   "lng": -94.043,
+   "affinity": 0.9922,
+   "popularity": 0.962
+  },
+  {
+   "lat": 35.4199,
+   "lng": -83.8477,
+   "affinity": 0.992,
+   "popularity": 0.803
+  },
+  {
+   "lat": 35.4199,
+   "lng": -83.1445,
+   "affinity": 0.9919,
+   "popularity": 0.914
+  },
+  {
+   "lat": 35.2441,
+   "lng": -84.9023,
+   "affinity": 0.9918,
+   "popularity": 0.879
+  },
+  {
+   "lat": 40.166,
+   "lng": -111.6211,
+   "affinity": 0.9916,
+   "popularity": 0.959
+  },
+  {
+   "lat": 35.2441,
+   "lng": -82.793,
+   "affinity": 0.9915,
+   "popularity": 0.951
+  },
+  {
+   "lat": 34.8926,
+   "lng": -85.2539,
+   "affinity": 0.9914,
+   "popularity": 0.938
+  },
+  {
+   "lat": 38.7598,
+   "lng": -104.9414,
+   "affinity": 0.9913,
+   "popularity": 0.987
+  },
+  {
+   "lat": 48.4277,
+   "lng": -114.082,
+   "affinity": 0.9911,
+   "popularity": 0.962
+  },
+  {
+   "lat": 35.4199,
+   "lng": -86.6602,
+   "affinity": 0.991,
+   "popularity": 0.69
+  },
+  {
+   "lat": 36.2988,
+   "lng": -85.6055,
+   "affinity": 0.9909,
+   "popularity": 0.859
+  },
+  {
+   "lat": 40.5176,
+   "lng": -111.6211,
+   "affinity": 0.9907,
+   "popularity": 0.971
+  },
+  {
+   "lat": 35.0684,
+   "lng": -83.1445,
+   "affinity": 0.9906,
+   "popularity": 0.94
+  },
+  {
+   "lat": 40.3418,
+   "lng": -105.6445,
+   "affinity": 0.9905,
+   "popularity": 0.987
+  },
+  {
+   "lat": 45.2637,
+   "lng": -107.7539,
+   "affinity": 0.9904,
+   "popularity": 0.526
+  },
+  {
+   "lat": 44.0332,
+   "lng": -121.4648,
+   "affinity": 0.9902,
+   "popularity": 0.973
+  },
+  {
+   "lat": 35.9473,
+   "lng": -85.6055,
+   "affinity": 0.9901,
+   "popularity": 0.794
+  },
+  {
+   "lat": 40.5176,
+   "lng": -111.9727,
+   "affinity": 0.99,
+   "popularity": 0.969
+  },
+  {
+   "lat": 39.1113,
+   "lng": -84.5508,
+   "affinity": 0.9898,
+   "popularity": 0.994
+  },
+  {
+   "lat": 35.7715,
+   "lng": -84.1992,
+   "affinity": 0.9897,
+   "popularity": 0.875
+  },
+  {
+   "lat": 35.2441,
+   "lng": -82.4414,
+   "affinity": 0.9896,
+   "popularity": 0.944
+  },
+  {
+   "lat": 42.9785,
+   "lng": -107.4023,
+   "affinity": 0.9895,
+   "popularity": 0.906
+  },
+  {
+   "lat": 30.3223,
+   "lng": -85.957,
+   "affinity": 0.9893,
+   "popularity": 0.986
+  },
+  {
+   "lat": 36.123,
+   "lng": -95.8008,
+   "affinity": 0.9892,
+   "popularity": 0.967
+  },
+  {
+   "lat": 35.4199,
+   "lng": -82.4414,
+   "affinity": 0.9891,
+   "popularity": 0.951
+  },
+  {
+   "lat": 38.2324,
+   "lng": -85.6055,
+   "affinity": 0.9889,
+   "popularity": 0.995
+  },
+  {
+   "lat": 37.1777,
+   "lng": -85.957,
+   "affinity": 0.9888,
+   "popularity": 0.876
+  },
+  {
+   "lat": 37.7051,
+   "lng": -112.3242,
+   "affinity": 0.9887,
+   "popularity": 0.957
+  },
+  {
+   "lat": 38.584,
+   "lng": -109.5117,
+   "affinity": 0.9886,
+   "popularity": 0.979
+  },
+  {
+   "lat": 41.2207,
+   "lng": -111.9727,
+   "affinity": 0.9884,
+   "popularity": 0.945
+  },
+  {
+   "lat": 36.123,
+   "lng": -96.1523,
+   "affinity": 0.9883,
+   "popularity": 0.979
+  },
+  {
+   "lat": 32.7832,
+   "lng": -79.9805,
+   "affinity": 0.9882,
+   "popularity": 0.997
+  },
+  {
+   "lat": 37.002,
+   "lng": -86.3086,
+   "affinity": 0.988,
+   "popularity": 0.937
+  },
+  {
+   "lat": 43.6816,
+   "lng": -101.7773,
+   "affinity": 0.9879,
+   "popularity": 0.912
+  },
+  {
+   "lat": 35.9473,
+   "lng": -83.4961,
+   "affinity": 0.9878,
+   "popularity": 0.937
+  },
+  {
+   "lat": 43.6816,
+   "lng": -116.1914,
+   "affinity": 0.9877,
+   "popularity": 0.97
+  },
+  {
+   "lat": 35.7715,
+   "lng": -85.957,
+   "affinity": 0.9875,
+   "popularity": 0.62
+  },
+  {
+   "lat": 35.2441,
+   "lng": -101.7773,
+   "affinity": 0.9874,
+   "popularity": 0.926
+  },
+  {
+   "lat": 36.2988,
+   "lng": -84.1992,
+   "affinity": 0.9873,
+   "popularity": 0.882
+  },
+  {
+   "lat": 35.7715,
+   "lng": -82.0898,
+   "affinity": 0.9871,
+   "popularity": 0.888
+  },
+  {
+   "lat": 35.5957,
+   "lng": -85.957,
+   "affinity": 0.987,
+   "popularity": 0.443
+  },
+  {
+   "lat": 39.6387,
+   "lng": -104.9414,
+   "affinity": 0.9869,
+   "popularity": 0.991
+  },
+  {
+   "lat": 41.0449,
+   "lng": -111.9727,
+   "affinity": 0.9868,
+   "popularity": 0.934
+  },
+  {
+   "lat": 43.5059,
+   "lng": -111.9727,
+   "affinity": 0.9866,
+   "popularity": 0.841
+  },
+  {
+   "lat": 36.2988,
+   "lng": -82.4414,
+   "affinity": 0.9865,
+   "popularity": 0.911
+  },
+  {
+   "lat": 36.123,
+   "lng": -81.7383,
+   "affinity": 0.9864,
+   "popularity": 0.976
+  },
+  {
+   "lat": 39.1113,
+   "lng": -86.6602,
+   "affinity": 0.9863,
+   "popularity": 0.951
+  },
+  {
+   "lat": 37.002,
+   "lng": -112.6758,
+   "affinity": 0.9861,
+   "popularity": 0.832
+  },
+  {
+   "lat": 35.7715,
+   "lng": -82.4414,
+   "affinity": 0.986,
+   "popularity": 0.93
+  },
+  {
+   "lat": 36.123,
+   "lng": -84.5508,
+   "affinity": 0.9859,
+   "popularity": 0.723
+  },
+  {
+   "lat": 40.3418,
+   "lng": -111.9727,
+   "affinity": 0.9857,
+   "popularity": 0.93
+  },
+  {
+   "lat": 34.8926,
+   "lng": -85.6055,
+   "affinity": 0.9856,
+   "popularity": 0.855
+  },
+  {
+   "lat": 42.8027,
+   "lng": -106.3477,
+   "affinity": 0.9855,
+   "popularity": 0.785
+  },
+  {
+   "lat": 40.5176,
+   "lng": -104.9414,
+   "affinity": 0.9854,
+   "popularity": 0.969
+  },
+  {
+   "lat": 35.4199,
+   "lng": -82.0898,
+   "affinity": 0.9852,
+   "popularity": 0.921
+  },
+  {
+   "lat": 34.8926,
+   "lng": -82.4414,
+   "affinity": 0.9851,
+   "popularity": 0.982
+  },
+  {
+   "lat": 30.3223,
+   "lng": -97.5586,
+   "affinity": 0.985,
+   "popularity": 0.992
+  },
+  {
+   "lat": 37.1777,
+   "lng": -113.3789,
+   "affinity": 0.9848,
+   "popularity": 0.917
+  },
+  {
+   "lat": 35.4199,
+   "lng": -97.5586,
+   "affinity": 0.9847,
+   "popularity": 0.985
+  },
+  {
+   "lat": 44.5605,
+   "lng": -104.5898,
+   "affinity": 0.9846,
+   "popularity": 0.786
+  },
+  {
+   "lat": 39.4629,
+   "lng": -104.9414,
+   "affinity": 0.9845,
+   "popularity": 0.959
+  },
+  {
+   "lat": 39.4629,
+   "lng": -105.9961,
+   "affinity": 0.9843,
+   "popularity": 0.992
+  },
+  {
+   "lat": 39.9902,
+   "lng": -105.293,
+   "affinity": 0.9842,
+   "popularity": 0.992
+  },
+  {
+   "lat": 39.1113,
+   "lng": -94.7461,
+   "affinity": 0.9841,
+   "popularity": 0.993
+  },
+  {
+   "lat": 35.4199,
+   "lng": -82.793,
+   "affinity": 0.9839,
+   "popularity": 0.897
+  },
+  {
+   "lat": 47.7246,
+   "lng": -116.8945,
+   "affinity": 0.9838,
+   "popularity": 0.948
+  },
+  {
+   "lat": 37.3535,
+   "lng": -113.0273,
+   "affinity": 0.9837,
+   "popularity": 0.91
+  },
+  {
+   "lat": 37.8809,
+   "lng": -107.7539,
+   "affinity": 0.9836,
+   "popularity": 0.956
+  },
+  {
+   "lat": 35.5957,
+   "lng": -82.793,
+   "affinity": 0.9834,
+   "popularity": 0.867
+  },
+  {
+   "lat": 39.2871,
+   "lng": -84.1992,
+   "affinity": 0.9833,
+   "popularity": 0.96
+  },
+  {
+   "lat": 32.6074,
+   "lng": -79.9805,
+   "affinity": 0.9832,
+   "popularity": 0.98
+  },
+  {
+   "lat": 39.8145,
+   "lng": -105.293,
+   "affinity": 0.983,
+   "popularity": 0.973
+  },
+  {
+   "lat": 38.584,
+   "lng": -90.1758,
+   "affinity": 0.9829,
+   "popularity": 0.995
+  },
+  {
+   "lat": 35.2441,
+   "lng": -83.8477,
+   "affinity": 0.9828,
+   "popularity": 0.703
+  },
+  {
+   "lat": 41.3965,
+   "lng": -105.6445,
+   "affinity": 0.9827,
+   "popularity": 0.826
+  },
+  {
+   "lat": 36.2988,
+   "lng": -82.0898,
+   "affinity": 0.9825,
+   "popularity": 0.834
+  },
+  {
+   "lat": 39.6387,
+   "lng": -105.293,
+   "affinity": 0.9824,
+   "popularity": 0.99
+  },
+  {
+   "lat": 35.7715,
+   "lng": -83.4961,
+   "affinity": 0.9823,
+   "popularity": 0.995
+  },
+  {
+   "lat": 37.002,
+   "lng": -111.6211,
+   "affinity": 0.9821,
+   "popularity": 0.948
+  },
+  {
+   "lat": 39.4629,
+   "lng": -107.4023,
+   "affinity": 0.982,
+   "popularity": 0.904
+  },
+  {
+   "lat": 38.9355,
+   "lng": -105.6445,
+   "affinity": 0.9819,
+   "popularity": 0.982
+  },
+  {
+   "lat": 37.3535,
+   "lng": -79.9805,
+   "affinity": 0.9818,
+   "popularity": 0.938
+  },
+  {
+   "lat": 35.2441,
+   "lng": -84.5508,
+   "affinity": 0.9816,
+   "popularity": 0.704
+  },
+  {
+   "lat": 35.4199,
+   "lng": -85.2539,
+   "affinity": 0.9815,
+   "popularity": 0.658
+  },
+  {
+   "lat": 30.1465,
+   "lng": -97.5586,
+   "affinity": 0.9814,
+   "popularity": 0.975
+  },
+  {
+   "lat": 37.7051,
+   "lng": -105.6445,
+   "affinity": 0.9812,
+   "popularity": 0.924
+  },
+  {
+   "lat": 37.1777,
+   "lng": -112.6758,
+   "affinity": 0.9811,
+   "popularity": 0.708
+  },
+  {
+   "lat": 38.0566,
+   "lng": -84.5508,
+   "affinity": 0.981,
+   "popularity": 0.984
+  },
+  {
+   "lat": 39.1113,
+   "lng": -104.9414,
+   "affinity": 0.9809,
+   "popularity": 0.86
+  },
+  {
+   "lat": 35.9473,
+   "lng": -82.793,
+   "affinity": 0.9807,
+   "popularity": 0.815
+  },
+  {
+   "lat": 41.748,
+   "lng": -111.9727,
+   "affinity": 0.9806,
+   "popularity": 0.877
+  },
+  {
+   "lat": 35.5957,
+   "lng": -85.6055,
+   "affinity": 0.9805,
+   "popularity": 0.687
+  },
+  {
+   "lat": 38.0566,
+   "lng": -84.9023,
+   "affinity": 0.9803,
+   "popularity": 0.884
+  },
+  {
+   "lat": 37.1777,
+   "lng": -93.3398,
+   "affinity": 0.9802,
+   "popularity": 0.957
+  },
+  {
+   "lat": 39.6387,
+   "lng": -105.9961,
+   "affinity": 0.9801,
+   "popularity": 0.985
+  },
+  {
+   "lat": 43.6816,
+   "lng": -116.543,
+   "affinity": 0.98,
+   "popularity": 0.89
+  },
+  {
+   "lat": 47.7246,
+   "lng": -117.5977,
+   "affinity": 0.9798,
+   "popularity": 0.939
+  },
+  {
+   "lat": 47.7246,
+   "lng": -117.2461,
+   "affinity": 0.9797,
+   "popularity": 0.936
+  },
+  {
+   "lat": 35.0684,
+   "lng": -106.6992,
+   "affinity": 0.9796,
+   "popularity": 0.977
+  },
+  {
+   "lat": 30.1465,
+   "lng": -97.9102,
+   "affinity": 0.9794,
+   "popularity": 0.983
+  },
+  {
+   "lat": 36.123,
+   "lng": -82.0898,
+   "affinity": 0.9793,
+   "popularity": 0.849
+  },
+  {
+   "lat": 35.9473,
+   "lng": -84.5508,
+   "affinity": 0.9792,
+   "popularity": 0.723
+  },
+  {
+   "lat": 36.123,
+   "lng": -83.8477,
+   "affinity": 0.9791,
+   "popularity": 0.841
+  },
+  {
+   "lat": 41.2207,
+   "lng": -96.1523,
+   "affinity": 0.9789,
+   "popularity": 0.946
+  },
+  {
+   "lat": 38.7598,
+   "lng": -109.5117,
+   "affinity": 0.9788,
+   "popularity": 0.923
+  },
+  {
+   "lat": 36.123,
+   "lng": -83.4961,
+   "affinity": 0.9787,
+   "popularity": 0.77
+  },
+  {
+   "lat": 36.123,
+   "lng": -94.043,
+   "affinity": 0.9785,
+   "popularity": 0.965
+  },
+  {
+   "lat": 45.6152,
+   "lng": -110.918,
+   "affinity": 0.9784,
+   "popularity": 0.93
+  },
+  {
+   "lat": 36.4746,
+   "lng": -82.4414,
+   "affinity": 0.9783,
+   "popularity": 0.876
+  },
+  {
+   "lat": 36.4746,
+   "lng": -93.3398,
+   "affinity": 0.9782,
+   "popularity": 0.903
+  },
+  {
+   "lat": 39.2871,
+   "lng": -104.9414,
+   "affinity": 0.978,
+   "popularity": 0.911
+  },
+  {
+   "lat": 34.7168,
+   "lng": -86.6602,
+   "affinity": 0.9779,
+   "popularity": 0.972
+  },
+  {
+   "lat": 44.5605,
+   "lng": -111.2695,
+   "affinity": 0.9778,
+   "popularity": 0.782
+  },
+  {
+   "lat": 38.4082,
+   "lng": -105.293,
+   "affinity": 0.9776,
+   "popularity": 0.876
+  },
+  {
+   "lat": 39.9902,
+   "lng": -85.957,
+   "affinity": 0.9775,
+   "popularity": 0.974
+  },
+  {
+   "lat": 32.2559,
+   "lng": -80.6836,
+   "affinity": 0.9774,
+   "popularity": 0.984
+  },
+  {
+   "lat": 42.627,
+   "lng": -114.4336,
+   "affinity": 0.9773,
+   "popularity": 0.869
+  },
+  {
+   "lat": 39.6387,
+   "lng": -106.3477,
+   "affinity": 0.9771,
+   "popularity": 0.984
+  },
+  {
+   "lat": 41.5723,
+   "lng": -109.5117,
+   "affinity": 0.977,
+   "popularity": 0.521
+  },
+  {
+   "lat": 39.2871,
+   "lng": -94.7461,
+   "affinity": 0.9769,
+   "popularity": 0.933
+  },
+  {
+   "lat": 37.7051,
+   "lng": -113.0273,
+   "affinity": 0.9767,
+   "popularity": 0.834
+  },
+  {
+   "lat": 44.5605,
+   "lng": -109.1602,
+   "affinity": 0.9766,
+   "popularity": 0.776
+  },
+  {
+   "lat": 43.5059,
+   "lng": -116.1914,
+   "affinity": 0.9765,
+   "popularity": 0.875
+  },
+  {
+   "lat": 35.5957,
+   "lng": -82.0898,
+   "affinity": 0.9764,
+   "popularity": 0.828
+  },
+  {
+   "lat": 35.5957,
+   "lng": -84.1992,
+   "affinity": 0.9762,
+   "popularity": 0.742
+  },
+  {
+   "lat": 34.7168,
+   "lng": -83.8477,
+   "affinity": 0.9761,
+   "popularity": 0.955
+  },
+  {
+   "lat": 31.9043,
+   "lng": -104.9414,
+   "affinity": 0.976,
+   "popularity": 0.743
+  },
+  {
+   "lat": 41.2207,
+   "lng": -110.918,
+   "affinity": 0.9758,
+   "popularity": 0.614
+  },
+  {
+   "lat": 32.7832,
+   "lng": -79.6289,
+   "affinity": 0.9757,
+   "popularity": 0.959
+  },
+  {
+   "lat": 46.8457,
+   "lng": -114.082,
+   "affinity": 0.9756,
+   "popularity": 0.925
+  },
+  {
+   "lat": 37.5293,
+   "lng": -112.3242,
+   "affinity": 0.9755,
+   "popularity": 0.713
+  },
+  {
+   "lat": 34.8926,
+   "lng": -111.6211,
+   "affinity": 0.9753,
+   "popularity": 0.985
+  },
+  {
+   "lat": 38.2324,
+   "lng": -111.2695,
+   "affinity": 0.9752,
+   "popularity": 0.84
+  },
+  {
+   "lat": 36.4746,
+   "lng": -84.5508,
+   "affinity": 0.9751,
+   "popularity": 0.666
+  },
+  {
+   "lat": 35.5957,
+   "lng": -97.5586,
+   "affinity": 0.9749,
+   "popularity": 0.968
+  },
+  {
+   "lat": 38.9355,
+   "lng": -94.7461,
+   "affinity": 0.9748,
+   "popularity": 0.976
+  },
+  {
+   "lat": 39.9902,
+   "lng": -111.6211,
+   "affinity": 0.9747,
+   "popularity": 0.838
+  },
+  {
+   "lat": 40.8691,
+   "lng": -113.7305,
+   "affinity": 0.9746,
+   "popularity": 0.855
+  },
+  {
+   "lat": 43.6816,
+   "lng": -111.2695,
+   "affinity": 0.9744,
+   "popularity": 0.777
+  },
+  {
+   "lat": 35.5957,
+   "lng": -84.5508,
+   "affinity": 0.9743,
+   "popularity": 0.672
+  },
+  {
+   "lat": 44.7363,
+   "lng": -110.5664,
+   "affinity": 0.9742,
+   "popularity": 0.883
+  },
+  {
+   "lat": 39.9902,
+   "lng": -86.3086,
+   "affinity": 0.974,
+   "popularity": 0.954
+  },
+  {
+   "lat": 44.3848,
+   "lng": -110.5664,
+   "affinity": 0.9739,
+   "popularity": 0.947
+  },
+  {
+   "lat": 36.8262,
+   "lng": -111.6211,
+   "affinity": 0.9738,
+   "popularity": 0.954
+  },
+  {
+   "lat": 44.9121,
+   "lng": -93.3398,
+   "affinity": 0.9737,
+   "popularity": 0.996
+  },
+  {
+   "lat": 44.9121,
+   "lng": -116.1914,
+   "affinity": 0.9735,
+   "popularity": 0.865
+  },
+  {
+   "lat": 47.5488,
+   "lng": -115.8398,
+   "affinity": 0.9734,
+   "popularity": 0.662
+  },
+  {
+   "lat": 37.7051,
+   "lng": -97.207,
+   "affinity": 0.9733,
+   "popularity": 0.942
+  },
+  {
+   "lat": 40.5176,
+   "lng": -111.2695,
+   "affinity": 0.9731,
+   "popularity": 0.855
+  },
+  {
+   "lat": 35.9473,
+   "lng": -93.3398,
+   "affinity": 0.973,
+   "popularity": 0.842
+  },
+  {
+   "lat": 35.0684,
+   "lng": -84.9023,
+   "affinity": 0.9729,
+   "popularity": 0.804
+  },
+  {
+   "lat": 35.4199,
+   "lng": -87.0117,
+   "affinity": 0.9728,
+   "popularity": 0.62
+  },
+  {
+   "lat": 30.3223,
+   "lng": -97.9102,
+   "affinity": 0.9726,
+   "popularity": 0.999
+  },
+  {
+   "lat": 34.8926,
+   "lng": -84.1992,
+   "affinity": 0.9725,
+   "popularity": 0.942
+  },
+  {
+   "lat": 45.2637,
+   "lng": -111.2695,
+   "affinity": 0.9724,
+   "popularity": 0.925
+  },
+  {
+   "lat": 45.791,
+   "lng": -108.457,
+   "affinity": 0.9722,
+   "popularity": 0.873
+  },
+  {
+   "lat": 36.4746,
+   "lng": -93.6914,
+   "affinity": 0.9721,
+   "popularity": 0.906
+  },
+  {
+   "lat": 41.2207,
+   "lng": -95.8008,
+   "affinity": 0.972,
+   "popularity": 0.975
+  },
+  {
+   "lat": 35.4199,
+   "lng": -84.1992,
+   "affinity": 0.9719,
+   "popularity": 0.701
+  },
+  {
+   "lat": 34.7168,
+   "lng": -85.6055,
+   "affinity": 0.9717,
+   "popularity": 0.742
+  },
+  {
+   "lat": 47.0215,
+   "lng": -109.8633,
+   "affinity": 0.9716,
+   "popularity": 0.936
+  },
+  {
+   "lat": 31.5527,
+   "lng": -97.207,
+   "affinity": 0.9715,
+   "popularity": 0.98
+  },
+  {
+   "lat": 34.541,
+   "lng": -92.9883,
+   "affinity": 0.9713,
+   "popularity": 0.926
+  },
+  {
+   "lat": 35.7715,
+   "lng": -87.3633,
+   "affinity": 0.9712,
+   "popularity": 0.729
+  },
+  {
+   "lat": 30.498,
+   "lng": -97.9102,
+   "affinity": 0.9711,
+   "popularity": 0.964
+  },
+  {
+   "lat": 35.7715,
+   "lng": -82.793,
+   "affinity": 0.971,
+   "popularity": 0.863
+  },
+  {
+   "lat": 34.7168,
+   "lng": -84.5508,
+   "affinity": 0.9708,
+   "popularity": 0.887
+  },
+  {
+   "lat": 39.8145,
+   "lng": -105.6445,
+   "affinity": 0.9707,
+   "popularity": 0.959
+  },
+  {
+   "lat": 39.8145,
+   "lng": -86.3086,
+   "affinity": 0.9706,
+   "popularity": 0.995
+  },
+  {
+   "lat": 41.2207,
+   "lng": -104.9414,
+   "affinity": 0.9704,
+   "popularity": 0.824
+  },
+  {
+   "lat": 34.541,
+   "lng": -85.6055,
+   "affinity": 0.9703,
+   "popularity": 0.815
+  },
+  {
+   "lat": 45.4395,
+   "lng": -122.5195,
+   "affinity": 0.9702,
+   "popularity": 0.997
+  },
+  {
+   "lat": 35.2441,
+   "lng": -102.1289,
+   "affinity": 0.9701,
+   "popularity": 0.829
+  },
+  {
+   "lat": 38.2324,
+   "lng": -84.9023,
+   "affinity": 0.9699,
+   "popularity": 0.899
+  },
+  {
+   "lat": 37.7051,
+   "lng": -79.6289,
+   "affinity": 0.9698,
+   "popularity": 0.804
+  },
+  {
+   "lat": 39.1113,
+   "lng": -94.3945,
+   "affinity": 0.9697,
+   "popularity": 0.98
+  },
+  {
+   "lat": 34.8926,
+   "lng": -109.8633,
+   "affinity": 0.9695,
+   "popularity": 0.729
+  },
+  {
+   "lat": 37.002,
+   "lng": -113.7305,
+   "affinity": 0.9694,
+   "popularity": 0.782
+  },
+  {
+   "lat": 36.123,
+   "lng": -84.1992,
+   "affinity": 0.9693,
+   "popularity": 0.78
+  },
+  {
+   "lat": 41.748,
+   "lng": -86.3086,
+   "affinity": 0.9692,
+   "popularity": 0.954
+  },
+  {
+   "lat": 45.6152,
+   "lng": -122.168,
+   "affinity": 0.969,
+   "popularity": 0.976
+  },
+  {
+   "lat": 48.4277,
+   "lng": -114.4336,
+   "affinity": 0.9689,
+   "popularity": 0.911
+  },
+  {
+   "lat": 35.2441,
+   "lng": -83.1445,
+   "affinity": 0.9688,
+   "popularity": 0.791
+  },
+  {
+   "lat": 45.791,
+   "lng": -111.2695,
+   "affinity": 0.9686,
+   "popularity": 0.734
+  },
+  {
+   "lat": 39.9902,
+   "lng": -105.6445,
+   "affinity": 0.9685,
+   "popularity": 0.967
+  },
+  {
+   "lat": 43.8574,
+   "lng": -110.5664,
+   "affinity": 0.9684,
+   "popularity": 0.889
+  },
+  {
+   "lat": 41.3965,
+   "lng": -111.9727,
+   "affinity": 0.9683,
+   "popularity": 0.766
+  },
+  {
+   "lat": 38.7598,
+   "lng": -105.9961,
+   "affinity": 0.9681,
+   "popularity": 0.922
+  },
+  {
+   "lat": 34.0137,
+   "lng": -83.4961,
+   "affinity": 0.968,
+   "popularity": 0.976
+  },
+  {
+   "lat": 41.748,
+   "lng": -107.4023,
+   "affinity": 0.9679,
+   "popularity": 0.552
+  },
+  {
+   "lat": 41.5723,
+   "lng": -93.6914,
+   "affinity": 0.9677,
+   "popularity": 0.972
+  },
+  {
+   "lat": 43.5059,
+   "lng": -116.543,
+   "affinity": 0.9676,
+   "popularity": 0.835
+  },
+  {
+   "lat": 35.7715,
+   "lng": -84.5508,
+   "affinity": 0.9675,
+   "popularity": 0.719
+  },
+  {
+   "lat": 34.7168,
+   "lng": -84.1992,
+   "affinity": 0.9674,
+   "popularity": 0.833
+  },
+  {
+   "lat": 40.5176,
+   "lng": -122.5195,
+   "affinity": 0.9672,
+   "popularity": 0.896
+  },
+  {
+   "lat": 34.8926,
+   "lng": -84.5508,
+   "affinity": 0.9671,
+   "popularity": 0.763
+  },
+  {
+   "lat": 32.0801,
+   "lng": -80.6836,
+   "affinity": 0.967,
+   "popularity": 0.981
+  },
+  {
+   "lat": 44.209,
+   "lng": -105.6445,
+   "affinity": 0.9668,
+   "popularity": 0.572
+  },
+  {
+   "lat": 38.584,
+   "lng": -84.5508,
+   "affinity": 0.9667,
+   "popularity": 0.791
+  },
+  {
+   "lat": 40.3418,
+   "lng": -104.9414,
+   "affinity": 0.9666,
+   "popularity": 0.894
+  },
+  {
+   "lat": 34.541,
+   "lng": -84.1992,
+   "affinity": 0.9665,
+   "popularity": 0.936
+  },
+  {
+   "lat": 44.3848,
+   "lng": -106.6992,
+   "affinity": 0.9663,
+   "popularity": 0.627
+  },
+  {
+   "lat": 36.2988,
+   "lng": -81.7383,
+   "affinity": 0.9662,
+   "popularity": 0.937
+  },
+  {
+   "lat": 35.9473,
+   "lng": -95.8008,
+   "affinity": 0.9661,
+   "popularity": 0.9
+  },
+  {
+   "lat": 38.9355,
+   "lng": -105.293,
+   "affinity": 0.9659,
+   "popularity": 0.803
+  },
+  {
+   "lat": 38.9355,
+   "lng": -104.5898,
+   "affinity": 0.9658,
+   "popularity": 0.864
+  },
+  {
+   "lat": 45.6152,
+   "lng": -122.5195,
+   "affinity": 0.9657,
+   "popularity": 0.991
+  },
+  {
+   "lat": 35.9473,
+   "lng": -82.0898,
+   "affinity": 0.9656,
+   "popularity": 0.856
+  },
+  {
+   "lat": 37.1777,
+   "lng": -113.0273,
+   "affinity": 0.9654,
+   "popularity": 0.983
+  },
+  {
+   "lat": 40.166,
+   "lng": -104.9414,
+   "affinity": 0.9653,
+   "popularity": 0.907
+  },
+  {
+   "lat": 39.6387,
+   "lng": -105.6445,
+   "affinity": 0.9652,
+   "popularity": 0.948
+  },
+  {
+   "lat": 33.6621,
+   "lng": -111.9727,
+   "affinity": 0.965,
+   "popularity": 0.987
+  },
+  {
+   "lat": 32.959,
+   "lng": -97.207,
+   "affinity": 0.9649,
+   "popularity": 0.991
+  },
+  {
+   "lat": 29.9707,
+   "lng": -81.3867,
+   "affinity": 0.9648,
+   "popularity": 0.983
+  },
+  {
+   "lat": 40.166,
+   "lng": -105.9961,
+   "affinity": 0.9647,
+   "popularity": 0.913
+  },
+  {
+   "lat": 30.498,
+   "lng": -87.0117,
+   "affinity": 0.9645,
+   "popularity": 0.689
+  },
+  {
+   "lat": 38.0566,
+   "lng": -87.7148,
+   "affinity": 0.9644,
+   "popularity": 0.873
+  },
+  {
+   "lat": 39.8145,
+   "lng": -83.8477,
+   "affinity": 0.9643,
+   "popularity": 0.908
+  },
+  {
+   "lat": 36.2988,
+   "lng": -94.3945,
+   "affinity": 0.9641,
+   "popularity": 0.827
+  },
+  {
+   "lat": 30.3223,
+   "lng": -86.3086,
+   "affinity": 0.964,
+   "popularity": 0.996
+  },
+  {
+   "lat": 47.5488,
+   "lng": -122.168,
+   "affinity": 0.9639,
+   "popularity": 0.998
+  },
+  {
+   "lat": 40.5176,
+   "lng": -106.6992,
+   "affinity": 0.9638,
+   "popularity": 0.963
+  },
+  {
+   "lat": 39.1113,
+   "lng": -106.3477,
+   "affinity": 0.9636,
+   "popularity": 0.918
+  },
+  {
+   "lat": 45.0879,
+   "lng": -110.5664,
+   "affinity": 0.9635,
+   "popularity": 0.815
+  },
+  {
+   "lat": 41.0449,
+   "lng": -112.3242,
+   "affinity": 0.9634,
+   "popularity": 0.789
+  },
+  {
+   "lat": 40.8691,
+   "lng": -96.5039,
+   "affinity": 0.9632,
+   "popularity": 0.91
+  },
+  {
+   "lat": 43.1543,
+   "lng": -124.2773,
+   "affinity": 0.9631,
+   "popularity": 0.88
+  },
+  {
+   "lat": 41.5723,
+   "lng": -111.9727,
+   "affinity": 0.963,
+   "popularity": 0.783
+  },
+  {
+   "lat": 38.9355,
+   "lng": -95.0977,
+   "affinity": 0.9629,
+   "popularity": 0.945
+  },
+  {
+   "lat": 34.8926,
+   "lng": -83.8477,
+   "affinity": 0.9627,
+   "popularity": 0.904
+  },
+  {
+   "lat": 42.9785,
+   "lng": -85.6055,
+   "affinity": 0.9626,
+   "popularity": 0.981
+  },
+  {
+   "lat": 47.5488,
+   "lng": -117.5977,
+   "affinity": 0.9625,
+   "popularity": 0.819
+  },
+  {
+   "lat": 39.1113,
+   "lng": -105.293,
+   "affinity": 0.9623,
+   "popularity": 0.664
+  },
+  {
+   "lat": 37.8809,
+   "lng": -85.6055,
+   "affinity": 0.9622,
+   "popularity": 0.861
+  },
+  {
+   "lat": 41.9238,
+   "lng": -111.2695,
+   "affinity": 0.9621,
+   "popularity": 0.844
+  },
+  {
+   "lat": 36.6504,
+   "lng": -93.3398,
+   "affinity": 0.962,
+   "popularity": 0.971
+  },
+  {
+   "lat": 30.3223,
+   "lng": -87.3633,
+   "affinity": 0.9618,
+   "popularity": 0.964
+  },
+  {
+   "lat": 38.9355,
+   "lng": -94.3945,
+   "affinity": 0.9617,
+   "popularity": 0.949
+  },
+  {
+   "lat": 45.9668,
+   "lng": -112.6758,
+   "affinity": 0.9616,
+   "popularity": 0.768
+  },
+  {
+   "lat": 36.2988,
+   "lng": -95.8008,
+   "affinity": 0.9614,
+   "popularity": 0.858
+  },
+  {
+   "lat": 40.6934,
+   "lng": -111.2695,
+   "affinity": 0.9613,
+   "popularity": 0.829
+  },
+  {
+   "lat": 34.3652,
+   "lng": -85.6055,
+   "affinity": 0.9612,
+   "popularity": 0.725
+  },
+  {
+   "lat": 44.0332,
+   "lng": -120.4102,
+   "affinity": 0.9611,
+   "popularity": 0.944
+  },
+  {
+   "lat": 36.6504,
+   "lng": -86.6602,
+   "affinity": 0.9609,
+   "popularity": 0.815
+  },
+  {
+   "lat": 37.7051,
+   "lng": -85.2539,
+   "affinity": 0.9608,
+   "popularity": 0.802
+  },
+  {
+   "lat": 35.9473,
+   "lng": -82.4414,
+   "affinity": 0.9607,
+   "popularity": 0.772
+  },
+  {
+   "lat": 39.1113,
+   "lng": -106.6992,
+   "affinity": 0.9605,
+   "popularity": 0.964
+  },
+  {
+   "lat": 41.5723,
+   "lng": -100.0195,
+   "affinity": 0.9604,
+   "popularity": 0.823
+  },
+  {
+   "lat": 36.2988,
+   "lng": -88.418,
+   "affinity": 0.9603,
+   "popularity": 0.638
+  },
+  {
+   "lat": 37.3535,
+   "lng": -79.2773,
+   "affinity": 0.9602,
+   "popularity": 0.929
+  },
+  {
+   "lat": 43.6816,
+   "lng": -110.5664,
+   "affinity": 0.96,
+   "popularity": 0.908
+  },
+  {
+   "lat": 35.0684,
+   "lng": -101.7773,
+   "affinity": 0.9599,
+   "popularity": 0.843
+  },
+  {
+   "lat": 35.0684,
+   "lng": -83.4961,
+   "affinity": 0.9598,
+   "popularity": 0.737
+  },
+  {
+   "lat": 34.7168,
+   "lng": -111.6211,
+   "affinity": 0.9597,
+   "popularity": 0.904
+  },
+  {
+   "lat": 35.4199,
+   "lng": -84.5508,
+   "affinity": 0.9595,
+   "popularity": 0.718
+  },
+  {
+   "lat": 39.6387,
+   "lng": -106.6992,
+   "affinity": 0.9594,
+   "popularity": 0.901
+  },
+  {
+   "lat": 30.498,
+   "lng": -97.5586,
+   "affinity": 0.9593,
+   "popularity": 0.961
+  },
+  {
+   "lat": 43.6816,
+   "lng": -114.4336,
+   "affinity": 0.9591,
+   "popularity": 0.881
+  },
+  {
+   "lat": 36.123,
+   "lng": -85.2539,
+   "affinity": 0.959,
+   "popularity": 0.561
+  },
+  {
+   "lat": 37.002,
+   "lng": -93.3398,
+   "affinity": 0.9589,
+   "popularity": 0.835
+  },
+  {
+   "lat": 37.7051,
+   "lng": -79.2773,
+   "affinity": 0.9588,
+   "popularity": 0.817
+  },
+  {
+   "lat": 41.9238,
+   "lng": -92.9883,
+   "affinity": 0.9586,
+   "popularity": 0.879
+  },
+  {
+   "lat": 44.9121,
+   "lng": -114.082,
+   "affinity": 0.9585,
+   "popularity": 0.879
+  },
+  {
+   "lat": 34.7168,
+   "lng": -83.4961,
+   "affinity": 0.9584,
+   "popularity": 0.879
+  },
+  {
+   "lat": 29.2676,
+   "lng": -103.1836,
+   "affinity": 0.9582,
+   "popularity": 0.882
+  },
+  {
+   "lat": 34.541,
+   "lng": -87.0117,
+   "affinity": 0.9581,
+   "popularity": 0.814
+  },
+  {
+   "lat": 39.1113,
+   "lng": -86.3086,
+   "affinity": 0.958,
+   "popularity": 0.864
+  },
+  {
+   "lat": 44.5605,
+   "lng": -110.918,
+   "affinity": 0.9579,
+   "popularity": 0.853
+  },
+  {
+   "lat": 34.8926,
+   "lng": -111.9727,
+   "affinity": 0.9577,
+   "popularity": 0.932
+  },
+  {
+   "lat": 43.6816,
+   "lng": -103.5352,
+   "affinity": 0.9576,
+   "popularity": 0.839
+  },
+  {
+   "lat": 34.8926,
+   "lng": -83.4961,
+   "affinity": 0.9575,
+   "popularity": 0.874
+  },
+  {
+   "lat": 41.5723,
+   "lng": -109.1602,
+   "affinity": 0.9573,
+   "popularity": 0.608
+  },
+  {
+   "lat": 39.2871,
+   "lng": -102.1289,
+   "affinity": 0.9572,
+   "popularity": 0.68
+  },
+  {
+   "lat": 30.6738,
+   "lng": -97.5586,
+   "affinity": 0.9571,
+   "popularity": 0.91
+  },
+  {
+   "lat": 30.3223,
+   "lng": -86.6602,
+   "affinity": 0.957,
+   "popularity": 0.968
+  },
+  {
+   "lat": 35.2441,
+   "lng": -112.3242,
+   "affinity": 0.9568,
+   "popularity": 0.911
+  },
+  {
+   "lat": 36.123,
+   "lng": -82.4414,
+   "affinity": 0.9567,
+   "popularity": 0.717
+  },
+  {
+   "lat": 33.8379,
+   "lng": -111.9727,
+   "affinity": 0.9566,
+   "popularity": 0.934
+  },
+  {
+   "lat": 41.0449,
+   "lng": -85.2539,
+   "affinity": 0.9564,
+   "popularity": 0.939
+  },
+  {
+   "lat": 35.9473,
+   "lng": -111.9727,
+   "affinity": 0.9563,
+   "popularity": 0.848
+  },
+  {
+   "lat": 39.4629,
+   "lng": -105.293,
+   "affinity": 0.9562,
+   "popularity": 0.876
+  },
+  {
+   "lat": 44.5605,
+   "lng": -110.5664,
+   "affinity": 0.9561,
+   "popularity": 0.778
+  },
+  {
+   "lat": 37.8809,
+   "lng": -78.9258,
+   "affinity": 0.9559,
+   "popularity": 0.892
+  },
+  {
+   "lat": 39.4629,
+   "lng": -84.1992,
+   "affinity": 0.9558,
+   "popularity": 0.895
+  },
+  {
+   "lat": 40.5176,
+   "lng": -87.0117,
+   "affinity": 0.9557,
+   "popularity": 0.846
+  },
+  {
+   "lat": 35.9473,
+   "lng": -78.9258,
+   "affinity": 0.9555,
+   "popularity": 0.985
+  },
+  {
+   "lat": 36.4746,
+   "lng": -85.957,
+   "affinity": 0.9554,
+   "popularity": 0.46
+  },
+  {
+   "lat": 30.3223,
+   "lng": -98.2617,
+   "affinity": 0.9553,
+   "popularity": 0.92
+  },
+  {
+   "lat": 33.4863,
+   "lng": -111.9727,
+   "affinity": 0.9552,
+   "popularity": 0.998
+  },
+  {
+   "lat": 29.7949,
+   "lng": -81.3867,
+   "affinity": 0.955,
+   "popularity": 0.953
+  },
+  {
+   "lat": 34.541,
+   "lng": -83.8477,
+   "affinity": 0.9549,
+   "popularity": 0.9
+  },
+  {
+   "lat": 43.8574,
+   "lng": -111.6211,
+   "affinity": 0.9548,
+   "popularity": 0.788
+  },
+  {
+   "lat": 33.4863,
+   "lng": -86.6602,
+   "affinity": 0.9546,
+   "popularity": 0.989
+  },
+  {
+   "lat": 37.3535,
+   "lng": -107.7539,
+   "affinity": 0.9545,
+   "popularity": 0.914
+  },
+  {
+   "lat": 40.8691,
+   "lng": -96.8555,
+   "affinity": 0.9544,
+   "popularity": 0.928
+  },
+  {
+   "lat": 35.5957,
+   "lng": -84.9023,
+   "affinity": 0.9543,
+   "popularity": 0.634
+  },
+  {
+   "lat": 39.1113,
+   "lng": -84.9023,
+   "affinity": 0.9541,
+   "popularity": 0.883
+  },
+  {
+   "lat": 31.2012,
+   "lng": -81.3867,
+   "affinity": 0.954,
+   "popularity": 0.956
+  },
+  {
+   "lat": 37.1777,
+   "lng": -88.7695,
+   "affinity": 0.9539,
+   "popularity": 0.772
+  },
+  {
+   "lat": 45.4395,
+   "lng": -122.8711,
+   "affinity": 0.9537,
+   "popularity": 0.983
+  },
+  {
+   "lat": 39.9902,
+   "lng": -104.9414,
+   "affinity": 0.9536,
+   "popularity": 0.949
+  },
+  {
+   "lat": 34.7168,
+   "lng": -87.7148,
+   "affinity": 0.9535,
+   "popularity": 0.896
+  },
+  {
+   "lat": 45.9668,
+   "lng": -123.9258,
+   "affinity": 0.9534,
+   "popularity": 0.983
+  },
+  {
+   "lat": 42.9785,
+   "lng": -122.168,
+   "affinity": 0.9532,
+   "popularity": 0.841
+  },
+  {
+   "lat": 37.002,
+   "lng": -110.2148,
+   "affinity": 0.9531,
+   "popularity": 0.877
+  },
+  {
+   "lat": 29.7949,
+   "lng": -98.2617,
+   "affinity": 0.953,
+   "popularity": 0.964
+  },
+  {
+   "lat": 39.2871,
+   "lng": -105.293,
+   "affinity": 0.9528,
+   "popularity": 0.698
+  },
+  {
+   "lat": 40.5176,
+   "lng": -105.293,
+   "affinity": 0.9527,
+   "popularity": 0.861
+  },
+  {
+   "lat": 36.4746,
+   "lng": -82.0898,
+   "affinity": 0.9526,
+   "popularity": 0.811
+  },
+  {
+   "lat": 35.0684,
+   "lng": -110.918,
+   "affinity": 0.9525,
+   "popularity": 0.729
+  },
+  {
+   "lat": 36.6504,
+   "lng": -105.293,
+   "affinity": 0.9523,
+   "popularity": 0.835
+  },
+  {
+   "lat": 30.3223,
+   "lng": -87.0117,
+   "affinity": 0.9522,
+   "popularity": 0.974
+  },
+  {
+   "lat": 44.7363,
+   "lng": -107.0508,
+   "affinity": 0.9521,
+   "popularity": 0.666
+  },
+  {
+   "lat": 42.4512,
+   "lng": -123.2227,
+   "affinity": 0.9519,
+   "popularity": 0.835
+  },
+  {
+   "lat": 35.2441,
+   "lng": -79.6289,
+   "affinity": 0.9518,
+   "popularity": 0.891
+  },
+  {
+   "lat": 38.4082,
+   "lng": -109.8633,
+   "affinity": 0.9517,
+   "popularity": 0.829
+  },
+  {
+   "lat": 43.8574,
+   "lng": -121.4648,
+   "affinity": 0.9516,
+   "popularity": 0.899
+  },
+  {
+   "lat": 39.1113,
+   "lng": -84.1992,
+   "affinity": 0.9514,
+   "popularity": 0.899
+  },
+  {
+   "lat": 38.9355,
+   "lng": -107.0508,
+   "affinity": 0.9513,
+   "popularity": 0.934
+  },
+  {
+   "lat": 39.6387,
+   "lng": -84.1992,
+   "affinity": 0.9512,
+   "popularity": 0.923
+  },
+  {
+   "lat": 37.5293,
+   "lng": -112.6758,
+   "affinity": 0.951,
+   "popularity": 0.738
+  },
+  {
+   "lat": 39.6387,
+   "lng": -86.3086,
+   "affinity": 0.9509,
+   "popularity": 0.897
+  },
+  {
+   "lat": 38.0566,
+   "lng": -78.5742,
+   "affinity": 0.9508,
+   "popularity": 0.967
+  },
+  {
+   "lat": 39.2871,
+   "lng": -104.5898,
+   "affinity": 0.9507,
+   "popularity": 0.758
+  },
+  {
+   "lat": 33.3105,
+   "lng": -86.6602,
+   "affinity": 0.9505,
+   "popularity": 0.95
+  },
+  {
+   "lat": 37.7051,
+   "lng": -112.6758,
+   "affinity": 0.9504,
+   "popularity": 0.796
+  },
+  {
+   "lat": 35.0684,
+   "lng": -90.1758,
+   "affinity": 0.9503,
+   "popularity": 0.992
+  },
+  {
+   "lat": 34.541,
+   "lng": -112.3242,
+   "affinity": 0.9501,
+   "popularity": 0.921
+  },
+  {
+   "lat": 35.2441,
+   "lng": -97.5586,
+   "affinity": 0.95,
+   "popularity": 0.941
+  },
+  {
+   "lat": 40.8691,
+   "lng": -109.5117,
+   "affinity": 0.9499,
+   "popularity": 0.687
+  },
+  {
+   "lat": 40.166,
+   "lng": -85.957,
+   "affinity": 0.9498,
+   "popularity": 0.806
+  },
+  {
+   "lat": 36.2988,
+   "lng": -83.8477,
+   "affinity": 0.9496,
+   "popularity": 0.78
+  },
+  {
+   "lat": 39.2871,
+   "lng": -86.3086,
+   "affinity": 0.9495,
+   "popularity": 0.846
+  },
+  {
+   "lat": 39.2871,
+   "lng": -85.957,
+   "affinity": 0.9494,
+   "popularity": 0.829
+  },
+  {
+   "lat": 33.4863,
+   "lng": -79.2773,
+   "affinity": 0.9492,
+   "popularity": 0.885
+  },
+  {
+   "lat": 30.6738,
+   "lng": -81.3867,
+   "affinity": 0.9491,
+   "popularity": 0.941
+  },
+  {
+   "lat": 34.1895,
+   "lng": -94.7461,
+   "affinity": 0.949,
+   "popularity": 0.86
+  },
+  {
+   "lat": 40.8691,
+   "lng": -111.2695,
+   "affinity": 0.9489,
+   "popularity": 0.674
+  },
+  {
+   "lat": 38.2324,
+   "lng": -85.957,
+   "affinity": 0.9487,
+   "popularity": 0.887
+  },
+  {
+   "lat": 45.2637,
+   "lng": -122.8711,
+   "affinity": 0.9486,
+   "popularity": 0.929
+  },
+  {
+   "lat": 43.1543,
+   "lng": -89.4727,
+   "affinity": 0.9485,
+   "popularity": 0.98
+  },
+  {
+   "lat": 39.1113,
+   "lng": -108.457,
+   "affinity": 0.9483,
+   "popularity": 0.891
+  },
+  {
+   "lat": 36.123,
+   "lng": -94.3945,
+   "affinity": 0.9482,
+   "popularity": 0.822
+  },
+  {
+   "lat": 30.3223,
+   "lng": -87.7148,
+   "affinity": 0.9481,
+   "popularity": 0.99
+  },
+  {
+   "lat": 33.1348,
+   "lng": -97.207,
+   "affinity": 0.948,
+   "popularity": 0.962
+  },
+  {
+   "lat": 38.4082,
+   "lng": -85.6055,
+   "affinity": 0.9478,
+   "popularity": 0.877
+  },
+  {
+   "lat": 44.5605,
+   "lng": -100.0195,
+   "affinity": 0.9477,
+   "popularity": 0.841
+  },
+  {
+   "lat": 40.166,
+   "lng": -83.1445,
+   "affinity": 0.9476,
+   "popularity": 0.966
+  },
+  {
+   "lat": 39.9902,
+   "lng": -100.0195,
+   "affinity": 0.9474,
+   "popularity": 0.979
+  },
+  {
+   "lat": 46.6699,
+   "lng": -111.9727,
+   "affinity": 0.9473,
+   "popularity": 0.789
+  },
+  {
+   "lat": 44.0332,
+   "lng": -103.1836,
+   "affinity": 0.9472,
+   "popularity": 0.891
+  },
+  {
+   "lat": 35.4199,
+   "lng": -84.9023,
+   "affinity": 0.9471,
+   "popularity": 0.659
+  },
+  {
+   "lat": 38.4082,
+   "lng": -79.9805,
+   "affinity": 0.9469,
+   "popularity": 0.868
+  },
+  {
+   "lat": 38.584,
+   "lng": -105.9961,
+   "affinity": 0.9468,
+   "popularity": 0.856
+  },
+  {
+   "lat": 34.541,
+   "lng": -86.6602,
+   "affinity": 0.9467,
+   "popularity": 0.605
+  },
+  {
+   "lat": 38.584,
+   "lng": -86.6602,
+   "affinity": 0.9465,
+   "popularity": 0.823
+  },
+  {
+   "lat": 48.6035,
+   "lng": -113.7305,
+   "affinity": 0.9464,
+   "popularity": 0.794
+  },
+  {
+   "lat": 45.2637,
+   "lng": -121.8164,
+   "affinity": 0.9463,
+   "popularity": 0.951
+  },
+  {
+   "lat": 38.0566,
+   "lng": -78.9258,
+   "affinity": 0.9462,
+   "popularity": 0.884
+  },
+  {
+   "lat": 35.9473,
+   "lng": -87.3633,
+   "affinity": 0.946,
+   "popularity": 0.74
+  },
+  {
+   "lat": 42.2754,
+   "lng": -85.6055,
+   "affinity": 0.9459,
+   "popularity": 0.937
+  },
+  {
+   "lat": 29.6191,
+   "lng": -98.2617,
+   "affinity": 0.9458,
+   "popularity": 0.968
+  },
+  {
+   "lat": 38.0566,
+   "lng": -81.0352,
+   "affinity": 0.9456,
+   "popularity": 0.88
+  },
+  {
+   "lat": 34.7168,
+   "lng": -92.2852,
+   "affinity": 0.9455,
+   "popularity": 0.975
+  },
+  {
+   "lat": 47.5488,
+   "lng": -122.5195,
+   "affinity": 0.9454,
+   "popularity": 0.993
+  },
+  {
+   "lat": 37.1777,
+   "lng": -79.9805,
+   "affinity": 0.9453,
+   "popularity": 0.818
+  },
+  {
+   "lat": 30.1465,
+   "lng": -81.3867,
+   "affinity": 0.9451,
+   "popularity": 0.942
+  },
+  {
+   "lat": 35.7715,
+   "lng": -97.5586,
+   "affinity": 0.945,
+   "popularity": 0.803
+  },
+  {
+   "lat": 40.3418,
+   "lng": -87.0117,
+   "affinity": 0.9449,
+   "popularity": 0.846
+  },
+  {
+   "lat": 38.584,
+   "lng": -110.5664,
+   "affinity": 0.9447,
+   "popularity": 0.597
+  },
+  {
+   "lat": 43.5059,
+   "lng": -96.8555,
+   "affinity": 0.9446,
+   "popularity": 0.903
+  },
+  {
+   "lat": 30.498,
+   "lng": -86.3086,
+   "affinity": 0.9445,
+   "popularity": 0.775
+  },
+  {
+   "lat": 35.2441,
+   "lng": -111.6211,
+   "affinity": 0.9444,
+   "popularity": 0.969
+  },
+  {
+   "lat": 38.0566,
+   "lng": -107.7539,
+   "affinity": 0.9442,
+   "popularity": 0.887
+  },
+  {
+   "lat": 30.498,
+   "lng": -88.0664,
+   "affinity": 0.9441,
+   "popularity": 0.903
+  },
+  {
+   "lat": 36.6504,
+   "lng": -81.3867,
+   "affinity": 0.944,
+   "popularity": 0.783
+  },
+  {
+   "lat": 45.791,
+   "lng": -121.4648,
+   "affinity": 0.9438,
+   "popularity": 0.925
+  },
+  {
+   "lat": 41.5723,
+   "lng": -90.5273,
+   "affinity": 0.9437,
+   "popularity": 0.919
+  },
+  {
+   "lat": 37.7051,
+   "lng": -97.5586,
+   "affinity": 0.9436,
+   "popularity": 0.838
+  },
+  {
+   "lat": 44.3848,
+   "lng": -110.918,
+   "affinity": 0.9435,
+   "popularity": 0.801
+  },
+  {
+   "lat": 40.166,
+   "lng": -105.293,
+   "affinity": 0.9433,
+   "popularity": 0.897
+  },
+  {
+   "lat": 37.8809,
+   "lng": -113.0273,
+   "affinity": 0.9432,
+   "popularity": 0.509
+  },
+  {
+   "lat": 48.252,
+   "lng": -114.4336,
+   "affinity": 0.9431,
+   "popularity": 0.832
+  },
+  {
+   "lat": 37.5293,
+   "lng": -79.6289,
+   "affinity": 0.9429,
+   "popularity": 0.765
+  },
+  {
+   "lat": 37.5293,
+   "lng": -106.6992,
+   "affinity": 0.9428,
+   "popularity": 0.748
+  },
+  {
+   "lat": 41.748,
+   "lng": -93.6914,
+   "affinity": 0.9427,
+   "popularity": 0.858
+  },
+  {
+   "lat": 30.498,
+   "lng": -81.3867,
+   "affinity": 0.9426,
+   "popularity": 0.893
+  },
+  {
+   "lat": 34.0137,
+   "lng": -85.957,
+   "affinity": 0.9424,
+   "popularity": 0.843
+  },
+  {
+   "lat": 32.6074,
+   "lng": -80.332,
+   "affinity": 0.9423,
+   "popularity": 0.885
+  },
+  {
+   "lat": 47.5488,
+   "lng": -117.2461,
+   "affinity": 0.9422,
+   "popularity": 0.794
+  },
+  {
+   "lat": 35.4199,
+   "lng": -87.3633,
+   "affinity": 0.942,
+   "popularity": 0.618
+  },
+  {
+   "lat": 42.9785,
+   "lng": -110.918,
+   "affinity": 0.9419,
+   "popularity": 0.465
+  },
+  {
+   "lat": 30.498,
+   "lng": -98.2617,
+   "affinity": 0.9418,
+   "popularity": 0.907
+  },
+  {
+   "lat": 36.4746,
+   "lng": -85.6055,
+   "affinity": 0.9417,
+   "popularity": 0.436
+  },
+  {
+   "lat": 35.4199,
+   "lng": -97.9102,
+   "affinity": 0.9415,
+   "popularity": 0.915
+  },
+  {
+   "lat": 45.2637,
+   "lng": -122.5195,
+   "affinity": 0.9414,
+   "popularity": 0.872
+  },
+  {
+   "lat": 38.9355,
+   "lng": -92.2852,
+   "affinity": 0.9413,
+   "popularity": 0.943
+  },
+  {
+   "lat": 42.2754,
+   "lng": -122.8711,
+   "affinity": 0.9411,
+   "popularity": 0.911
+  },
+  {
+   "lat": 35.9473,
+   "lng": -88.0664,
+   "affinity": 0.941,
+   "popularity": 0.548
+  },
+  {
+   "lat": 40.5176,
+   "lng": -79.9805,
+   "affinity": 0.9409,
+   "popularity": 0.994
+  },
+  {
+   "lat": 34.3652,
+   "lng": -84.1992,
+   "affinity": 0.9408,
+   "popularity": 0.863
+  },
+  {
+   "lat": 44.9121,
+   "lng": -110.5664,
+   "affinity": 0.9406,
+   "popularity": 0.845
+  },
+  {
+   "lat": 36.4746,
+   "lng": -87.3633,
+   "affinity": 0.9405,
+   "popularity": 0.904
+  },
+  {
+   "lat": 39.2871,
+   "lng": -105.9961,
+   "affinity": 0.9404,
+   "popularity": 0.868
+  },
+  {
+   "lat": 35.7715,
+   "lng": -81.7383,
+   "affinity": 0.9402,
+   "popularity": 0.796
+  },
+  {
+   "lat": 36.123,
+   "lng": -82.793,
+   "affinity": 0.9401,
+   "popularity": 0.711
+  },
+  {
+   "lat": 44.7363,
+   "lng": -123.9258,
+   "affinity": 0.94,
+   "popularity": 0.892
+  },
+  {
+   "lat": 41.748,
+   "lng": -85.957,
+   "affinity": 0.9399,
+   "popularity": 0.809
+  },
+  {
+   "lat": 42.0996,
+   "lng": -86.3086,
+   "affinity": 0.9397,
+   "popularity": 0.89
+  },
+  {
+   "lat": 35.0684,
+   "lng": -84.1992,
+   "affinity": 0.9396,
+   "popularity": 0.774
+  },
+  {
+   "lat": 45.6152,
+   "lng": -121.8164,
+   "affinity": 0.9395,
+   "popularity": 0.919
+  },
+  {
+   "lat": 32.0801,
+   "lng": -81.0352,
+   "affinity": 0.9393,
+   "popularity": 0.993
+  },
+  {
+   "lat": 36.4746,
+   "lng": -94.3945,
+   "affinity": 0.9392,
+   "popularity": 0.775
+  },
+  {
+   "lat": 47.5488,
+   "lng": -120.7617,
+   "affinity": 0.9391,
+   "popularity": 0.95
+  },
+  {
+   "lat": 39.9902,
+   "lng": -105.9961,
+   "affinity": 0.939,
+   "popularity": 0.807
+  },
+  {
+   "lat": 39.2871,
+   "lng": -106.3477,
+   "affinity": 0.9388,
+   "popularity": 0.894
+  },
+  {
+   "lat": 47.5488,
+   "lng": -116.543,
+   "affinity": 0.9387,
+   "popularity": 0.572
+  },
+  {
+   "lat": 44.209,
+   "lng": -121.4648,
+   "affinity": 0.9386,
+   "popularity": 0.857
+  },
+  {
+   "lat": 35.2441,
+   "lng": -84.1992,
+   "affinity": 0.9384,
+   "popularity": 0.555
+  },
+  {
+   "lat": 38.7598,
+   "lng": -111.2695,
+   "affinity": 0.9383,
+   "popularity": 0.38
+  },
+  {
+   "lat": 43.5059,
+   "lng": -103.5352,
+   "affinity": 0.9382,
+   "popularity": 0.575
+  },
+  {
+   "lat": 40.3418,
+   "lng": -104.5898,
+   "affinity": 0.9381,
+   "popularity": 0.845
+  },
+  {
+   "lat": 39.9902,
+   "lng": -83.1445,
+   "affinity": 0.9379,
+   "popularity": 0.994
+  },
+  {
+   "lat": 33.4863,
+   "lng": -111.6211,
+   "affinity": 0.9378,
+   "popularity": 0.948
+  },
+  {
+   "lat": 29.7949,
+   "lng": -84.9023,
+   "affinity": 0.9377,
+   "popularity": 0.791
+  },
+  {
+   "lat": 39.2871,
+   "lng": -86.6602,
+   "affinity": 0.9375,
+   "popularity": 0.797
+  },
+  {
+   "lat": 45.6152,
+   "lng": -122.8711,
+   "affinity": 0.9374,
+   "popularity": 0.972
+  },
+  {
+   "lat": 47.373,
+   "lng": -122.168,
+   "affinity": 0.9373,
+   "popularity": 0.983
+  },
+  {
+   "lat": 34.1895,
+   "lng": -77.8711,
+   "affinity": 0.9372,
+   "popularity": 0.981
+  },
+  {
+   "lat": 42.8027,
+   "lng": -85.957,
+   "affinity": 0.937,
+   "popularity": 0.925
+  },
+  {
+   "lat": 29.6191,
+   "lng": -81.0352,
+   "affinity": 0.9369,
+   "popularity": 0.83
+  },
+  {
+   "lat": 40.166,
+   "lng": -105.6445,
+   "affinity": 0.9368,
+   "popularity": 0.846
+  },
+  {
+   "lat": 35.9473,
+   "lng": -83.1445,
+   "affinity": 0.9366,
+   "popularity": 0.616
+  },
+  {
+   "lat": 36.4746,
+   "lng": -84.9023,
+   "affinity": 0.9365,
+   "popularity": 0.476
+  },
+  {
+   "lat": 36.123,
+   "lng": -97.207,
+   "affinity": 0.9364,
+   "popularity": 0.917
+  },
+  {
+   "lat": 35.9473,
+   "lng": -75.7617,
+   "affinity": 0.9363,
+   "popularity": 0.964
+  },
+  {
+   "lat": 35.0684,
+   "lng": -89.8242,
+   "affinity": 0.9361,
+   "popularity": 0.978
+  },
+  {
+   "lat": 38.9355,
+   "lng": -84.5508,
+   "affinity": 0.936,
+   "popularity": 0.884
+  },
+  {
+   "lat": 39.4629,
+   "lng": -119.707,
+   "affinity": 0.9359,
+   "popularity": 0.969
+  },
+  {
+   "lat": 44.7363,
+   "lng": -116.1914,
+   "affinity": 0.9357,
+   "popularity": 0.69
+  },
+  {
+   "lat": 32.2559,
+   "lng": -104.5898,
+   "affinity": 0.9356,
+   "popularity": 0.638
+  },
+  {
+   "lat": 32.7832,
+   "lng": -85.957,
+   "affinity": 0.9355,
+   "popularity": 0.875
+  },
+  {
+   "lat": 42.2754,
+   "lng": -121.8164,
+   "affinity": 0.9354,
+   "popularity": 0.726
+  },
+  {
+   "lat": 34.3652,
+   "lng": -111.6211,
+   "affinity": 0.9352,
+   "popularity": 0.969
+  },
+  {
+   "lat": 41.9238,
+   "lng": -87.7148,
+   "affinity": 0.9351,
+   "popularity": 1
+  },
+  {
+   "lat": 37.1777,
+   "lng": -80.332,
+   "affinity": 0.935,
+   "popularity": 0.9
+  },
+  {
+   "lat": 46.8457,
+   "lng": -121.8164,
+   "affinity": 0.9348,
+   "popularity": 0.869
+  },
+  {
+   "lat": 35.5957,
+   "lng": -97.207,
+   "affinity": 0.9347,
+   "popularity": 0.799
+  },
+  {
+   "lat": 35.2441,
+   "lng": -106.6992,
+   "affinity": 0.9346,
+   "popularity": 0.919
+  },
+  {
+   "lat": 38.2324,
+   "lng": -84.5508,
+   "affinity": 0.9345,
+   "popularity": 0.88
+  },
+  {
+   "lat": 34.0137,
+   "lng": -77.8711,
+   "affinity": 0.9343,
+   "popularity": 0.944
+  },
+  {
+   "lat": 44.5605,
+   "lng": -116.1914,
+   "affinity": 0.9342,
+   "popularity": 0.664
+  },
+  {
+   "lat": 46.3184,
+   "lng": -114.082,
+   "affinity": 0.9341,
+   "popularity": 0.653
+  },
+  {
+   "lat": 36.6504,
+   "lng": -87.0117,
+   "affinity": 0.934,
+   "popularity": 0.632
+  },
+  {
+   "lat": 34.7168,
+   "lng": -111.9727,
+   "affinity": 0.9338,
+   "popularity": 0.886
+  },
+  {
+   "lat": 29.9707,
+   "lng": -98.2617,
+   "affinity": 0.9337,
+   "popularity": 0.918
+  },
+  {
+   "lat": 44.209,
+   "lng": -121.1133,
+   "affinity": 0.9336,
+   "popularity": 0.856
+  },
+  {
+   "lat": 37.7051,
+   "lng": -111.6211,
+   "affinity": 0.9334,
+   "popularity": 0.766
+  },
+  {
+   "lat": 27.334,
+   "lng": -82.4414,
+   "affinity": 0.9333,
+   "popularity": 0.986
+  },
+  {
+   "lat": 37.8809,
+   "lng": -112.3242,
+   "affinity": 0.9332,
+   "popularity": 0.521
+  },
+  {
+   "lat": 39.2871,
+   "lng": -111.9727,
+   "affinity": 0.9331,
+   "popularity": 0.365
+  },
+  {
+   "lat": 40.6934,
+   "lng": -114.082,
+   "affinity": 0.9329,
+   "popularity": 0.656
+  },
+  {
+   "lat": 32.7832,
+   "lng": -97.5586,
+   "affinity": 0.9328,
+   "popularity": 0.937
+  },
+  {
+   "lat": 40.6934,
+   "lng": -113.7305,
+   "affinity": 0.9327,
+   "popularity": 0.696
+  },
+  {
+   "lat": 39.4629,
+   "lng": -105.6445,
+   "affinity": 0.9325,
+   "popularity": 0.841
+  },
+  {
+   "lat": 41.9238,
+   "lng": -86.6602,
+   "affinity": 0.9324,
+   "popularity": 0.876
+  },
+  {
+   "lat": 35.0684,
+   "lng": -111.6211,
+   "affinity": 0.9323,
+   "popularity": 0.847
+  },
+  {
+   "lat": 37.3535,
+   "lng": -107.0508,
+   "affinity": 0.9322,
+   "popularity": 0.863
+  },
+  {
+   "lat": 36.4746,
+   "lng": -85.2539,
+   "affinity": 0.932,
+   "popularity": 0.586
+  },
+  {
+   "lat": 40.166,
+   "lng": -82.793,
+   "affinity": 0.9319,
+   "popularity": 0.932
+  },
+  {
+   "lat": 31.0254,
+   "lng": -81.3867,
+   "affinity": 0.9318,
+   "popularity": 0.911
+  },
+  {
+   "lat": 35.0684,
+   "lng": -109.8633,
+   "affinity": 0.9316,
+   "popularity": 0.653
+  },
+  {
+   "lat": 47.1973,
+   "lng": -122.5195,
+   "affinity": 0.9315,
+   "popularity": 0.977
+  },
+  {
+   "lat": 44.5605,
+   "lng": -123.9258,
+   "affinity": 0.9314,
+   "popularity": 0.924
+  },
+  {
+   "lat": 45.0879,
+   "lng": -122.8711,
+   "affinity": 0.9313,
+   "popularity": 0.896
+  },
+  {
+   "lat": 39.1113,
+   "lng": -107.0508,
+   "affinity": 0.9311,
+   "popularity": 0.895
+  },
+  {
+   "lat": 39.1113,
+   "lng": -108.8086,
+   "affinity": 0.931,
+   "popularity": 0.846
+  },
+  {
+   "lat": 37.002,
+   "lng": -88.7695,
+   "affinity": 0.9309,
+   "popularity": 0.837
+  },
+  {
+   "lat": 44.9121,
+   "lng": -123.9258,
+   "affinity": 0.9307,
+   "popularity": 0.927
+  },
+  {
+   "lat": 35.2441,
+   "lng": -103.8867,
+   "affinity": 0.9306,
+   "popularity": 0.584
+  },
+  {
+   "lat": 36.123,
+   "lng": -87.7148,
+   "affinity": 0.9305,
+   "popularity": 0.567
+  },
+  {
+   "lat": 42.4512,
+   "lng": -90.5273,
+   "affinity": 0.9304,
+   "popularity": 0.896
+  },
+  {
+   "lat": 39.4629,
+   "lng": -104.5898,
+   "affinity": 0.9302,
+   "popularity": 0.765
+  },
+  {
+   "lat": 34.541,
+   "lng": -84.5508,
+   "affinity": 0.9301,
+   "popularity": 0.823
+  },
+  {
+   "lat": 36.4746,
+   "lng": -94.043,
+   "affinity": 0.93,
+   "popularity": 0.669
+  },
+  {
+   "lat": 45.2637,
+   "lng": -123.2227,
+   "affinity": 0.9298,
+   "popularity": 0.899
+  },
+  {
+   "lat": 33.4863,
+   "lng": -78.9258,
+   "affinity": 0.9297,
+   "popularity": 0.929
+  },
+  {
+   "lat": 35.9473,
+   "lng": -94.043,
+   "affinity": 0.9296,
+   "popularity": 0.744
+  },
+  {
+   "lat": 34.3652,
+   "lng": -85.2539,
+   "affinity": 0.9295,
+   "popularity": 0.832
+  },
+  {
+   "lat": 30.6738,
+   "lng": -98.2617,
+   "affinity": 0.9293,
+   "popularity": 0.873
+  },
+  {
+   "lat": 35.0684,
+   "lng": -82.793,
+   "affinity": 0.9292,
+   "popularity": 0.89
+  },
+  {
+   "lat": 39.6387,
+   "lng": -85.957,
+   "affinity": 0.9291,
+   "popularity": 0.888
+  },
+  {
+   "lat": 35.4199,
+   "lng": -120.7617,
+   "affinity": 0.9289,
+   "popularity": 0.95
+  },
+  {
+   "lat": 38.7598,
+   "lng": -111.9727,
+   "affinity": 0.9288,
+   "popularity": 0.548
+  },
+  {
+   "lat": 36.4746,
+   "lng": -87.7148,
+   "affinity": 0.9287,
+   "popularity": 0.502
+  },
+  {
+   "lat": 34.1895,
+   "lng": -84.5508,
+   "affinity": 0.9286,
+   "popularity": 0.935
+  },
+  {
+   "lat": 42.0996,
+   "lng": -93.6914,
+   "affinity": 0.9284,
+   "popularity": 0.884
+  },
+  {
+   "lat": 45.2637,
+   "lng": -111.6211,
+   "affinity": 0.9283,
+   "popularity": 0.726
+  },
+  {
+   "lat": 37.3535,
+   "lng": -79.6289,
+   "affinity": 0.9282,
+   "popularity": 0.778
+  },
+  {
+   "lat": 43.6816,
+   "lng": -111.9727,
+   "affinity": 0.928,
+   "popularity": 0.618
+  },
+  {
+   "lat": 48.0762,
+   "lng": -123.5742,
+   "affinity": 0.9279,
+   "popularity": 0.921
+  },
+  {
+   "lat": 38.7598,
+   "lng": -105.293,
+   "affinity": 0.9278,
+   "popularity": 0.705
+  },
+  {
+   "lat": 27.5098,
+   "lng": -82.793,
+   "affinity": 0.9277,
+   "popularity": 0.963
+  },
+  {
+   "lat": 40.166,
+   "lng": -85.6055,
+   "affinity": 0.9275,
+   "popularity": 0.821
+  },
+  {
+   "lat": 41.0449,
+   "lng": -111.2695,
+   "affinity": 0.9274,
+   "popularity": 0.476
+  },
+  {
+   "lat": 41.748,
+   "lng": -86.6602,
+   "affinity": 0.9273,
+   "popularity": 0.916
+  },
+  {
+   "lat": 43.5059,
+   "lng": -109.5117,
+   "affinity": 0.9271,
+   "popularity": 0.506
+  },
+  {
+   "lat": 39.2871,
+   "lng": -107.0508,
+   "affinity": 0.927,
+   "popularity": 0.913
+  },
+  {
+   "lat": 33.8379,
+   "lng": -98.6133,
+   "affinity": 0.9269,
+   "popularity": 0.822
+  },
+  {
+   "lat": 41.2207,
+   "lng": -85.957,
+   "affinity": 0.9268,
+   "popularity": 0.758
+  },
+  {
+   "lat": 46.1426,
+   "lng": -122.8711,
+   "affinity": 0.9266,
+   "popularity": 0.759
+  },
+  {
+   "lat": 39.4629,
+   "lng": -84.5508,
+   "affinity": 0.9265,
+   "popularity": 0.854
+  },
+  {
+   "lat": 33.1348,
+   "lng": -86.6602,
+   "affinity": 0.9264,
+   "popularity": 0.795
+  },
+  {
+   "lat": 36.123,
+   "lng": -83.1445,
+   "affinity": 0.9262,
+   "popularity": 0.659
+  },
+  {
+   "lat": 36.8262,
+   "lng": -95.8008,
+   "affinity": 0.9261,
+   "popularity": 0.586
+  },
+  {
+   "lat": 37.5293,
+   "lng": -113.0273,
+   "affinity": 0.926,
+   "popularity": 0.634
+  },
+  {
+   "lat": 44.9121,
+   "lng": -93.6914,
+   "affinity": 0.9259,
+   "popularity": 0.946
+  },
+  {
+   "lat": 33.8379,
+   "lng": -80.6836,
+   "affinity": 0.9257,
+   "popularity": 0.716
+  },
+  {
+   "lat": 39.2871,
+   "lng": -94.3945,
+   "affinity": 0.9256,
+   "popularity": 0.854
+  },
+  {
+   "lat": 37.8809,
+   "lng": -79.2773,
+   "affinity": 0.9255,
+   "popularity": 0.712
+  },
+  {
+   "lat": 37.1777,
+   "lng": -94.3945,
+   "affinity": 0.9253,
+   "popularity": 0.763
+  },
+  {
+   "lat": 38.7598,
+   "lng": -106.3477,
+   "affinity": 0.9252,
+   "popularity": 0.782
+  },
+  {
+   "lat": 48.4277,
+   "lng": -113.3789,
+   "affinity": 0.9251,
+   "popularity": 0.79
+  },
+  {
+   "lat": 36.6504,
+   "lng": -82.0898,
+   "affinity": 0.925,
+   "popularity": 0.903
+  },
+  {
+   "lat": 37.8809,
+   "lng": -80.332,
+   "affinity": 0.9248,
+   "popularity": 0.695
+  },
+  {
+   "lat": 34.8926,
+   "lng": -110.2148,
+   "affinity": 0.9247,
+   "popularity": 0.696
+  },
+  {
+   "lat": 46.8457,
+   "lng": -103.5352,
+   "affinity": 0.9246,
+   "popularity": 0.762
+  },
+  {
+   "lat": 39.8145,
+   "lng": -84.9023,
+   "affinity": 0.9244,
+   "popularity": 0.75
+  },
+  {
+   "lat": 39.8145,
+   "lng": -85.957,
+   "affinity": 0.9243,
+   "popularity": 0.931
+  },
+  {
+   "lat": 33.6621,
+   "lng": -111.6211,
+   "affinity": 0.9242,
+   "popularity": 0.902
+  },
+  {
+   "lat": 34.7168,
+   "lng": -87.0117,
+   "affinity": 0.9241,
+   "popularity": 0.758
+  },
+  {
+   "lat": 38.9355,
+   "lng": -85.957,
+   "affinity": 0.9239,
+   "popularity": 0.678
+  },
+  {
+   "lat": 35.5957,
+   "lng": -87.3633,
+   "affinity": 0.9238,
+   "popularity": 0.58
+  },
+  {
+   "lat": 32.6074,
+   "lng": -95.4492,
+   "affinity": 0.9237,
+   "popularity": 0.749
+  },
+  {
+   "lat": 47.7246,
+   "lng": -122.5195,
+   "affinity": 0.9235,
+   "popularity": 0.986
+  },
+  {
+   "lat": 38.4082,
+   "lng": -78.9258,
+   "affinity": 0.9234,
+   "popularity": 0.908
+  },
+  {
+   "lat": 39.2871,
+   "lng": -111.6211,
+   "affinity": 0.9233,
+   "popularity": 0.636
+  },
+  {
+   "lat": 43.6816,
+   "lng": -110.918,
+   "affinity": 0.9232,
+   "popularity": 0.862
+  },
+  {
+   "lat": 34.541,
+   "lng": -111.9727,
+   "affinity": 0.923,
+   "popularity": 0.797
+  }
+ ],
+ "cities": [
+  {
+   "name": "Nashville",
+   "query": "Nashville",
+   "lat": 36.1627,
+   "lng": -86.7816,
+   "score": 100,
+   "affinity": 1,
+   "popularity": 0.938,
+   "cells": 13
+  },
+  {
+   "name": "Denver",
+   "query": "Denver",
+   "lat": 39.7392,
+   "lng": -104.9903,
+   "score": 99,
+   "affinity": 0.992,
+   "popularity": 0.907,
+   "cells": 13
+  },
+  {
+   "name": "Salt Lake City",
+   "query": "Salt Lake City",
+   "lat": 40.7608,
+   "lng": -111.891,
+   "score": 99,
+   "affinity": 0.995,
+   "popularity": 0.784,
+   "cells": 13
+  },
+  {
+   "name": "Austin",
+   "query": "Austin, Texas",
+   "lat": 30.2672,
+   "lng": -97.7431,
+   "score": 98,
+   "affinity": 0.982,
+   "popularity": 0.926,
+   "cells": 10
+  },
+  {
+   "name": "Kansas City",
+   "query": "Kansas City, Missouri",
+   "lat": 39.0997,
+   "lng": -94.5786,
+   "score": 98,
+   "affinity": 0.979,
+   "popularity": 0.794,
+   "cells": 15
+  },
+  {
+   "name": "Phoenix",
+   "query": "Phoenix, Arizona",
+   "lat": 33.4484,
+   "lng": -112.074,
+   "score": 96,
+   "affinity": 0.959,
+   "popularity": 0.92,
+   "cells": 12
+  },
+  {
+   "name": "Seattle",
+   "query": "Seattle",
+   "lat": 47.6062,
+   "lng": -122.3321,
+   "score": 95,
+   "affinity": 0.949,
+   "popularity": 0.896,
+   "cells": 16
+  },
+  {
+   "name": "Minneapolis",
+   "query": "Minneapolis",
+   "lat": 44.9778,
+   "lng": -93.265,
+   "score": 94,
+   "affinity": 0.939,
+   "popularity": 0.875,
+   "cells": 14
+  },
+  {
+   "name": "Columbus",
+   "query": "Columbus, Ohio",
+   "lat": 39.9612,
+   "lng": -82.9988,
+   "score": 94,
+   "affinity": 0.939,
+   "popularity": 0.767,
+   "cells": 14
+  },
+  {
+   "name": "Dallas",
+   "query": "Dallas",
+   "lat": 32.7767,
+   "lng": -96.797,
+   "score": 92,
+   "affinity": 0.915,
+   "popularity": 0.895,
+   "cells": 13
+  },
+  {
+   "name": "Chicago",
+   "query": "Chicago",
+   "lat": 41.8781,
+   "lng": -87.6298,
+   "score": 88,
+   "affinity": 0.875,
+   "popularity": 0.931,
+   "cells": 11
+  },
+  {
+   "name": "Boston",
+   "query": "Boston",
+   "lat": 42.3601,
+   "lng": -71.0589,
+   "score": 85,
+   "affinity": 0.853,
+   "popularity": 0.934,
+   "cells": 13
+  },
+  {
+   "name": "Atlanta",
+   "query": "Atlanta",
+   "lat": 33.749,
+   "lng": -84.388,
+   "score": 81,
+   "affinity": 0.81,
+   "popularity": 0.938,
+   "cells": 10
+  },
+  {
+   "name": "Philadelphia",
+   "query": "Philadelphia",
+   "lat": 39.9526,
+   "lng": -75.1652,
+   "score": 68,
+   "affinity": 0.679,
+   "popularity": 0.914,
+   "cells": 13
+  },
+  {
+   "name": "Los Angeles",
+   "query": "Los Angeles",
+   "lat": 34.0522,
+   "lng": -118.2437,
+   "score": 61,
+   "affinity": 0.615,
+   "popularity": 0.956,
+   "cells": 11
+  },
+  {
+   "name": "New York",
+   "query": "New York City",
+   "lat": 40.7128,
+   "lng": -74.006,
+   "score": 55,
+   "affinity": 0.546,
+   "popularity": 0.969,
+   "cells": 13
+  }
+ ],
+ "profile": {
+  "tags": [
+   {
+    "id": "urn:tag:character:qloo:everyman",
+    "name": "Everyman",
+    "affinity": 1
+   },
+   {
+    "id": "urn:tag:style:qloo:southern_charm",
+    "name": "Southern Charm",
+    "affinity": 0.9999385724231131
+   },
+   {
+    "id": "urn:tag:keyword:qloo:observational_humor",
+    "name": "Observational Humor",
+    "affinity": 0.999922387364663
+   },
+   {
+    "id": "urn:tag:keyword:qloo:observational",
+    "name": "Observational",
+    "affinity": 0.9998370981754996
+   },
+   {
+    "id": "urn:tag:keyword:qloo:comedy_special",
+    "name": "Comedy Special",
+    "affinity": 0.9998037676609105
+   },
+   {
+    "id": "urn:tag:keyword:qloo:family_friendly",
+    "name": "Family Friendly",
+    "affinity": 0.9996866256295467
+   },
+   {
+    "id": "urn:tag:keyword:qloo:documentary_series",
+    "name": "Documentary Series",
+    "affinity": 0.999647266313933
+   },
+   {
+    "id": "urn:tag:keyword:qloo:observational_comedy",
+    "name": "Observational Comedy",
+    "affinity": 0.9996113486202876
+   }
+  ],
+  "demographics": {
+   "age": {
+    "24_and_younger": -0.22,
+    "25_to_29": -0.42,
+    "30_to_34": -0.49,
+    "35_to_44": 0.23,
+    "45_to_54": 0.63,
+    "55_and_older": 0
+   },
+   "gender": {
+    "male": 0.04,
+    "female": -0.04
+   }
+  },
+  "trend": [],
+  "momentum": null
+ },
+ "route": [
+  {
+   "name": "Phoenix",
+   "query": "Phoenix, Arizona",
+   "lat": 33.4484,
+   "lng": -112.074,
+   "score": 96,
+   "affinity": 0.959,
+   "popularity": 0.92,
+   "cells": 12,
+   "why": "Strong 96 score and 0.959 affinity combined with broad 0.920 popularity."
+  },
+  {
+   "name": "Salt Lake City",
+   "query": "Salt Lake City",
+   "lat": 40.7608,
+   "lng": -111.891,
+   "score": 99,
+   "affinity": 0.995,
+   "popularity": 0.784,
+   "cells": 13,
+   "why": "99 score and region-leading 0.995 affinity perfectly align with clean, family-friendly comedy."
+  },
+  {
+   "name": "Denver",
+   "query": "Denver",
+   "lat": 39.7392,
+   "lng": -104.9903,
+   "score": 99,
+   "affinity": 0.992,
+   "popularity": 0.907,
+   "cells": 13,
+   "why": "Elite 99 score and 0.992 affinity with solid 0.907 scene density."
+  },
+  {
+   "name": "Kansas City",
+   "query": "Kansas City, Missouri",
+   "lat": 39.0997,
+   "lng": -94.5786,
+   "score": 98,
+   "affinity": 0.979,
+   "popularity": 0.794,
+   "cells": 15,
+   "why": "High 98 score and 0.979 affinity across 15 grid cells in a prime theater market."
+  },
+  {
+   "name": "Nashville",
+   "query": "Nashville",
+   "lat": 36.1627,
+   "lng": -86.7816,
+   "score": 100,
+   "affinity": 1,
+   "popularity": 0.938,
+   "cells": 13,
+   "why": "Maximum 100 score and 1.0 affinity anchored by strong 0.938 popularity."
+  },
+  {
+   "name": "Austin",
+   "query": "Austin, Texas",
+   "lat": 30.2672,
+   "lng": -97.7431,
+   "score": 98,
+   "affinity": 0.982,
+   "popularity": 0.926,
+   "cells": 10,
+   "why": "Outstanding 98 score and 0.982 affinity backed by high 0.926 popularity."
+  }
+ ],
+ "dropped": [
+  {
+   "city": "Seattle",
+   "score": 95,
+   "reason": "Just missed the cut with a 95 score and 0.949 affinity compared to Phoenix's 96 score."
+  },
+  {
+   "city": "Minneapolis",
+   "score": 94,
+   "reason": "Lower fan affinity than the kept markets"
+  },
+  {
+   "city": "Columbus",
+   "score": 94,
+   "reason": "Lower fan affinity than the kept markets"
+  },
+  {
+   "city": "Dallas",
+   "score": 92,
+   "reason": "Lower fan affinity than the kept markets"
+  },
+  {
+   "city": "Chicago",
+   "score": 88,
+   "reason": "Lower relative affinity score of 88 (0.875 affinity) despite high 0.931 popularity."
+  },
+  {
+   "city": "Boston",
+   "score": 85,
+   "reason": "Lower fan affinity than the kept markets"
+  },
+  {
+   "city": "Atlanta",
+   "score": 81,
+   "reason": "Lower fan affinity than the kept markets"
+  },
+  {
+   "city": "Philadelphia",
+   "score": 68,
+   "reason": "Lower fan affinity than the kept markets"
+  },
+  {
+   "city": "Los Angeles",
+   "score": 61,
+   "reason": "Underperforms significantly with a 61 score and 0.615 affinity despite massive 0.956 popularity."
+  },
+  {
+   "city": "New York",
+   "score": 55,
+   "reason": "Lowest affinity in the dataset with a 55 score (0.546 affinity) despite peak 0.969 popularity."
+  }
+ ],
+ "rationale": "The top routing prioritizes high-affinity heartland and western markets where Nate Bargatze's clean, everyman persona strongly over-indexes against local baselines. Massive coastal markets like New York (55 score) and Los Angeles (61 score) show severe affinity drop-offs despite high overall population density, indicating lower relative demand for family-friendly stand-up.",
+ "stops": [
+  {
+   "name": "Phoenix",
+   "query": "Phoenix, Arizona",
+   "lat": 33.4484,
+   "lng": -112.074,
+   "score": 96,
+   "affinity": 0.959,
+   "popularity": 0.92,
+   "cells": 12,
+   "why": "Strong 96 score and 0.959 affinity combined with broad 0.920 popularity.",
+   "peers": [
+    {
+     "id": "6C1FAD83-7D3D-48AF-AAC3-DDCDA5536A3F",
+     "name": "Bert Kreischer",
+     "affinity": 0.97,
+     "popularity": 0.969,
+     "image": "https://images.qloo.com/i/6C1FAD83-7D3D-48AF-AAC3-DDCDA5536A3F-420x-auto.jpg"
+    },
+    {
+     "id": "EF9AF6DA-7785-4BD1-8F84-53B4958505CA",
+     "name": "Tom Segura",
+     "affinity": 0.964,
+     "popularity": 0.965,
+     "image": "https://images.qloo.com/i/EF9AF6DA-7785-4BD1-8F84-53B4958505CA-420x-auto.jpg"
+    },
+    {
+     "id": "AA7E0314-0231-48D6-B53E-60F5303D443A",
+     "name": "Sam Morril",
+     "affinity": 0.963,
+     "popularity": 0.843
+    },
+    {
+     "id": "B45CAFC8-DC2D-4556-97A6-E32A288546CA",
+     "name": "Nikki Glaser",
+     "affinity": 0.962,
+     "popularity": 0.915,
+     "image": "https://images.qloo.com/i/B45CAFC8-DC2D-4556-97A6-E32A288546CA-420x-auto.jpg"
+    },
+    {
+     "id": "F71871FF-3A92-4756-BFBD-B1E187434710",
+     "name": "Chris Distefano",
+     "affinity": 0.959,
+     "popularity": 0.872,
+     "image": "https://images.qloo.com/i/F71871FF-3A92-4756-BFBD-B1E187434710-420x-auto.jpg"
+    },
+    {
+     "id": "FD65F7F7-95AB-40A6-AB09-D8046C40FE48",
+     "name": "Bryan Callen",
+     "affinity": 0.959,
+     "popularity": 0.926,
+     "image": "https://images.qloo.com/i/FD65F7F7-95AB-40A6-AB09-D8046C40FE48-420x-auto.jpg"
+    },
+    {
+     "id": "ED427EB1-A394-456D-9CFB-03C44C6E899C",
+     "name": "Theo Von",
+     "affinity": 0.958,
+     "popularity": 0.956,
+     "image": "https://images.qloo.com/i/ED427EB1-A394-456D-9CFB-03C44C6E899C-420x-auto.jpg"
+    },
+    {
+     "id": "F44C9634-A445-4C85-951F-4497111FDED9",
+     "name": "Christina Pazsitzky",
+     "affinity": 0.957,
+     "popularity": 0.867,
+     "image": "https://images.qloo.com/i/F44C9634-A445-4C85-951F-4497111FDED9-420x-auto.jpg"
+    },
+    {
+     "id": "01FAA997-13B8-456A-8DBF-5EC0F6EE06CF",
+     "name": "Gary Gulman",
+     "affinity": 0.956,
+     "popularity": 0.674,
+     "image": "https://images.qloo.com/i/01FAA997-13B8-456A-8DBF-5EC0F6EE06CF-420x-auto.jpg"
+    },
+    {
+     "id": "10CE7A2E-1D3D-4298-B75E-2E13353B0609",
+     "name": "Jim Gaffigan",
+     "affinity": 0.955,
+     "popularity": 0.979,
+     "image": "https://images.qloo.com/i/10CE7A2E-1D3D-4298-B75E-2E13353B0609-420x-auto.jpg"
+    },
+    {
+     "id": "45728EBE-E016-42BA-9E9B-5B1624346E17",
+     "name": "Chris D'Elia",
+     "affinity": 0.955,
+     "popularity": 0.971,
+     "image": "https://images.qloo.com/i/45728EBE-E016-42BA-9E9B-5B1624346E17-420x-auto.jpg"
+    },
+    {
+     "id": "B6D77A0C-770B-4176-B482-2DA63CC3B566",
+     "name": "Jay Oakerson",
+     "affinity": 0.955,
+     "popularity": 0.824,
+     "image": "https://images.qloo.com/i/B6D77A0C-770B-4176-B482-2DA63CC3B566-420x-auto.jpg"
+    },
+    {
+     "id": "853277C9-2A52-43A6-BFA1-7B89C019B927",
+     "name": "Annie Lederman",
+     "affinity": 0.954,
+     "popularity": 0.786
+    },
+    {
+     "id": "837C5A32-E8E7-4FD8-A643-D20B6CC154E1",
+     "name": "Ari Shaffir",
+     "affinity": 0.954,
+     "popularity": 0.791,
+     "image": "https://images.qloo.com/i/837C5A32-E8E7-4FD8-A643-D20B6CC154E1-420x-auto.jpg"
+    },
+    {
+     "id": "77395141-8BEE-42B4-8091-9382A8EEF563",
+     "name": "Taylor Tomlinson",
+     "affinity": 0.953,
+     "popularity": 0.875,
+     "image": "https://images.qloo.com/i/77395141-8BEE-42B4-8091-9382A8EEF563-420x-auto.jpg"
+    }
+   ],
+   "rooms": [
+    {
+     "id": "D52EDE9F-C2C0-438A-A911-C5A41439F5EF",
+     "name": "Stand Up Live",
+     "affinity": 0.852,
+     "popularity": 0.995,
+     "address": "50 W Jefferson St Phoenix, AZ 85003",
+     "image": "https://images.qloo.com/i/D52EDE9F-C2C0-438A-A911-C5A41439F5EF-420x-auto.jpg",
+     "description": "Buzzy downtown Phoenix comedy club hosting national touring comedians with specialty drinks and global food, plus regular classes and special events."
+    },
+    {
+     "id": "A0B7E8B5-0203-45EB-B61E-471BFC84F4A0",
+     "name": "Stir Crazy Comedy Club",
+     "affinity": 0.84,
+     "popularity": 0.882,
+     "address": "6751 N Sunset Blvd Suite E-206 Glendale, AZ 85305",
+     "image": "https://images.qloo.com/i/A0B7E8B5-0203-45EB-B61E-471BFC84F4A0-420x-auto.jpg",
+     "description": "Casual, intimate Westgate-area comedy club serving cocktails, beers and pub grub while showcasing a rotating roster of stand-up comedians and events."
+    },
+    {
+     "id": "7F795AFA-9284-4918-B746-90A568ED4317",
+     "name": "Kobalt",
+     "affinity": 0.81,
+     "popularity": 0.972,
+     "address": "3110 N Central Ave #175 Phoenix, AZ 85012",
+     "image": "https://images.qloo.com/i/7F795AFA-9284-4918-B746-90A568ED4317-420x-auto.jpg",
+     "description": "Energetic gay bar offering drag shows, karaoke, trivia, themed nights, and happy-hour cocktails in central Phoenix."
+    }
+   ],
+   "places": [
+    {
+     "id": "16B8DCD9-5A95-4F9A-A5F1-DD65DF3D46D1",
+     "name": "The Scotch Library",
+     "affinity": 0.888,
+     "popularity": 0.175,
+     "address": "6902 E Greenway Pkwy Scottsdale, AZ 85254",
+     "image": "https://images.qloo.com/i/16B8DCD9-5A95-4F9A-A5F1-DD65DF3D46D1-420x-auto.jpg",
+     "description": "Upscale bar and restaurant at Kierland Resort in Scottsdale offering cocktails, hard liquor, dining, outdoor seating and happy hour."
+    },
+    {
+     "id": "EEE48919-E5BD-4BE5-ACFB-AB2F8F8652ED",
+     "name": "Phoenician Golf Club",
+     "affinity": 0.884,
+     "popularity": 0.898,
+     "address": "6000 E Camelback Rd Scottsdale, AZ 85251",
+     "image": "https://images.qloo.com/i/EEE48919-E5BD-4BE5-ACFB-AB2F8F8652ED-420x-auto.jpg",
+     "description": "Luxury 18‑hole Sonoran Desert golf course at a Scottsdale resort with mountain and city views, practice facilities, pro shop, and on-site dining."
+    },
+    {
+     "id": "FAC9ED66-766E-4092-974C-259025DCFF39",
+     "name": "The Legacy Golf Club",
+     "affinity": 0.883,
+     "popularity": 0.919,
+     "address": "6808 S 32nd St Phoenix, AZ 85042",
+     "image": "https://images.qloo.com/i/FAC9ED66-766E-4092-974C-259025DCFF39-420x-auto.jpg",
+     "description": "Tranquil resort golf course open to the public with a bar-and-grill, pro shop, and event spaces for weddings and banquets."
+    },
+    {
+     "id": "C68ABB38-F029-4648-BA8F-3E6F592863F7",
+     "name": "Sidecar Social Club",
+     "affinity": 0.863,
+     "popularity": 0.049,
+     "address": "3243 N 3rd St Suite A Phoenix, AZ 85012",
+     "image": "https://images.qloo.com/i/C68ABB38-F029-4648-BA8F-3E6F592863F7-420x-auto.jpg",
+     "description": "Lively LGBTQ+-friendly cocktail lounge with indoor seating and two patios offering happy hour drinks, bar food, and dancing."
+    },
+    {
+     "id": "B78948B9-76CB-40F8-9911-DE6B62EFDE9B",
+     "name": "Phoenix Art Museum",
+     "affinity": 0.861,
+     "popularity": 0.999,
+     "address": "1625 N Central Ave Phoenix, AZ 85004",
+     "image": "https://images.qloo.com/i/B78948B9-76CB-40F8-9911-DE6B62EFDE9B-420x-auto.jpg",
+     "description": "Extensive international art museum spanning ancient to contemporary works, featuring rotating exhibitions, a sculpture garden, on-site restaurant, and museum store."
+    }
+   ],
+   "brands": [
+    {
+     "id": "42A589B2-8C86-4C63-820B-0977038CAE7F",
+     "name": "Faherty",
+     "affinity": 0.984,
+     "popularity": 0.865,
+     "image": "https://images.qloo.com/i/42A589B2-8C86-4C63-820B-0977038CAE7F-420x-auto.jpg",
+     "description": "Faherty is a family-owned brand offering modern American heritage clothing for men, women, and kids, known for quality, comfort, and sustainable fashion."
+    },
+    {
+     "id": "78A44C09-E691-42DA-A553-5CDE6EE9B18A",
+     "name": "Allbirds",
+     "affinity": 0.976,
+     "popularity": 0.934,
+     "image": "https://images.qloo.com/i/78A44C09-E691-42DA-A553-5CDE6EE9B18A-420x-auto.jpg",
+     "description": "Allbirds is a global footwear and apparel brand known for comfortable, sustainable shoes made with innovative natural materials."
+    },
+    {
+     "id": "D619A0B2-F0ED-4DD3-97D9-00BDC4F32E7C",
+     "name": "Vuori",
+     "affinity": 0.97,
+     "popularity": 0.85,
+     "image": "https://images.qloo.com/i/D619A0B2-F0ED-4DD3-97D9-00BDC4F32E7C-420x-auto.jpg",
+     "description": "Vuori is a retail apparel brand specializing in athletic and performance clothing for men and women, designed for movement and everyday style."
+    },
+    {
+     "id": "E8AE27B9-1528-4A58-97BD-30AF0BFE8859",
+     "name": "Peloton",
+     "affinity": 0.968,
+     "popularity": 0.987,
+     "image": "https://images.qloo.com/i/E8AE27B9-1528-4A58-97BD-30AF0BFE8859-420x-auto.jpg",
+     "description": "Peloton is a fitness brand offering connected exercise equipment and streaming fitness classes including cycling, running, strength, yoga, and more."
+    },
+    {
+     "id": "011DFDA5-F5A7-461A-9D96-E28E4964E7FB",
+     "name": "Outdoor Voices",
+     "affinity": 0.966,
+     "popularity": 0.963,
+     "image": "https://images.qloo.com/i/011DFDA5-F5A7-461A-9D96-E28E4964E7FB-420x-auto.jpg",
+     "description": "Outdoor Voices is a brand specializing in technical and activewear apparel designed for recreational activities and everyday movement."
+    }
+   ],
+   "podcasts": [
+    {
+     "id": "D4A9C252-5787-4FAF-87D8-B91743B2FE2D",
+     "name": "Your Mom's House with Christina P. and Tom Segura",
+     "affinity": 0.957,
+     "popularity": 0.996,
+     "image": "https://images.qloo.com/i/D4A9C252-5787-4FAF-87D8-B91743B2FE2D-420x-auto.jpg",
+     "description": "Comedians Christina P. and Tom Segura share humorous stories and insights on life, relationships, and parenting."
+    },
+    {
+     "id": "9BFDA741-03C8-4B27-B5CB-E8631550A9C2",
+     "name": "2 Bears, 1 Cave with Tom Segura & Bert Kreischer",
+     "affinity": 0.955,
+     "popularity": 0.99,
+     "image": "https://images.qloo.com/i/9BFDA741-03C8-4B27-B5CB-E8631550A9C2-420x-auto.jpg",
+     "description": "Comedian best friends share laughs and stories in a casual setting, exploring humor and friendship."
+    },
+    {
+     "id": "E5DEA7B0-2217-4CC3-B46E-B6CA56934C2E",
+     "name": "Bertcast",
+     "affinity": 0.952,
+     "popularity": 0.992,
+     "image": "https://images.qloo.com/i/E5DEA7B0-2217-4CC3-B46E-B6CA56934C2E-420x-auto.jpg",
+     "description": "Bert Kreischer shares his life experiences and insights through humor and storytelling."
+    },
+    {
+     "id": "078C788C-D82D-4AB5-9EF8-C98A5E4D6771",
+     "name": "The Pete and Sebastian Show",
+     "affinity": 0.951,
+     "popularity": 0.982,
+     "image": "https://images.qloo.com/i/078C788C-D82D-4AB5-9EF8-C98A5E4D6771-420x-auto.jpg",
+     "description": "Two A-list comedians share stories and comedy bits in a weekly radio show format."
+    }
+   ],
+   "opener": {
+    "id": "AA7E0314-0231-48D6-B53E-60F5303D443A",
+    "name": "Sam Morril",
+    "affinity": 0.963,
+    "popularity": 0.843
+   }
+  },
+  {
+   "name": "Salt Lake City",
+   "query": "Salt Lake City",
+   "lat": 40.7608,
+   "lng": -111.891,
+   "score": 99,
+   "affinity": 0.995,
+   "popularity": 0.784,
+   "cells": 13,
+   "why": "99 score and region-leading 0.995 affinity perfectly align with clean, family-friendly comedy.",
+   "peers": [
+    {
+     "id": "6C1FAD83-7D3D-48AF-AAC3-DDCDA5536A3F",
+     "name": "Bert Kreischer",
+     "affinity": 0.97,
+     "popularity": 0.969,
+     "image": "https://images.qloo.com/i/6C1FAD83-7D3D-48AF-AAC3-DDCDA5536A3F-420x-auto.jpg"
+    },
+    {
+     "id": "AA7E0314-0231-48D6-B53E-60F5303D443A",
+     "name": "Sam Morril",
+     "affinity": 0.965,
+     "popularity": 0.843
+    },
+    {
+     "id": "EF9AF6DA-7785-4BD1-8F84-53B4958505CA",
+     "name": "Tom Segura",
+     "affinity": 0.964,
+     "popularity": 0.965,
+     "image": "https://images.qloo.com/i/EF9AF6DA-7785-4BD1-8F84-53B4958505CA-420x-auto.jpg"
+    },
+    {
+     "id": "B45CAFC8-DC2D-4556-97A6-E32A288546CA",
+     "name": "Nikki Glaser",
+     "affinity": 0.962,
+     "popularity": 0.915,
+     "image": "https://images.qloo.com/i/B45CAFC8-DC2D-4556-97A6-E32A288546CA-420x-auto.jpg"
+    },
+    {
+     "id": "01FAA997-13B8-456A-8DBF-5EC0F6EE06CF",
+     "name": "Gary Gulman",
+     "affinity": 0.961,
+     "popularity": 0.674,
+     "image": "https://images.qloo.com/i/01FAA997-13B8-456A-8DBF-5EC0F6EE06CF-420x-auto.jpg"
+    },
+    {
+     "id": "F71871FF-3A92-4756-BFBD-B1E187434710",
+     "name": "Chris Distefano",
+     "affinity": 0.959,
+     "popularity": 0.872,
+     "image": "https://images.qloo.com/i/F71871FF-3A92-4756-BFBD-B1E187434710-420x-auto.jpg"
+    },
+    {
+     "id": "FD65F7F7-95AB-40A6-AB09-D8046C40FE48",
+     "name": "Bryan Callen",
+     "affinity": 0.959,
+     "popularity": 0.926,
+     "image": "https://images.qloo.com/i/FD65F7F7-95AB-40A6-AB09-D8046C40FE48-420x-auto.jpg"
+    },
+    {
+     "id": "F44C9634-A445-4C85-951F-4497111FDED9",
+     "name": "Christina Pazsitzky",
+     "affinity": 0.958,
+     "popularity": 0.867,
+     "image": "https://images.qloo.com/i/F44C9634-A445-4C85-951F-4497111FDED9-420x-auto.jpg"
+    },
+    {
+     "id": "ED427EB1-A394-456D-9CFB-03C44C6E899C",
+     "name": "Theo Von",
+     "affinity": 0.958,
+     "popularity": 0.956,
+     "image": "https://images.qloo.com/i/ED427EB1-A394-456D-9CFB-03C44C6E899C-420x-auto.jpg"
+    },
+    {
+     "id": "45728EBE-E016-42BA-9E9B-5B1624346E17",
+     "name": "Chris D'Elia",
+     "affinity": 0.957,
+     "popularity": 0.971,
+     "image": "https://images.qloo.com/i/45728EBE-E016-42BA-9E9B-5B1624346E17-420x-auto.jpg"
+    },
+    {
+     "id": "71BE8054-71DC-4845-BBD6-49C51A0F3D7A",
+     "name": "Brian Regan",
+     "affinity": 0.957,
+     "popularity": 0.833
+    },
+    {
+     "id": "10CE7A2E-1D3D-4298-B75E-2E13353B0609",
+     "name": "Jim Gaffigan",
+     "affinity": 0.956,
+     "popularity": 0.979,
+     "image": "https://images.qloo.com/i/10CE7A2E-1D3D-4298-B75E-2E13353B0609-420x-auto.jpg"
+    },
+    {
+     "id": "77395141-8BEE-42B4-8091-9382A8EEF563",
+     "name": "Taylor Tomlinson",
+     "affinity": 0.954,
+     "popularity": 0.875,
+     "image": "https://images.qloo.com/i/77395141-8BEE-42B4-8091-9382A8EEF563-420x-auto.jpg"
+    },
+    {
+     "id": "837C5A32-E8E7-4FD8-A643-D20B6CC154E1",
+     "name": "Ari Shaffir",
+     "affinity": 0.954,
+     "popularity": 0.791,
+     "image": "https://images.qloo.com/i/837C5A32-E8E7-4FD8-A643-D20B6CC154E1-420x-auto.jpg"
+    },
+    {
+     "id": "853277C9-2A52-43A6-BFA1-7B89C019B927",
+     "name": "Annie Lederman",
+     "affinity": 0.954,
+     "popularity": 0.786
+    }
+   ],
+   "rooms": [
+    {
+     "id": "D0802BD1-6623-40A5-B669-6C4372AB22A7",
+     "name": "Wiseguys Comedy Club Downtown Salt Lake City",
+     "affinity": 0.789,
+     "popularity": 0.936,
+     "address": "190 400 W Salt Lake City, UT 84101",
+     "image": "https://images.qloo.com/i/D0802BD1-6623-40A5-B669-6C4372AB22A7-420x-auto.jpg",
+     "description": "Downtown Gateway comedy venue with nightly stand-up shows, full bar and food, and a lively, LGBTQ+ friendly lounge atmosphere."
+    }
+   ],
+   "places": [
+    {
+     "id": "1CCC4239-E954-4EE3-B34F-2B1E2111FA5B",
+     "name": "Shades Brewing",
+     "affinity": 0.863,
+     "popularity": 0.788,
+     "address": "1388 S 300 W Salt Lake City, UT 84115",
+     "image": "https://images.qloo.com/i/1CCC4239-E954-4EE3-B34F-2B1E2111FA5B-420x-auto.jpg",
+     "description": "Inclusive, Latino and women-owned brewpub in Salt Lake City offering house-crafted beer, onsite dining, and delivery."
+    },
+    {
+     "id": "0F47998C-B3A3-43A8-924E-7008238B98E9",
+     "name": "The State Room",
+     "affinity": 0.857,
+     "popularity": 0.981,
+     "address": "638 S State St Salt Lake City, UT 84111",
+     "image": "https://images.qloo.com/i/0F47998C-B3A3-43A8-924E-7008238B98E9-420x-auto.jpg",
+     "description": "Cozy 299-capacity live music venue and bar on State Street hosting touring acts, theater seating, and a dance floor; 21+."
+    },
+    {
+     "id": "C290166A-FD8F-4909-BAD7-FB61F0E0D6F9",
+     "name": "Keys On Main",
+     "affinity": 0.857,
+     "popularity": 0.968,
+     "address": "242 S Main St Salt Lake City, UT 84101",
+     "image": "https://images.qloo.com/i/C290166A-FD8F-4909-BAD7-FB61F0E0D6F9-420x-auto.jpg",
+     "description": "Clubby downtown venue featuring dueling pianos, audience-requested performances, and inventive cocktails in a high-energy nightlife setting."
+    },
+    {
+     "id": "405F5E7E-E093-487D-BAC7-8C520AA7C7A5",
+     "name": "Eaglewood Golf Course",
+     "affinity": 0.856,
+     "popularity": 0.975,
+     "address": "1110 E Eaglewood Dr North Salt Lake, UT 84054",
+     "image": "https://images.qloo.com/i/405F5E7E-E093-487D-BAC7-8C520AA7C7A5-420x-auto.jpg",
+     "description": "Championship 18-hole golf course on a Wasatch ridge overlooking Bountiful, with practice facilities, pro shop, on-site grill, and event/wedding amenities."
+    },
+    {
+     "id": "3AC6BBC7-378B-41EC-80E4-43B651D53488",
+     "name": "The Garten Cider House & Bar",
+     "affinity": 0.856,
+     "popularity": 0.584,
+     "address": "417 N 400 W Salt Lake City, UT 84103",
+     "image": "https://images.qloo.com/i/3AC6BBC7-378B-41EC-80E4-43B651D53488-420x-auto.jpg",
+     "description": "Rustic cider house and bar serving Mountain West hard ciders, cocktails, beer, wine and food with outdoor seating in downtown Salt Lake City."
+    }
+   ],
+   "brands": [
+    {
+     "id": "42A589B2-8C86-4C63-820B-0977038CAE7F",
+     "name": "Faherty",
+     "affinity": 0.985,
+     "popularity": 0.865,
+     "image": "https://images.qloo.com/i/42A589B2-8C86-4C63-820B-0977038CAE7F-420x-auto.jpg",
+     "description": "Faherty is a family-owned brand offering modern American heritage clothing for men, women, and kids, known for quality, comfort, and sustainable fashion."
+    },
+    {
+     "id": "78A44C09-E691-42DA-A553-5CDE6EE9B18A",
+     "name": "Allbirds",
+     "affinity": 0.976,
+     "popularity": 0.934,
+     "image": "https://images.qloo.com/i/78A44C09-E691-42DA-A553-5CDE6EE9B18A-420x-auto.jpg",
+     "description": "Allbirds is a global footwear and apparel brand known for comfortable, sustainable shoes made with innovative natural materials."
+    },
+    {
+     "id": "D619A0B2-F0ED-4DD3-97D9-00BDC4F32E7C",
+     "name": "Vuori",
+     "affinity": 0.969,
+     "popularity": 0.85,
+     "image": "https://images.qloo.com/i/D619A0B2-F0ED-4DD3-97D9-00BDC4F32E7C-420x-auto.jpg",
+     "description": "Vuori is a retail apparel brand specializing in athletic and performance clothing for men and women, designed for movement and everyday style."
+    },
+    {
+     "id": "96A5C649-56F4-4853-8F1A-A2E645120728",
+     "name": "SeaVees",
+     "affinity": 0.969,
+     "popularity": 0.746,
+     "image": "https://images.qloo.com/i/96A5C649-56F4-4853-8F1A-A2E645120728-420x-auto.jpg",
+     "description": "SeaVees is a casual sneaker brand known for timeless, classic styles made with sustainable materials like recycled plastic and cotton scraps."
+    },
+    {
+     "id": "E8AE27B9-1528-4A58-97BD-30AF0BFE8859",
+     "name": "Peloton",
+     "affinity": 0.968,
+     "popularity": 0.987,
+     "image": "https://images.qloo.com/i/E8AE27B9-1528-4A58-97BD-30AF0BFE8859-420x-auto.jpg",
+     "description": "Peloton is a fitness brand offering connected exercise equipment and streaming fitness classes including cycling, running, strength, yoga, and more."
+    }
+   ],
+   "podcasts": [
+    {
+     "id": "D4A9C252-5787-4FAF-87D8-B91743B2FE2D",
+     "name": "Your Mom's House with Christina P. and Tom Segura",
+     "affinity": 0.955,
+     "popularity": 0.996,
+     "image": "https://images.qloo.com/i/D4A9C252-5787-4FAF-87D8-B91743B2FE2D-420x-auto.jpg",
+     "description": "Comedians Christina P. and Tom Segura share humorous stories and insights on life, relationships, and parenting."
+    },
+    {
+     "id": "9BFDA741-03C8-4B27-B5CB-E8631550A9C2",
+     "name": "2 Bears, 1 Cave with Tom Segura & Bert Kreischer",
+     "affinity": 0.952,
+     "popularity": 0.99,
+     "image": "https://images.qloo.com/i/9BFDA741-03C8-4B27-B5CB-E8631550A9C2-420x-auto.jpg",
+     "description": "Comedian best friends share laughs and stories in a casual setting, exploring humor and friendship."
+    },
+    {
+     "id": "E5DEA7B0-2217-4CC3-B46E-B6CA56934C2E",
+     "name": "Bertcast",
+     "affinity": 0.951,
+     "popularity": 0.992,
+     "image": "https://images.qloo.com/i/E5DEA7B0-2217-4CC3-B46E-B6CA56934C2E-420x-auto.jpg",
+     "description": "Bert Kreischer shares his life experiences and insights through humor and storytelling."
+    },
+    {
+     "id": "CA300E91-9CE3-4F75-8837-7DF8B0B2F631",
+     "name": "Armchair Expert with Dax Shepard",
+     "affinity": 0.949,
+     "popularity": 0.999,
+     "image": "https://images.qloo.com/i/CA300E91-9CE3-4F75-8837-7DF8B0B2F631-420x-auto.jpg",
+     "description": "Dax Shepard explores the messiness of being human through candid conversations with celebrities and experts about vulnerability and personal growth."
+    }
+   ],
+   "opener": {
+    "id": "AA7E0314-0231-48D6-B53E-60F5303D443A",
+    "name": "Sam Morril",
+    "affinity": 0.965,
+    "popularity": 0.843
+   }
+  },
+  {
+   "name": "Denver",
+   "query": "Denver",
+   "lat": 39.7392,
+   "lng": -104.9903,
+   "score": 99,
+   "affinity": 0.992,
+   "popularity": 0.907,
+   "cells": 13,
+   "why": "Elite 99 score and 0.992 affinity with solid 0.907 scene density.",
+   "peers": [
+    {
+     "id": "6C1FAD83-7D3D-48AF-AAC3-DDCDA5536A3F",
+     "name": "Bert Kreischer",
+     "affinity": 0.97,
+     "popularity": 0.969,
+     "image": "https://images.qloo.com/i/6C1FAD83-7D3D-48AF-AAC3-DDCDA5536A3F-420x-auto.jpg"
+    },
+    {
+     "id": "AA7E0314-0231-48D6-B53E-60F5303D443A",
+     "name": "Sam Morril",
+     "affinity": 0.965,
+     "popularity": 0.843
+    },
+    {
+     "id": "EF9AF6DA-7785-4BD1-8F84-53B4958505CA",
+     "name": "Tom Segura",
+     "affinity": 0.964,
+     "popularity": 0.965,
+     "image": "https://images.qloo.com/i/EF9AF6DA-7785-4BD1-8F84-53B4958505CA-420x-auto.jpg"
+    },
+    {
+     "id": "B45CAFC8-DC2D-4556-97A6-E32A288546CA",
+     "name": "Nikki Glaser",
+     "affinity": 0.962,
+     "popularity": 0.915,
+     "image": "https://images.qloo.com/i/B45CAFC8-DC2D-4556-97A6-E32A288546CA-420x-auto.jpg"
+    },
+    {
+     "id": "01FAA997-13B8-456A-8DBF-5EC0F6EE06CF",
+     "name": "Gary Gulman",
+     "affinity": 0.96,
+     "popularity": 0.674,
+     "image": "https://images.qloo.com/i/01FAA997-13B8-456A-8DBF-5EC0F6EE06CF-420x-auto.jpg"
+    },
+    {
+     "id": "F71871FF-3A92-4756-BFBD-B1E187434710",
+     "name": "Chris Distefano",
+     "affinity": 0.96,
+     "popularity": 0.872,
+     "image": "https://images.qloo.com/i/F71871FF-3A92-4756-BFBD-B1E187434710-420x-auto.jpg"
+    },
+    {
+     "id": "FD65F7F7-95AB-40A6-AB09-D8046C40FE48",
+     "name": "Bryan Callen",
+     "affinity": 0.959,
+     "popularity": 0.926,
+     "image": "https://images.qloo.com/i/FD65F7F7-95AB-40A6-AB09-D8046C40FE48-420x-auto.jpg"
+    },
+    {
+     "id": "F44C9634-A445-4C85-951F-4497111FDED9",
+     "name": "Christina Pazsitzky",
+     "affinity": 0.958,
+     "popularity": 0.867,
+     "image": "https://images.qloo.com/i/F44C9634-A445-4C85-951F-4497111FDED9-420x-auto.jpg"
+    },
+    {
+     "id": "ED427EB1-A394-456D-9CFB-03C44C6E899C",
+     "name": "Theo Von",
+     "affinity": 0.958,
+     "popularity": 0.956,
+     "image": "https://images.qloo.com/i/ED427EB1-A394-456D-9CFB-03C44C6E899C-420x-auto.jpg"
+    },
+    {
+     "id": "B6D77A0C-770B-4176-B482-2DA63CC3B566",
+     "name": "Jay Oakerson",
+     "affinity": 0.956,
+     "popularity": 0.824,
+     "image": "https://images.qloo.com/i/B6D77A0C-770B-4176-B482-2DA63CC3B566-420x-auto.jpg"
+    },
+    {
+     "id": "10CE7A2E-1D3D-4298-B75E-2E13353B0609",
+     "name": "Jim Gaffigan",
+     "affinity": 0.956,
+     "popularity": 0.979,
+     "image": "https://images.qloo.com/i/10CE7A2E-1D3D-4298-B75E-2E13353B0609-420x-auto.jpg"
+    },
+    {
+     "id": "837C5A32-E8E7-4FD8-A643-D20B6CC154E1",
+     "name": "Ari Shaffir",
+     "affinity": 0.956,
+     "popularity": 0.791,
+     "image": "https://images.qloo.com/i/837C5A32-E8E7-4FD8-A643-D20B6CC154E1-420x-auto.jpg"
+    },
+    {
+     "id": "853277C9-2A52-43A6-BFA1-7B89C019B927",
+     "name": "Annie Lederman",
+     "affinity": 0.955,
+     "popularity": 0.786
+    },
+    {
+     "id": "45728EBE-E016-42BA-9E9B-5B1624346E17",
+     "name": "Chris D'Elia",
+     "affinity": 0.955,
+     "popularity": 0.971,
+     "image": "https://images.qloo.com/i/45728EBE-E016-42BA-9E9B-5B1624346E17-420x-auto.jpg"
+    },
+    {
+     "id": "FE46E1BE-1671-426A-8328-6D8FC0D7DCF1",
+     "name": "Mark Normand",
+     "affinity": 0.955,
+     "popularity": 0.86,
+     "image": "https://images.qloo.com/i/FE46E1BE-1671-426A-8328-6D8FC0D7DCF1-420x-auto.jpg"
+    }
+   ],
+   "rooms": [
+    {
+     "id": "84366980-7B1E-49CE-AA8D-210D0D95374A",
+     "name": "Crazy Mountain Tap Room Colorado",
+     "affinity": 0.887,
+     "popularity": 0.728,
+     "address": "1505 N Ogden St Denver, CO 80218",
+     "image": "https://images.qloo.com/i/84366980-7B1E-49CE-AA8D-210D0D95374A-420x-auto.jpg",
+     "description": "Industrial taproom and brewery serving small-batch craft beers, cider, and hosting live music, events, and community gatherings."
+    },
+    {
+     "id": "9B44DD95-AF8F-421B-994B-45189DC93D93",
+     "name": "Comedy Works South",
+     "affinity": 0.884,
+     "popularity": 0.977,
+     "address": "5345 Landmark Pl Greenwood Village, CO 80111",
+     "image": "https://images.qloo.com/i/9B44DD95-AF8F-421B-994B-45189DC93D93-420x-auto.jpg",
+     "description": "Intimate Landmark shopping-center comedy club showcasing rising stars and national touring acts, with dining tie-ins and a two-drink minimum."
+    },
+    {
+     "id": "9AAAC82C-82A7-4B88-9A82-001D3326634D",
+     "name": "Comedy Works",
+     "affinity": 0.879,
+     "popularity": 0.981,
+     "address": "1226 15th St Denver, CO 80202",
+     "image": "https://images.qloo.com/i/9AAAC82C-82A7-4B88-9A82-001D3326634D-420x-auto.jpg",
+     "description": "Intimate basement comedy club hosting established and emerging stand-up acts in downtown Denver, paired with upstairs dining and reserved seating."
+    },
+    {
+     "id": "AD57A260-E709-4004-B8C1-D5E30B1A96DD",
+     "name": "Denver Improv",
+     "affinity": 0.878,
+     "popularity": 0.973,
+     "address": "8246 Northfield Blvd Unit 1400 Denver, CO 80238",
+     "image": "https://images.qloo.com/i/AD57A260-E709-4004-B8C1-D5E30B1A96DD-420x-auto.jpg",
+     "description": "Lively comedy club in Denver's Northfield area featuring national and improv acts alongside pub-style food and a full bar."
+    },
+    {
+     "id": "FC9D32BD-88E6-42C9-8893-2BE73BCBAC6C",
+     "name": "RISE Comedy - Denver Comedy, Improv, Stand Up and Sketch - Full Bar",
+     "affinity": 0.858,
+     "popularity": 0.918,
+     "address": "1260 22nd St Denver, CO 80205",
+     "image": "https://images.qloo.com/i/FC9D32BD-88E6-42C9-8893-2BE73BCBAC6C-420x-auto.jpg",
+     "description": "Nightclub-style comedy venue offering improv, stand-up, sketch shows, drop-in classes, and a full bar with local cocktails and no drink minimums."
+    }
+   ],
+   "places": [
+    {
+     "id": "79DBF106-D417-4C71-9DFF-BB80ACC198A7",
+     "name": "Your Mom's House Denver",
+     "affinity": 0.903,
+     "popularity": 1,
+     "address": "608 E 13th Ave Denver, CO 80203",
+     "image": "https://images.qloo.com/i/79DBF106-D417-4C71-9DFF-BB80ACC198A7-420x-auto.jpg",
+     "description": "Lively LGBTQ+-friendly bar and live-music venue in Denver offering cocktails, happy hour, and nightclub events."
+    },
+    {
+     "id": "F8173977-2594-43ED-A764-2DAD3BD7C7A5",
+     "name": "Our Mutual Friend Brewing",
+     "affinity": 0.894,
+     "popularity": 0.986,
+     "address": "2810 Larimer St Denver, CO 80205",
+     "image": "https://images.qloo.com/i/F8173977-2594-43ED-A764-2DAD3BD7C7A5-420x-auto.jpg",
+     "description": "Art-filled brewery and taproom serving varied draft beers with a retail shop, patio seating, and a lively, LGBTQ+ friendly atmosphere."
+    },
+    {
+     "id": "4C54376E-216B-4F1F-9A79-740ED2660E82",
+     "name": "Platt Park Brewing Co.",
+     "affinity": 0.892,
+     "popularity": 0.902,
+     "address": "1875 S Pearl St Denver, CO 80210",
+     "image": "https://images.qloo.com/i/4C54376E-216B-4F1F-9A79-740ED2660E82-420x-auto.jpg",
+     "description": "Neighborhood brewpub with a full bar, deli, large heated outdoor patio, rotating craft beers and American pub food across from Wash Park."
+    },
+    {
+     "id": "C5A92A5B-474F-4B0D-86DA-7C43310FBA1D",
+     "name": "Denver Press Club",
+     "affinity": 0.891,
+     "popularity": 0.274,
+     "address": "1330 Glenarm Pl Denver, CO 80204",
+     "image": "https://images.qloo.com/i/C5A92A5B-474F-4B0D-86DA-7C43310FBA1D-420x-auto.jpg",
+     "description": "Historic 1920s-era speakeasy-style bar and club offering cocktails, food, events, and private rentals in a designated historic venue."
+    },
+    {
+     "id": "450DDD6B-7FA7-4B5F-9595-B08C0916FAB1",
+     "name": "The Clocktower Cabaret",
+     "affinity": 0.891,
+     "popularity": 0.969,
+     "address": "1601 Arapahoe St Denver, CO 80202",
+     "image": "https://images.qloo.com/i/450DDD6B-7FA7-4B5F-9595-B08C0916FAB1-420x-auto.jpg",
+     "description": "Intimate subterranean cabaret hosting burlesque, comedy, music and variety shows with a full bar and menu in downtown Denver."
+    }
+   ],
+   "brands": [
+    {
+     "id": "42A589B2-8C86-4C63-820B-0977038CAE7F",
+     "name": "Faherty",
+     "affinity": 0.987,
+     "popularity": 0.865,
+     "image": "https://images.qloo.com/i/42A589B2-8C86-4C63-820B-0977038CAE7F-420x-auto.jpg",
+     "description": "Faherty is a family-owned brand offering modern American heritage clothing for men, women, and kids, known for quality, comfort, and sustainable fashion."
+    },
+    {
+     "id": "78A44C09-E691-42DA-A553-5CDE6EE9B18A",
+     "name": "Allbirds",
+     "affinity": 0.976,
+     "popularity": 0.934,
+     "image": "https://images.qloo.com/i/78A44C09-E691-42DA-A553-5CDE6EE9B18A-420x-auto.jpg",
+     "description": "Allbirds is a global footwear and apparel brand known for comfortable, sustainable shoes made with innovative natural materials."
+    },
+    {
+     "id": "96A5C649-56F4-4853-8F1A-A2E645120728",
+     "name": "SeaVees",
+     "affinity": 0.97,
+     "popularity": 0.746,
+     "image": "https://images.qloo.com/i/96A5C649-56F4-4853-8F1A-A2E645120728-420x-auto.jpg",
+     "description": "SeaVees is a casual sneaker brand known for timeless, classic styles made with sustainable materials like recycled plastic and cotton scraps."
+    },
+    {
+     "id": "D619A0B2-F0ED-4DD3-97D9-00BDC4F32E7C",
+     "name": "Vuori",
+     "affinity": 0.97,
+     "popularity": 0.85,
+     "image": "https://images.qloo.com/i/D619A0B2-F0ED-4DD3-97D9-00BDC4F32E7C-420x-auto.jpg",
+     "description": "Vuori is a retail apparel brand specializing in athletic and performance clothing for men and women, designed for movement and everyday style."
+    },
+    {
+     "id": "E8AE27B9-1528-4A58-97BD-30AF0BFE8859",
+     "name": "Peloton",
+     "affinity": 0.968,
+     "popularity": 0.987,
+     "image": "https://images.qloo.com/i/E8AE27B9-1528-4A58-97BD-30AF0BFE8859-420x-auto.jpg",
+     "description": "Peloton is a fitness brand offering connected exercise equipment and streaming fitness classes including cycling, running, strength, yoga, and more."
+    }
+   ],
+   "podcasts": [
+    {
+     "id": "D4A9C252-5787-4FAF-87D8-B91743B2FE2D",
+     "name": "Your Mom's House with Christina P. and Tom Segura",
+     "affinity": 0.959,
+     "popularity": 0.996,
+     "image": "https://images.qloo.com/i/D4A9C252-5787-4FAF-87D8-B91743B2FE2D-420x-auto.jpg",
+     "description": "Comedians Christina P. and Tom Segura share humorous stories and insights on life, relationships, and parenting."
+    },
+    {
+     "id": "E5DEA7B0-2217-4CC3-B46E-B6CA56934C2E",
+     "name": "Bertcast",
+     "affinity": 0.955,
+     "popularity": 0.992,
+     "image": "https://images.qloo.com/i/E5DEA7B0-2217-4CC3-B46E-B6CA56934C2E-420x-auto.jpg",
+     "description": "Bert Kreischer shares his life experiences and insights through humor and storytelling."
+    },
+    {
+     "id": "9BFDA741-03C8-4B27-B5CB-E8631550A9C2",
+     "name": "2 Bears, 1 Cave with Tom Segura & Bert Kreischer",
+     "affinity": 0.955,
+     "popularity": 0.99,
+     "image": "https://images.qloo.com/i/9BFDA741-03C8-4B27-B5CB-E8631550A9C2-420x-auto.jpg",
+     "description": "Comedian best friends share laughs and stories in a casual setting, exploring humor and friendship."
+    },
+    {
+     "id": "CA300E91-9CE3-4F75-8837-7DF8B0B2F631",
+     "name": "Armchair Expert with Dax Shepard",
+     "affinity": 0.95,
+     "popularity": 0.999,
+     "image": "https://images.qloo.com/i/CA300E91-9CE3-4F75-8837-7DF8B0B2F631-420x-auto.jpg",
+     "description": "Dax Shepard explores the messiness of being human through candid conversations with celebrities and experts about vulnerability and personal growth."
+    }
+   ],
+   "opener": {
+    "id": "AA7E0314-0231-48D6-B53E-60F5303D443A",
+    "name": "Sam Morril",
+    "affinity": 0.965,
+    "popularity": 0.843
+   }
+  },
+  {
+   "name": "Kansas City",
+   "query": "Kansas City, Missouri",
+   "lat": 39.0997,
+   "lng": -94.5786,
+   "score": 98,
+   "affinity": 0.979,
+   "popularity": 0.794,
+   "cells": 15,
+   "why": "High 98 score and 0.979 affinity across 15 grid cells in a prime theater market.",
+   "peers": [
+    {
+     "id": "6C1FAD83-7D3D-48AF-AAC3-DDCDA5536A3F",
+     "name": "Bert Kreischer",
+     "affinity": 0.969,
+     "popularity": 0.969,
+     "image": "https://images.qloo.com/i/6C1FAD83-7D3D-48AF-AAC3-DDCDA5536A3F-420x-auto.jpg"
+    },
+    {
+     "id": "EF9AF6DA-7785-4BD1-8F84-53B4958505CA",
+     "name": "Tom Segura",
+     "affinity": 0.963,
+     "popularity": 0.965,
+     "image": "https://images.qloo.com/i/EF9AF6DA-7785-4BD1-8F84-53B4958505CA-420x-auto.jpg"
+    },
+    {
+     "id": "AA7E0314-0231-48D6-B53E-60F5303D443A",
+     "name": "Sam Morril",
+     "affinity": 0.962,
+     "popularity": 0.843
+    },
+    {
+     "id": "B45CAFC8-DC2D-4556-97A6-E32A288546CA",
+     "name": "Nikki Glaser",
+     "affinity": 0.962,
+     "popularity": 0.915,
+     "image": "https://images.qloo.com/i/B45CAFC8-DC2D-4556-97A6-E32A288546CA-420x-auto.jpg"
+    },
+    {
+     "id": "F71871FF-3A92-4756-BFBD-B1E187434710",
+     "name": "Chris Distefano",
+     "affinity": 0.958,
+     "popularity": 0.872,
+     "image": "https://images.qloo.com/i/F71871FF-3A92-4756-BFBD-B1E187434710-420x-auto.jpg"
+    },
+    {
+     "id": "ED427EB1-A394-456D-9CFB-03C44C6E899C",
+     "name": "Theo Von",
+     "affinity": 0.958,
+     "popularity": 0.956,
+     "image": "https://images.qloo.com/i/ED427EB1-A394-456D-9CFB-03C44C6E899C-420x-auto.jpg"
+    },
+    {
+     "id": "FD65F7F7-95AB-40A6-AB09-D8046C40FE48",
+     "name": "Bryan Callen",
+     "affinity": 0.957,
+     "popularity": 0.926,
+     "image": "https://images.qloo.com/i/FD65F7F7-95AB-40A6-AB09-D8046C40FE48-420x-auto.jpg"
+    },
+    {
+     "id": "F44C9634-A445-4C85-951F-4497111FDED9",
+     "name": "Christina Pazsitzky",
+     "affinity": 0.957,
+     "popularity": 0.867,
+     "image": "https://images.qloo.com/i/F44C9634-A445-4C85-951F-4497111FDED9-420x-auto.jpg"
+    },
+    {
+     "id": "01FAA997-13B8-456A-8DBF-5EC0F6EE06CF",
+     "name": "Gary Gulman",
+     "affinity": 0.956,
+     "popularity": 0.674,
+     "image": "https://images.qloo.com/i/01FAA997-13B8-456A-8DBF-5EC0F6EE06CF-420x-auto.jpg"
+    },
+    {
+     "id": "10CE7A2E-1D3D-4298-B75E-2E13353B0609",
+     "name": "Jim Gaffigan",
+     "affinity": 0.956,
+     "popularity": 0.979,
+     "image": "https://images.qloo.com/i/10CE7A2E-1D3D-4298-B75E-2E13353B0609-420x-auto.jpg"
+    },
+    {
+     "id": "45728EBE-E016-42BA-9E9B-5B1624346E17",
+     "name": "Chris D'Elia",
+     "affinity": 0.955,
+     "popularity": 0.971,
+     "image": "https://images.qloo.com/i/45728EBE-E016-42BA-9E9B-5B1624346E17-420x-auto.jpg"
+    },
+    {
+     "id": "77395141-8BEE-42B4-8091-9382A8EEF563",
+     "name": "Taylor Tomlinson",
+     "affinity": 0.954,
+     "popularity": 0.875,
+     "image": "https://images.qloo.com/i/77395141-8BEE-42B4-8091-9382A8EEF563-420x-auto.jpg"
+    },
+    {
+     "id": "853277C9-2A52-43A6-BFA1-7B89C019B927",
+     "name": "Annie Lederman",
+     "affinity": 0.952,
+     "popularity": 0.786
+    },
+    {
+     "id": "FE46E1BE-1671-426A-8328-6D8FC0D7DCF1",
+     "name": "Mark Normand",
+     "affinity": 0.952,
+     "popularity": 0.86,
+     "image": "https://images.qloo.com/i/FE46E1BE-1671-426A-8328-6D8FC0D7DCF1-420x-auto.jpg"
+    },
+    {
+     "id": "B6D77A0C-770B-4176-B482-2DA63CC3B566",
+     "name": "Jay Oakerson",
+     "affinity": 0.952,
+     "popularity": 0.824,
+     "image": "https://images.qloo.com/i/B6D77A0C-770B-4176-B482-2DA63CC3B566-420x-auto.jpg"
+    }
+   ],
+   "rooms": [],
+   "places": [
+    {
+     "id": "AA6ACC8E-2807-4128-8610-E58C66009EF8",
+     "name": "Knuckleheads Garage",
+     "affinity": 0.91,
+     "popularity": 0.141,
+     "address": "701- 707 N Montgall Ave Kansas City, MO 64120",
+     "image": "https://images.qloo.com/i/AA6ACC8E-2807-4128-8610-E58C66009EF8-420x-auto.jpg",
+     "description": "Multi-stage live-music venue and bar featuring indoor and outdoor stages, dance floor, honky-tonk saloon, and full bar with food in Kansas City."
+    },
+    {
+     "id": "164609E6-7F7D-4C71-9081-8151438E4C5D",
+     "name": "Westport Bar & Rec",
+     "affinity": 0.901,
+     "popularity": 0.922,
+     "address": "4120 Pennsylvania Ave Kansas City, MO 64111",
+     "image": "https://images.qloo.com/i/164609E6-7F7D-4C71-9081-8151438E4C5D-420x-auto.jpg",
+     "description": "Casual neighborhood bar and restaurant in Kansas City offering beer, cocktails, and dine-in or delivery."
+    },
+    {
+     "id": "B1C90180-5D0E-4412-9767-A30669589494",
+     "name": "Hotel No Vacancy®",
+     "affinity": 0.9,
+     "popularity": 0.274,
+     "address": "1717 Wyandotte St Kansas City, MO 64108",
+     "image": "https://images.qloo.com/i/B1C90180-5D0E-4412-9767-A30669589494-420x-auto.jpg",
+     "description": "Guesthouse and gathering place on Wyandotte Street in Kansas City offering lodging, dining, and event spaces."
+    },
+    {
+     "id": "312A14FF-2F5C-4998-AC39-193CC3F6E0F0",
+     "name": "Conductor Club",
+     "affinity": 0.896,
+     "popularity": 0.413,
+     "address": "30 W Pershing Rd Kansas City, MO 64108",
+     "image": "https://images.qloo.com/i/312A14FF-2F5C-4998-AC39-193CC3F6E0F0-420x-auto.jpg",
+     "description": "Bar and restaurant inside historic Union Station offering cocktails, beer, wine, hard liquor and food."
+    },
+    {
+     "id": "7DD68B24-154A-476C-AFAD-AC29D5356143",
+     "name": "PBR Big Sky: A Coors Banquet Bar",
+     "affinity": 0.895,
+     "popularity": 0.96,
+     "address": "111 E 13th St Kansas City, MO 64106",
+     "image": "https://images.qloo.com/i/7DD68B24-154A-476C-AFAD-AC29D5356143-420x-auto.jpg",
+     "description": "Cowboy-themed downtown bar with live country music, mechanical bull, large dance floor, VIP tables, and outdoor balconies."
+    }
+   ],
+   "brands": [
+    {
+     "id": "42A589B2-8C86-4C63-820B-0977038CAE7F",
+     "name": "Faherty",
+     "affinity": 0.985,
+     "popularity": 0.865,
+     "image": "https://images.qloo.com/i/42A589B2-8C86-4C63-820B-0977038CAE7F-420x-auto.jpg",
+     "description": "Faherty is a family-owned brand offering modern American heritage clothing for men, women, and kids, known for quality, comfort, and sustainable fashion."
+    },
+    {
+     "id": "78A44C09-E691-42DA-A553-5CDE6EE9B18A",
+     "name": "Allbirds",
+     "affinity": 0.976,
+     "popularity": 0.934,
+     "image": "https://images.qloo.com/i/78A44C09-E691-42DA-A553-5CDE6EE9B18A-420x-auto.jpg",
+     "description": "Allbirds is a global footwear and apparel brand known for comfortable, sustainable shoes made with innovative natural materials."
+    },
+    {
+     "id": "96A5C649-56F4-4853-8F1A-A2E645120728",
+     "name": "SeaVees",
+     "affinity": 0.968,
+     "popularity": 0.746,
+     "image": "https://images.qloo.com/i/96A5C649-56F4-4853-8F1A-A2E645120728-420x-auto.jpg",
+     "description": "SeaVees is a casual sneaker brand known for timeless, classic styles made with sustainable materials like recycled plastic and cotton scraps."
+    },
+    {
+     "id": "E8AE27B9-1528-4A58-97BD-30AF0BFE8859",
+     "name": "Peloton",
+     "affinity": 0.968,
+     "popularity": 0.987,
+     "image": "https://images.qloo.com/i/E8AE27B9-1528-4A58-97BD-30AF0BFE8859-420x-auto.jpg",
+     "description": "Peloton is a fitness brand offering connected exercise equipment and streaming fitness classes including cycling, running, strength, yoga, and more."
+    },
+    {
+     "id": "15817070-EEC5-49C9-BE35-02FE0A6416A1",
+     "name": "The Frye Company",
+     "affinity": 0.967,
+     "popularity": 0.905,
+     "image": "https://images.qloo.com/i/15817070-EEC5-49C9-BE35-02FE0A6416A1-420x-auto.jpg",
+     "description": "The Frye Company is an American brand known for its handcrafted boots, shoes, and bags for men and women, established since 1863."
+    }
+   ],
+   "podcasts": [
+    {
+     "id": "D4A9C252-5787-4FAF-87D8-B91743B2FE2D",
+     "name": "Your Mom's House with Christina P. and Tom Segura",
+     "affinity": 0.953,
+     "popularity": 0.996,
+     "image": "https://images.qloo.com/i/D4A9C252-5787-4FAF-87D8-B91743B2FE2D-420x-auto.jpg",
+     "description": "Comedians Christina P. and Tom Segura share humorous stories and insights on life, relationships, and parenting."
+    },
+    {
+     "id": "E5DEA7B0-2217-4CC3-B46E-B6CA56934C2E",
+     "name": "Bertcast",
+     "affinity": 0.952,
+     "popularity": 0.992,
+     "image": "https://images.qloo.com/i/E5DEA7B0-2217-4CC3-B46E-B6CA56934C2E-420x-auto.jpg",
+     "description": "Bert Kreischer shares his life experiences and insights through humor and storytelling."
+    },
+    {
+     "id": "9BFDA741-03C8-4B27-B5CB-E8631550A9C2",
+     "name": "2 Bears, 1 Cave with Tom Segura & Bert Kreischer",
+     "affinity": 0.951,
+     "popularity": 0.99,
+     "image": "https://images.qloo.com/i/9BFDA741-03C8-4B27-B5CB-E8631550A9C2-420x-auto.jpg",
+     "description": "Comedian best friends share laughs and stories in a casual setting, exploring humor and friendship."
+    },
+    {
+     "id": "CA300E91-9CE3-4F75-8837-7DF8B0B2F631",
+     "name": "Armchair Expert with Dax Shepard",
+     "affinity": 0.949,
+     "popularity": 0.999,
+     "image": "https://images.qloo.com/i/CA300E91-9CE3-4F75-8837-7DF8B0B2F631-420x-auto.jpg",
+     "description": "Dax Shepard explores the messiness of being human through candid conversations with celebrities and experts about vulnerability and personal growth."
+    }
+   ],
+   "opener": {
+    "id": "AA7E0314-0231-48D6-B53E-60F5303D443A",
+    "name": "Sam Morril",
+    "affinity": 0.962,
+    "popularity": 0.843
+   }
+  },
+  {
+   "name": "Nashville",
+   "query": "Nashville",
+   "lat": 36.1627,
+   "lng": -86.7816,
+   "score": 100,
+   "affinity": 1,
+   "popularity": 0.938,
+   "cells": 13,
+   "why": "Maximum 100 score and 1.0 affinity anchored by strong 0.938 popularity.",
+   "peers": [
+    {
+     "id": "6C1FAD83-7D3D-48AF-AAC3-DDCDA5536A3F",
+     "name": "Bert Kreischer",
+     "affinity": 0.969,
+     "popularity": 0.969,
+     "image": "https://images.qloo.com/i/6C1FAD83-7D3D-48AF-AAC3-DDCDA5536A3F-420x-auto.jpg"
+    },
+    {
+     "id": "EF9AF6DA-7785-4BD1-8F84-53B4958505CA",
+     "name": "Tom Segura",
+     "affinity": 0.963,
+     "popularity": 0.965,
+     "image": "https://images.qloo.com/i/EF9AF6DA-7785-4BD1-8F84-53B4958505CA-420x-auto.jpg"
+    },
+    {
+     "id": "AA7E0314-0231-48D6-B53E-60F5303D443A",
+     "name": "Sam Morril",
+     "affinity": 0.963,
+     "popularity": 0.843
+    },
+    {
+     "id": "B45CAFC8-DC2D-4556-97A6-E32A288546CA",
+     "name": "Nikki Glaser",
+     "affinity": 0.961,
+     "popularity": 0.915,
+     "image": "https://images.qloo.com/i/B45CAFC8-DC2D-4556-97A6-E32A288546CA-420x-auto.jpg"
+    },
+    {
+     "id": "F71871FF-3A92-4756-BFBD-B1E187434710",
+     "name": "Chris Distefano",
+     "affinity": 0.959,
+     "popularity": 0.872,
+     "image": "https://images.qloo.com/i/F71871FF-3A92-4756-BFBD-B1E187434710-420x-auto.jpg"
+    },
+    {
+     "id": "ED427EB1-A394-456D-9CFB-03C44C6E899C",
+     "name": "Theo Von",
+     "affinity": 0.958,
+     "popularity": 0.956,
+     "image": "https://images.qloo.com/i/ED427EB1-A394-456D-9CFB-03C44C6E899C-420x-auto.jpg"
+    },
+    {
+     "id": "01FAA997-13B8-456A-8DBF-5EC0F6EE06CF",
+     "name": "Gary Gulman",
+     "affinity": 0.957,
+     "popularity": 0.674,
+     "image": "https://images.qloo.com/i/01FAA997-13B8-456A-8DBF-5EC0F6EE06CF-420x-auto.jpg"
+    },
+    {
+     "id": "FD65F7F7-95AB-40A6-AB09-D8046C40FE48",
+     "name": "Bryan Callen",
+     "affinity": 0.957,
+     "popularity": 0.926,
+     "image": "https://images.qloo.com/i/FD65F7F7-95AB-40A6-AB09-D8046C40FE48-420x-auto.jpg"
+    },
+    {
+     "id": "F44C9634-A445-4C85-951F-4497111FDED9",
+     "name": "Christina Pazsitzky",
+     "affinity": 0.955,
+     "popularity": 0.867,
+     "image": "https://images.qloo.com/i/F44C9634-A445-4C85-951F-4497111FDED9-420x-auto.jpg"
+    },
+    {
+     "id": "10CE7A2E-1D3D-4298-B75E-2E13353B0609",
+     "name": "Jim Gaffigan",
+     "affinity": 0.955,
+     "popularity": 0.979,
+     "image": "https://images.qloo.com/i/10CE7A2E-1D3D-4298-B75E-2E13353B0609-420x-auto.jpg"
+    },
+    {
+     "id": "45728EBE-E016-42BA-9E9B-5B1624346E17",
+     "name": "Chris D'Elia",
+     "affinity": 0.954,
+     "popularity": 0.971,
+     "image": "https://images.qloo.com/i/45728EBE-E016-42BA-9E9B-5B1624346E17-420x-auto.jpg"
+    },
+    {
+     "id": "77395141-8BEE-42B4-8091-9382A8EEF563",
+     "name": "Taylor Tomlinson",
+     "affinity": 0.954,
+     "popularity": 0.875,
+     "image": "https://images.qloo.com/i/77395141-8BEE-42B4-8091-9382A8EEF563-420x-auto.jpg"
+    },
+    {
+     "id": "B6D77A0C-770B-4176-B482-2DA63CC3B566",
+     "name": "Jay Oakerson",
+     "affinity": 0.953,
+     "popularity": 0.824,
+     "image": "https://images.qloo.com/i/B6D77A0C-770B-4176-B482-2DA63CC3B566-420x-auto.jpg"
+    },
+    {
+     "id": "853277C9-2A52-43A6-BFA1-7B89C019B927",
+     "name": "Annie Lederman",
+     "affinity": 0.952,
+     "popularity": 0.786
+    },
+    {
+     "id": "FE46E1BE-1671-426A-8328-6D8FC0D7DCF1",
+     "name": "Mark Normand",
+     "affinity": 0.952,
+     "popularity": 0.86,
+     "image": "https://images.qloo.com/i/FE46E1BE-1671-426A-8328-6D8FC0D7DCF1-420x-auto.jpg"
+    }
+   ],
+   "rooms": [
+    {
+     "id": "BDB659FB-AC1C-40B9-914E-FD45941F636C",
+     "name": "The East Room",
+     "affinity": 0.876,
+     "popularity": 0.987,
+     "address": "2412 Gallatin Ave Nashville, TN 37206",
+     "image": "https://images.qloo.com/i/BDB659FB-AC1C-40B9-914E-FD45941F636C-420x-auto.jpg",
+     "description": "Intimate East Nashville venue hosting live music, comedy, theater and monthly goth dance nights."
+    },
+    {
+     "id": "EC62C535-89BC-4EB5-9D3D-C04AA00C4BEF",
+     "name": "Zanies Comedy Night Club",
+     "affinity": 0.823,
+     "popularity": 0.962,
+     "address": "2025 8th Ave S Nashville, TN 37204",
+     "image": "https://images.qloo.com/i/EC62C535-89BC-4EB5-9D3D-C04AA00C4BEF-420x-auto.jpg",
+     "description": "Longstanding comedy club featuring local acts, famous headliners, nightly open-mic shows and a full bar with food."
+    }
+   ],
+   "places": [
+    {
+     "id": "96D88F27-7890-4A0C-852F-4049D6614247",
+     "name": "Tennessee Brew Works",
+     "affinity": 0.918,
+     "popularity": 0.983,
+     "address": "809 Ewing Ave Nashville, TN 37203",
+     "image": "https://images.qloo.com/i/96D88F27-7890-4A0C-852F-4049D6614247-420x-auto.jpg",
+     "description": "On-site brewery and industrial taproom serving craft beers with oak-barrel tables, patio seating, live music, and event/wedding hosting."
+    },
+    {
+     "id": "89956665-B926-4382-B167-9FCC76118C34",
+     "name": "Nelson's Green Brier Distillery",
+     "affinity": 0.915,
+     "popularity": 0.987,
+     "address": "1414 Clinton St Nashville, TN 37203",
+     "image": "https://images.qloo.com/i/89956665-B926-4382-B167-9FCC76118C34-420x-auto.jpg",
+     "description": "Restored 19th-century Tennessee distillery offering guided tours, tastings, a gift shop, and a restaurant serving lunch and weekend brunch."
+    },
+    {
+     "id": "A1C44B89-8E7F-4385-AF36-DCF2993B3163",
+     "name": "The Detroit Cowboy",
+     "affinity": 0.908,
+     "popularity": 0.21,
+     "address": "500 11th Ave N Nashville, TN 37203",
+     "image": "https://images.qloo.com/i/A1C44B89-8E7F-4385-AF36-DCF2993B3163-420x-auto.jpg",
+     "description": "Classic upscale seafood and steak restaurant with sustainably sourced fare, extensive wine selection, and refined cocktails."
+    },
+    {
+     "id": "943B0027-CB62-4F52-85AB-667F004270F9",
+     "name": "The Twelve Thirty Club",
+     "affinity": 0.905,
+     "popularity": 0.987,
+     "address": "550 Broadway Nashville, TN 37203",
+     "image": "https://images.qloo.com/i/943B0027-CB62-4F52-85AB-667F004270F9-420x-auto.jpg",
+     "description": "Stylish downtown Nashville venue serving modern regional New American cuisine with rooftop dining, live music, and a full cocktail bar."
+    },
+    {
+     "id": "C0170B88-69C1-497B-BF66-CEE7C4BF857C",
+     "name": "White Limozeen",
+     "affinity": 0.904,
+     "popularity": 0.998,
+     "address": "101 20th Ave N Nashville, TN 37203",
+     "image": "https://images.qloo.com/i/C0170B88-69C1-497B-BF66-CEE7C4BF857C-420x-auto.jpg",
+     "description": "Chic French rooftop dining with vibrant pink decor, global bites, seafood, and stunning city views at Graduate Hotel Nashville."
+    }
+   ],
+   "brands": [
+    {
+     "id": "42A589B2-8C86-4C63-820B-0977038CAE7F",
+     "name": "Faherty",
+     "affinity": 0.987,
+     "popularity": 0.865,
+     "image": "https://images.qloo.com/i/42A589B2-8C86-4C63-820B-0977038CAE7F-420x-auto.jpg",
+     "description": "Faherty is a family-owned brand offering modern American heritage clothing for men, women, and kids, known for quality, comfort, and sustainable fashion."
+    },
+    {
+     "id": "78A44C09-E691-42DA-A553-5CDE6EE9B18A",
+     "name": "Allbirds",
+     "affinity": 0.976,
+     "popularity": 0.934,
+     "image": "https://images.qloo.com/i/78A44C09-E691-42DA-A553-5CDE6EE9B18A-420x-auto.jpg",
+     "description": "Allbirds is a global footwear and apparel brand known for comfortable, sustainable shoes made with innovative natural materials."
+    },
+    {
+     "id": "96A5C649-56F4-4853-8F1A-A2E645120728",
+     "name": "SeaVees",
+     "affinity": 0.97,
+     "popularity": 0.746,
+     "image": "https://images.qloo.com/i/96A5C649-56F4-4853-8F1A-A2E645120728-420x-auto.jpg",
+     "description": "SeaVees is a casual sneaker brand known for timeless, classic styles made with sustainable materials like recycled plastic and cotton scraps."
+    },
+    {
+     "id": "15817070-EEC5-49C9-BE35-02FE0A6416A1",
+     "name": "The Frye Company",
+     "affinity": 0.969,
+     "popularity": 0.905,
+     "image": "https://images.qloo.com/i/15817070-EEC5-49C9-BE35-02FE0A6416A1-420x-auto.jpg",
+     "description": "The Frye Company is an American brand known for its handcrafted boots, shoes, and bags for men and women, established since 1863."
+    },
+    {
+     "id": "E8AE27B9-1528-4A58-97BD-30AF0BFE8859",
+     "name": "Peloton",
+     "affinity": 0.968,
+     "popularity": 0.987,
+     "image": "https://images.qloo.com/i/E8AE27B9-1528-4A58-97BD-30AF0BFE8859-420x-auto.jpg",
+     "description": "Peloton is a fitness brand offering connected exercise equipment and streaming fitness classes including cycling, running, strength, yoga, and more."
+    }
+   ],
+   "podcasts": [
+    {
+     "id": "D4A9C252-5787-4FAF-87D8-B91743B2FE2D",
+     "name": "Your Mom's House with Christina P. and Tom Segura",
+     "affinity": 0.95,
+     "popularity": 0.996,
+     "image": "https://images.qloo.com/i/D4A9C252-5787-4FAF-87D8-B91743B2FE2D-420x-auto.jpg",
+     "description": "Comedians Christina P. and Tom Segura share humorous stories and insights on life, relationships, and parenting."
+    },
+    {
+     "id": "9BFDA741-03C8-4B27-B5CB-E8631550A9C2",
+     "name": "2 Bears, 1 Cave with Tom Segura & Bert Kreischer",
+     "affinity": 0.949,
+     "popularity": 0.99,
+     "image": "https://images.qloo.com/i/9BFDA741-03C8-4B27-B5CB-E8631550A9C2-420x-auto.jpg",
+     "description": "Comedian best friends share laughs and stories in a casual setting, exploring humor and friendship."
+    },
+    {
+     "id": "E5DEA7B0-2217-4CC3-B46E-B6CA56934C2E",
+     "name": "Bertcast",
+     "affinity": 0.949,
+     "popularity": 0.992,
+     "image": "https://images.qloo.com/i/E5DEA7B0-2217-4CC3-B46E-B6CA56934C2E-420x-auto.jpg",
+     "description": "Bert Kreischer shares his life experiences and insights through humor and storytelling."
+    },
+    {
+     "id": "CA300E91-9CE3-4F75-8837-7DF8B0B2F631",
+     "name": "Armchair Expert with Dax Shepard",
+     "affinity": 0.948,
+     "popularity": 0.999,
+     "image": "https://images.qloo.com/i/CA300E91-9CE3-4F75-8837-7DF8B0B2F631-420x-auto.jpg",
+     "description": "Dax Shepard explores the messiness of being human through candid conversations with celebrities and experts about vulnerability and personal growth."
+    }
+   ],
+   "opener": {
+    "id": "AA7E0314-0231-48D6-B53E-60F5303D443A",
+    "name": "Sam Morril",
+    "affinity": 0.963,
+    "popularity": 0.843
+   }
+  },
+  {
+   "name": "Austin",
+   "query": "Austin, Texas",
+   "lat": 30.2672,
+   "lng": -97.7431,
+   "score": 98,
+   "affinity": 0.982,
+   "popularity": 0.926,
+   "cells": 10,
+   "why": "Outstanding 98 score and 0.982 affinity backed by high 0.926 popularity.",
+   "peers": [
+    {
+     "id": "6C1FAD83-7D3D-48AF-AAC3-DDCDA5536A3F",
+     "name": "Bert Kreischer",
+     "affinity": 0.969,
+     "popularity": 0.969,
+     "image": "https://images.qloo.com/i/6C1FAD83-7D3D-48AF-AAC3-DDCDA5536A3F-420x-auto.jpg"
+    },
+    {
+     "id": "AA7E0314-0231-48D6-B53E-60F5303D443A",
+     "name": "Sam Morril",
+     "affinity": 0.964,
+     "popularity": 0.843
+    },
+    {
+     "id": "EF9AF6DA-7785-4BD1-8F84-53B4958505CA",
+     "name": "Tom Segura",
+     "affinity": 0.964,
+     "popularity": 0.965,
+     "image": "https://images.qloo.com/i/EF9AF6DA-7785-4BD1-8F84-53B4958505CA-420x-auto.jpg"
+    },
+    {
+     "id": "B45CAFC8-DC2D-4556-97A6-E32A288546CA",
+     "name": "Nikki Glaser",
+     "affinity": 0.961,
+     "popularity": 0.915,
+     "image": "https://images.qloo.com/i/B45CAFC8-DC2D-4556-97A6-E32A288546CA-420x-auto.jpg"
+    },
+    {
+     "id": "F71871FF-3A92-4756-BFBD-B1E187434710",
+     "name": "Chris Distefano",
+     "affinity": 0.959,
+     "popularity": 0.872,
+     "image": "https://images.qloo.com/i/F71871FF-3A92-4756-BFBD-B1E187434710-420x-auto.jpg"
+    },
+    {
+     "id": "FD65F7F7-95AB-40A6-AB09-D8046C40FE48",
+     "name": "Bryan Callen",
+     "affinity": 0.958,
+     "popularity": 0.926,
+     "image": "https://images.qloo.com/i/FD65F7F7-95AB-40A6-AB09-D8046C40FE48-420x-auto.jpg"
+    },
+    {
+     "id": "01FAA997-13B8-456A-8DBF-5EC0F6EE06CF",
+     "name": "Gary Gulman",
+     "affinity": 0.958,
+     "popularity": 0.674,
+     "image": "https://images.qloo.com/i/01FAA997-13B8-456A-8DBF-5EC0F6EE06CF-420x-auto.jpg"
+    },
+    {
+     "id": "ED427EB1-A394-456D-9CFB-03C44C6E899C",
+     "name": "Theo Von",
+     "affinity": 0.958,
+     "popularity": 0.956,
+     "image": "https://images.qloo.com/i/ED427EB1-A394-456D-9CFB-03C44C6E899C-420x-auto.jpg"
+    },
+    {
+     "id": "F44C9634-A445-4C85-951F-4497111FDED9",
+     "name": "Christina Pazsitzky",
+     "affinity": 0.957,
+     "popularity": 0.867,
+     "image": "https://images.qloo.com/i/F44C9634-A445-4C85-951F-4497111FDED9-420x-auto.jpg"
+    },
+    {
+     "id": "B6D77A0C-770B-4176-B482-2DA63CC3B566",
+     "name": "Jay Oakerson",
+     "affinity": 0.956,
+     "popularity": 0.824,
+     "image": "https://images.qloo.com/i/B6D77A0C-770B-4176-B482-2DA63CC3B566-420x-auto.jpg"
+    },
+    {
+     "id": "10CE7A2E-1D3D-4298-B75E-2E13353B0609",
+     "name": "Jim Gaffigan",
+     "affinity": 0.955,
+     "popularity": 0.979,
+     "image": "https://images.qloo.com/i/10CE7A2E-1D3D-4298-B75E-2E13353B0609-420x-auto.jpg"
+    },
+    {
+     "id": "853277C9-2A52-43A6-BFA1-7B89C019B927",
+     "name": "Annie Lederman",
+     "affinity": 0.955,
+     "popularity": 0.786
+    },
+    {
+     "id": "45728EBE-E016-42BA-9E9B-5B1624346E17",
+     "name": "Chris D'Elia",
+     "affinity": 0.954,
+     "popularity": 0.971,
+     "image": "https://images.qloo.com/i/45728EBE-E016-42BA-9E9B-5B1624346E17-420x-auto.jpg"
+    },
+    {
+     "id": "FE46E1BE-1671-426A-8328-6D8FC0D7DCF1",
+     "name": "Mark Normand",
+     "affinity": 0.954,
+     "popularity": 0.86,
+     "image": "https://images.qloo.com/i/FE46E1BE-1671-426A-8328-6D8FC0D7DCF1-420x-auto.jpg"
+    },
+    {
+     "id": "831C1BF8-B78B-4603-8530-C4CD64477074",
+     "name": "Fahim Anwar",
+     "affinity": 0.954,
+     "popularity": 0.622
+    }
+   ],
+   "rooms": [
+    {
+     "id": "8F921BFF-C387-4EFD-BA47-6133AD160CB1",
+     "name": "Esther's Follies",
+     "affinity": 0.87,
+     "popularity": 0.973,
+     "address": "525 E 6th St Austin, TX 78701",
+     "image": "https://images.qloo.com/i/8F921BFF-C387-4EFD-BA47-6133AD160CB1-420x-auto.jpg",
+     "description": "Long-running Austin sketch comedy and magic theater blending political satire, musical numbers, and illusion in a lively Sixth Street venue."
+    },
+    {
+     "id": "A8FD9396-A27D-488A-BF58-20086FD09229",
+     "name": "Vulcan Gas Company",
+     "affinity": 0.853,
+     "popularity": 0.992,
+     "address": "418 E 6th St Austin, TX 78701",
+     "image": "https://images.qloo.com/i/A8FD9396-A27D-488A-BF58-20086FD09229-420x-auto.jpg",
+     "description": "Intimate downtown nightspot hosting live music, comedy, and DJ events in industrial-chic surroundings, with a full bar and space for dancing."
+    },
+    {
+     "id": "D6CA7A63-B917-4C6D-BF10-8F874D53A3D7",
+     "name": "The Creek & The Cave",
+     "affinity": 0.849,
+     "popularity": 0.977,
+     "address": "611 E 7th St Austin, TX 78701",
+     "image": "https://images.qloo.com/i/D6CA7A63-B917-4C6D-BF10-8F874D53A3D7-420x-auto.jpg",
+     "description": "Lively Austin comedy club and bar hosting showcases, workshops, open mics, and touring headliners in an intimate courtyard-and-stage venue."
+    },
+    {
+     "id": "57C48CD1-4188-44BC-B813-C01CE4EED62A",
+     "name": "Fallout Theater",
+     "affinity": 0.839,
+     "popularity": 0.92,
+     "address": "616 Lavaca St Austin, TX 78701",
+     "image": "https://images.qloo.com/i/57C48CD1-4188-44BC-B813-C01CE4EED62A-420x-auto.jpg",
+     "description": "Underground Austin comedy club and improv school offering regular improv, sketch, and stand-up shows, classes, festivals, and corporate workshops."
+    },
+    {
+     "id": "2668A55D-5797-473D-8FF5-22851F3C5C10",
+     "name": "The Velveeta Room",
+     "affinity": 0.838,
+     "popularity": 0.798,
+     "address": "521 E 6th St Austin, TX 78701",
+     "image": "https://images.qloo.com/i/2668A55D-5797-473D-8FF5-22851F3C5C10-420x-auto.jpg",
+     "description": "Long-running intimate 6th Street comedy club and bar showcasing seasoned local stand-up, rising headliners, and open-mic nights since 1988."
+    }
+   ],
+   "places": [
+    {
+     "id": "D5D79DF5-A80E-4E34-871F-0464C3352C87",
+     "name": "WYLD Bar",
+     "affinity": 0.873,
+     "popularity": 0.077,
+     "address": "706 W 6th St Austin, TX 78701",
+     "image": "https://images.qloo.com/i/D5D79DF5-A80E-4E34-871F-0464C3352C87-420x-auto.jpg",
+     "description": "Lively downtown Austin bar and event venue with piano music, karaoke, a mechanical bull, and creative cocktails for parties and nights out."
+    },
+    {
+     "id": "70588033-1077-4F94-A820-F7D552A95568",
+     "name": "Augustine Cocktail Bar",
+     "affinity": 0.863,
+     "popularity": 0.578,
+     "address": "86 Rainey St Austin, TX 78701",
+     "image": "https://images.qloo.com/i/70588033-1077-4F94-A820-F7D552A95568-420x-auto.jpg",
+     "description": "Lively Rainey Street cocktail bar and restaurant offering craft cocktails, outdoor patios, live entertainment, and a stage for dancing and events."
+    },
+    {
+     "id": "7DD91ED1-FD47-4811-B561-8FB22839ABF8",
+     "name": "Peckerheads",
+     "affinity": 0.862,
+     "popularity": 0.877,
+     "address": "402 E 6th St Austin, TX 78701",
+     "image": "https://images.qloo.com/i/7DD91ED1-FD47-4811-B561-8FB22839ABF8-420x-auto.jpg",
+     "description": "Lively 6th Street bar and event venue known for giant mason jar Long Island iced teas, live music, multiple bars, stages, and dance floors."
+    },
+    {
+     "id": "60F253EF-109C-49FD-A9FB-D71C5A03304C",
+     "name": "The Lucky Duck",
+     "affinity": 0.862,
+     "popularity": 0.578,
+     "address": "1300 E 6th St Austin, TX 78702",
+     "image": "https://images.qloo.com/i/60F253EF-109C-49FD-A9FB-D71C5A03304C-420x-auto.jpg",
+     "description": "Casual East Sixth Street bar and restaurant known for chicken-and-waffles, arcade games, lively happy-hour scene, and LGBTQ+-friendly atmosphere."
+    },
+    {
+     "id": "3320560D-4DE8-40B9-A372-35335D4D0FF2",
+     "name": "Unbarlievable West 6th",
+     "affinity": 0.861,
+     "popularity": 0.399,
+     "address": "513 W 6th St Austin, TX 78701",
+     "image": "https://images.qloo.com/i/3320560D-4DE8-40B9-A372-35335D4D0FF2-420x-auto.jpg",
+     "description": "Circus-themed bar with oversized, Instagrammable cocktails, playful slides and eclectic decor, plus private-lounge and event reservations."
+    }
+   ],
+   "brands": [
+    {
+     "id": "42A589B2-8C86-4C63-820B-0977038CAE7F",
+     "name": "Faherty",
+     "affinity": 0.987,
+     "popularity": 0.865,
+     "image": "https://images.qloo.com/i/42A589B2-8C86-4C63-820B-0977038CAE7F-420x-auto.jpg",
+     "description": "Faherty is a family-owned brand offering modern American heritage clothing for men, women, and kids, known for quality, comfort, and sustainable fashion."
+    },
+    {
+     "id": "78A44C09-E691-42DA-A553-5CDE6EE9B18A",
+     "name": "Allbirds",
+     "affinity": 0.976,
+     "popularity": 0.934,
+     "image": "https://images.qloo.com/i/78A44C09-E691-42DA-A553-5CDE6EE9B18A-420x-auto.jpg",
+     "description": "Allbirds is a global footwear and apparel brand known for comfortable, sustainable shoes made with innovative natural materials."
+    },
+    {
+     "id": "96A5C649-56F4-4853-8F1A-A2E645120728",
+     "name": "SeaVees",
+     "affinity": 0.971,
+     "popularity": 0.746,
+     "image": "https://images.qloo.com/i/96A5C649-56F4-4853-8F1A-A2E645120728-420x-auto.jpg",
+     "description": "SeaVees is a casual sneaker brand known for timeless, classic styles made with sustainable materials like recycled plastic and cotton scraps."
+    },
+    {
+     "id": "D619A0B2-F0ED-4DD3-97D9-00BDC4F32E7C",
+     "name": "Vuori",
+     "affinity": 0.969,
+     "popularity": 0.85,
+     "image": "https://images.qloo.com/i/D619A0B2-F0ED-4DD3-97D9-00BDC4F32E7C-420x-auto.jpg",
+     "description": "Vuori is a retail apparel brand specializing in athletic and performance clothing for men and women, designed for movement and everyday style."
+    },
+    {
+     "id": "15817070-EEC5-49C9-BE35-02FE0A6416A1",
+     "name": "The Frye Company",
+     "affinity": 0.968,
+     "popularity": 0.905,
+     "image": "https://images.qloo.com/i/15817070-EEC5-49C9-BE35-02FE0A6416A1-420x-auto.jpg",
+     "description": "The Frye Company is an American brand known for its handcrafted boots, shoes, and bags for men and women, established since 1863."
+    }
+   ],
+   "podcasts": [
+    {
+     "id": "D4A9C252-5787-4FAF-87D8-B91743B2FE2D",
+     "name": "Your Mom's House with Christina P. and Tom Segura",
+     "affinity": 0.955,
+     "popularity": 0.996,
+     "image": "https://images.qloo.com/i/D4A9C252-5787-4FAF-87D8-B91743B2FE2D-420x-auto.jpg",
+     "description": "Comedians Christina P. and Tom Segura share humorous stories and insights on life, relationships, and parenting."
+    },
+    {
+     "id": "9BFDA741-03C8-4B27-B5CB-E8631550A9C2",
+     "name": "2 Bears, 1 Cave with Tom Segura & Bert Kreischer",
+     "affinity": 0.951,
+     "popularity": 0.99,
+     "image": "https://images.qloo.com/i/9BFDA741-03C8-4B27-B5CB-E8631550A9C2-420x-auto.jpg",
+     "description": "Comedian best friends share laughs and stories in a casual setting, exploring humor and friendship."
+    },
+    {
+     "id": "E5DEA7B0-2217-4CC3-B46E-B6CA56934C2E",
+     "name": "Bertcast",
+     "affinity": 0.948,
+     "popularity": 0.992,
+     "image": "https://images.qloo.com/i/E5DEA7B0-2217-4CC3-B46E-B6CA56934C2E-420x-auto.jpg",
+     "description": "Bert Kreischer shares his life experiences and insights through humor and storytelling."
+    },
+    {
+     "id": "CA300E91-9CE3-4F75-8837-7DF8B0B2F631",
+     "name": "Armchair Expert with Dax Shepard",
+     "affinity": 0.948,
+     "popularity": 0.999,
+     "image": "https://images.qloo.com/i/CA300E91-9CE3-4F75-8837-7DF8B0B2F631-420x-auto.jpg",
+     "description": "Dax Shepard explores the messiness of being human through candid conversations with celebrities and experts about vulnerability and personal growth."
+    }
+   ],
+   "opener": {
+    "id": "AA7E0314-0231-48D6-B53E-60F5303D443A",
+    "name": "Sam Morril",
+    "affinity": 0.964,
+    "popularity": 0.843
+   }
+  }
+ ],
+ "openers": {
+  "shortlist": [
+   "Sam Morril",
+   "Chris Distefano",
+   "Gary Gulman",
+   "Christina Pazsitzky",
+   "Annie Lederman",
+   "Jay Oakerson",
+   "Taylor Tomlinson",
+   "Mark Normand"
+  ],
+  "board": [
+   {
+    "id": "AA7E0314-0231-48D6-B53E-60F5303D443A",
+    "name": "Sam Morril",
+    "avg_rank": 1,
+    "first_in": 6,
+    "cities": 6,
+    "user": false
+   },
+   {
+    "id": "F71871FF-3A92-4756-BFBD-B1E187434710",
+    "name": "Chris Distefano",
+    "avg_rank": 2.33,
+    "first_in": 0,
+    "cities": 6,
+    "user": false
+   },
+   {
+    "id": "01FAA997-13B8-456A-8DBF-5EC0F6EE06CF",
+    "name": "Gary Gulman",
+    "avg_rank": 3,
+    "first_in": 0,
+    "cities": 6,
+    "user": false
+   },
+   {
+    "id": "F44C9634-A445-4C85-951F-4497111FDED9",
+    "name": "Christina Pazsitzky",
+    "avg_rank": 3.67,
+    "first_in": 0,
+    "cities": 6,
+    "user": false
+   },
+   {
+    "id": "B6D77A0C-770B-4176-B482-2DA63CC3B566",
+    "name": "Jay Oakerson",
+    "avg_rank": 6,
+    "first_in": 0,
+    "cities": 6,
+    "user": false
+   },
+   {
+    "id": "853277C9-2A52-43A6-BFA1-7B89C019B927",
+    "name": "Annie Lederman",
+    "avg_rank": 6.17,
+    "first_in": 0,
+    "cities": 6,
+    "user": false
+   },
+   {
+    "id": "77395141-8BEE-42B4-8091-9382A8EEF563",
+    "name": "Taylor Tomlinson",
+    "avg_rank": 6.33,
+    "first_in": 0,
+    "cities": 6,
+    "user": false
+   },
+   {
+    "id": "FE46E1BE-1671-426A-8328-6D8FC0D7DCF1",
+    "name": "Mark Normand",
+    "avg_rank": 7.5,
+    "first_in": 0,
+    "cities": 6,
+    "user": false
+   }
+  ],
+  "perCity": {
+   "Phoenix": [
+    "Sam Morril",
+    "Chris Distefano",
+    "Christina Pazsitzky",
+    "Gary Gulman",
+    "Jay Oakerson",
+    "Annie Lederman",
+    "Taylor Tomlinson",
+    "Mark Normand"
+   ],
+   "Denver": [
+    "Sam Morril",
+    "Gary Gulman",
+    "Chris Distefano",
+    "Christina Pazsitzky",
+    "Jay Oakerson",
+    "Annie Lederman",
+    "Mark Normand",
+    "Taylor Tomlinson"
+   ],
+   "Salt Lake City": [
+    "Sam Morril",
+    "Gary Gulman",
+    "Chris Distefano",
+    "Christina Pazsitzky",
+    "Taylor Tomlinson",
+    "Annie Lederman",
+    "Jay Oakerson",
+    "Mark Normand"
+   ],
+   "Nashville": [
+    "Sam Morril",
+    "Chris Distefano",
+    "Gary Gulman",
+    "Christina Pazsitzky",
+    "Taylor Tomlinson",
+    "Jay Oakerson",
+    "Annie Lederman",
+    "Mark Normand"
+   ],
+   "Kansas City": [
+    "Sam Morril",
+    "Chris Distefano",
+    "Christina Pazsitzky",
+    "Gary Gulman",
+    "Taylor Tomlinson",
+    "Annie Lederman",
+    "Mark Normand",
+    "Jay Oakerson"
+   ],
+   "Austin": [
+    "Sam Morril",
+    "Chris Distefano",
+    "Gary Gulman",
+    "Christina Pazsitzky",
+    "Jay Oakerson",
+    "Annie Lederman",
+    "Mark Normand",
+    "Taylor Tomlinson"
+   ]
+  }
+ },
+ "compare": {
+  "with": "Sam Morril",
+  "shared": [
+   {
+    "name": "Humorous",
+    "score": 0.7250551898383499
+   },
+   {
+    "name": "Minimalist",
+    "score": 0.72191346515457
+   },
+   {
+    "name": "Casual",
+    "score": 0.719088363407295
+   },
+   {
+    "name": "Authentic",
+    "score": 0.6000351443027333
+   }
+  ]
+ },
+ "copy": {
+  "source": "llm",
+  "stops": [
+   {
+    "city": "Phoenix",
+    "generic": "Get ready for an unforgettable night of hilarious comedy live in your city!",
+    "hook": "Throw on your favorite Faherty outfit, grab pre-show drinks at The Scotch Library, and catch Nate Bargatze with opener Sam Morril live in Phoenix!",
+    "caption": "Phoenix, don't miss Nate Bargatze and opener Sam Morril live! Grab your tickets today.",
+    "references": [
+     "Faherty",
+     "The Scotch Library",
+     "Sam Morril"
+    ]
+   },
+   {
+    "city": "Salt Lake City",
+    "generic": "Don't miss one of the funniest stand-up shows coming to town this tour season.",
+    "hook": "Grab pre-show craft drinks at Shades Brewing in your Vuori gear before catching Nate Bargatze live with opener Sam Morril!",
+    "caption": "Salt Lake City! Catch Nate Bargatze with special guest Sam Morril. Get your tickets now!",
+    "references": [
+     "Shades Brewing",
+     "Vuori",
+     "Sam Morril"
+    ]
+   },
+   {
+    "city": "Denver",
+    "generic": "Experience an incredible evening of stand-up comedy that will have you laughing all night.",
+    "hook": "Lace up your Allbirds for a pre-show drink at Our Mutual Friend Brewing before seeing Nate Bargatze and opener Sam Morril!",
+    "caption": "Denver! Don't miss Nate Bargatze with opener Sam Morril live on stage. Get tickets today!",
+    "references": [
+     "Allbirds",
+     "Our Mutual Friend Brewing",
+     "Sam Morril"
+    ]
+   },
+   {
+    "city": "Kansas City",
+    "generic": "Come out for a great night of live entertainment and non-stop laughs with us.",
+    "hook": "Wear your favorite SeaVees and grab pre-show drinks at Westport Bar & Rec before seeing Nate Bargatze with special guest Sam Morril!",
+    "caption": "Kansas City! Nate Bargatze is coming live with opener Sam Morril. Grab your tickets now!",
+    "references": [
+     "SeaVees",
+     "Westport Bar & Rec",
+     "Sam Morril"
+    ]
+   },
+   {
+    "city": "Nashville",
+    "generic": "Grab your tickets now for a hilarious night of comedy you will not forget.",
+    "hook": "Meet up at Tennessee Brew Works before seeing Nate Bargatze live with special guest Sam Morril in Nashville!",
+    "caption": "Nashville, catch Nate Bargatze and opener Sam Morril live! Get your tickets before they sell out.",
+    "references": [
+     "Tennessee Brew Works",
+     "Sam Morril"
+    ]
+   },
+   {
+    "city": "Austin",
+    "generic": "Join us for a top-tier comedy event featuring world-class stand-up performers tonight.",
+    "hook": "Wear your favorite Faherty gear and meet up at The Lucky Duck before catching Nate Bargatze with opener Sam Morril!",
+    "caption": "Austin! Don't miss Nate Bargatze live with opener Sam Morril. Get your tickets today!",
+    "references": [
+     "Faherty",
+     "The Lucky Duck",
+     "Sam Morril"
+    ]
+   }
+  ]
+ },
+ "brief": "Nate Bargatze's tour features a top routing of Nashville (100), Salt Lake City (99), Denver (99), Kansas City (98), Austin (98), and Phoenix (96), while dropping Seattle (95), Minneapolis (94), Columbus (94), Dallas (92), and Chicago (88). Massive coastal markets like New York (55) and Los Angeles (61) were excluded due to severe affinity drop-offs, whereas Sam Morril is the top opener sharing humorous, minimalist, casual, and authentic taste."
+}

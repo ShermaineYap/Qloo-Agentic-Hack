@@ -141,6 +141,16 @@ export function mockCall(name, args = {}) {
       const results = TAGS.filter((t) => r() > 0.5).slice(0, 5).map((t) => ({ id: `urn:tag:mock:${t}`, name: t }));
       return env("find_tags", { results, result_count: results.length });
     }
+    case "region_heatmap": {
+      // A coarse grid around every known city, with seeded affinities.
+      const points = [];
+      for (const c of ALL_CITIES) {
+        const base = 0.4 + r() * 0.6;
+        for (let i = 0; i < 12; i++)
+          points.push({ lat: c.lat + (r() - 0.5) * 0.8, lng: c.lng + (r() - 0.5) * 0.8, affinity: Math.min(1, base + (r() - 0.5) * 0.15), affinity_rank: r(), popularity: 0.3 + r() * 0.7 });
+      }
+      return { status: "ok", mock: true, summary: `${points.length} heatmap cells (sample)`, points };
+    }
     default:
       return { status: "error", mock: true, summary: `Unknown tool ${name}`, error: { code: "UNKNOWN_TOOL", retryable: false }, results: [] };
   }

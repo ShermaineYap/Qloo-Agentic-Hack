@@ -1,0 +1,6742 @@
+{
+ "id": "d2fa7b6fb3",
+ "created_at": "2026-10-29T17:49:44.453Z",
+ "input": {
+  "id": "music-uk",
+  "label": "Indie run, UK & Ireland",
+  "act": "Phoebe Bridgers",
+  "actType": "artist",
+  "region": "uk",
+  "stops": 5,
+  "notes": "Mid-size venues, autumn"
+ },
+ "region": {
+  "id": "uk",
+  "label": "UK & Ireland",
+  "center": [
+   54,
+   -3.5
+  ],
+  "zoom": 5
+ },
+ "llm": {
+  "provider": "gemini",
+  "model": "gemini-3.5-flash"
+ },
+ "mock": false,
+ "steps": [
+  {
+   "id": "s1",
+   "phase": "act",
+   "label": "Find \"Phoebe Bridgers\" in Qloo's taste graph",
+   "tool": "qloo_describe",
+   "args": {
+    "entity": "Phoebe Bridgers",
+    "type": "artist"
+   },
+   "status": "ok",
+   "summary": "1 results",
+   "result_count": 1,
+   "cached": true,
+   "mock": false,
+   "ms": 1,
+   "request": {
+    "entity_ids": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ]
+   }
+  },
+  {
+   "id": "s2",
+   "phase": "route",
+   "label": "Heatmap of Phoebe Bridgers's fans across UK & Ireland",
+   "tool": "qloo heatmap",
+   "args": {
+    "entity": "Phoebe Bridgers",
+    "boundary": "UK & Ireland"
+   },
+   "status": "ok",
+   "summary": "921 grid cells, each with an affinity and popularity score",
+   "cached": true,
+   "ms": 1,
+   "request": {
+    "filter.type": "urn:heatmap",
+    "signal.interests.entities": "AFBC71A7-9439-4AB0-AB68-D14B11AAF836",
+    "filter.location": "POLYGON((-11 49.8, 2 49.8, 2 59, -11 59, -11 49.8))",
+    "take": "50"
+   }
+  },
+  {
+   "id": "s3",
+   "phase": "route",
+   "label": "Scored 12 markets from the grid: London leads (98), Belfast trails (85).",
+   "tool": "agent",
+   "status": "done"
+  },
+  {
+   "id": "s6",
+   "phase": "audience",
+   "label": "Is the act rising or fading?",
+   "tool": "qloo_trends",
+   "args": {
+    "entities": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "entity_type": "artist",
+    "start_date": "2026-06-11",
+    "end_date": "2026-10-29",
+    "limit": 20
+   },
+   "status": "ok",
+   "summary": "1 results",
+   "result_count": 1,
+   "cached": true,
+   "mock": false,
+   "ms": 4,
+   "request": {
+    "filter.type": "urn:entity:artist",
+    "filter.start_date": "2026-06-11",
+    "filter.end_date": "2026-10-29",
+    "signal.interests.entities": "AFBC71A7-9439-4AB0-AB68-D14B11AAF836",
+    "take": 20
+   }
+  },
+  {
+   "id": "s4",
+   "phase": "audience",
+   "label": "What concepts define this act's fan base?",
+   "tool": "qloo_entity_tags",
+   "args": {
+    "entities": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "limit": 20
+   },
+   "status": "ok",
+   "summary": "20 results",
+   "result_count": 20,
+   "cached": true,
+   "mock": false,
+   "ms": 5,
+   "request": {
+    "filter.type": "urn:tag",
+    "signal.interests.entities": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "take": 20
+   }
+  },
+  {
+   "id": "s5",
+   "phase": "audience",
+   "label": "Who are the fans? (age and gender skew)",
+   "tool": "qloo_audience_demographics",
+   "args": {
+    "entity": "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+   },
+   "status": "ok",
+   "summary": "1 results",
+   "result_count": 1,
+   "cached": true,
+   "mock": false,
+   "ms": 5,
+   "request": {
+    "filter.type": "urn:demographics",
+    "signal.interests.entities": "AFBC71A7-9439-4AB0-AB68-D14B11AAF836",
+    "take": 10
+   }
+  },
+  {
+   "id": "s7",
+   "phase": "route",
+   "label": "We targeted top-scoring markets to match the artist's indie-leaning audience profile while prioritizing mid-size venue viability. Birmingham was dropped due to a sharp drop-off in affinity (0.891) compared to the rest of the tour.",
+   "tool": "agent",
+   "status": "done"
+  },
+  {
+   "id": "s10",
+   "phase": "stops",
+   "label": "Dublin: bars and restaurants these fans love (pre-show, after-party)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "place",
+    "signals": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "filter_location": "Dublin",
+    "include_tags": [
+     "urn:tag:category:place:bar",
+     "urn:tag:category:place:restaurant"
+    ],
+    "include_tags_operator": "union",
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": true,
+   "mock": false,
+   "ms": 9,
+   "request": {
+    "filter.type": "urn:entity:place",
+    "take": 5,
+    "signal.interests.entities": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "filter.location.query": "Dublin",
+    "filter.tags": [
+     "urn:tag:category:place:bar",
+     "urn:tag:category:place:restaurant"
+    ],
+    "operator.filter.tags": "union",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s8",
+   "phase": "stops",
+   "label": "Dublin: artists these fans also love (opener pool)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "artist",
+    "signals": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal_location": "Dublin",
+    "limit": 15
+   },
+   "status": "ok",
+   "summary": "15 results",
+   "result_count": 15,
+   "cached": true,
+   "mock": false,
+   "ms": 9,
+   "request": {
+    "filter.type": "urn:entity:artist",
+    "take": 15,
+    "signal.interests.entities": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal.location.query": "Dublin",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s9",
+   "phase": "stops",
+   "label": "Dublin: live music venues with high fan affinity",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "place",
+    "signals": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "filter_location": "Dublin",
+    "include_tags": [
+     "urn:tag:category:place:live_music_venue"
+    ],
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": true,
+   "mock": false,
+   "ms": 10,
+   "request": {
+    "filter.type": "urn:entity:place",
+    "take": 5,
+    "signal.interests.entities": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "filter.location.query": "Dublin",
+    "filter.tags": [
+     "urn:tag:category:place:live_music_venue"
+    ],
+    "operator.filter.tags": "union",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s14",
+   "phase": "stops",
+   "label": "Manchester: live music venues with high fan affinity",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "place",
+    "signals": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "filter_location": "Manchester, UK",
+    "include_tags": [
+     "urn:tag:category:place:live_music_venue"
+    ],
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": true,
+   "mock": false,
+   "ms": 9,
+   "request": {
+    "filter.type": "urn:entity:place",
+    "take": 5,
+    "signal.interests.entities": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "filter.location.query": "Manchester, UK",
+    "filter.tags": [
+     "urn:tag:category:place:live_music_venue"
+    ],
+    "operator.filter.tags": "union",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s13",
+   "phase": "stops",
+   "label": "Manchester: artists these fans also love (opener pool)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "artist",
+    "signals": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal_location": "Manchester, UK",
+    "limit": 15
+   },
+   "status": "ok",
+   "summary": "15 results",
+   "result_count": 15,
+   "cached": true,
+   "mock": false,
+   "ms": 10,
+   "request": {
+    "filter.type": "urn:entity:artist",
+    "take": 15,
+    "signal.interests.entities": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal.location.query": "Manchester, UK",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s12",
+   "phase": "stops",
+   "label": "Dublin: podcasts for local PR",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "podcast",
+    "signals": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal_location": "Dublin",
+    "limit": 4
+   },
+   "status": "ok",
+   "summary": "4 results",
+   "result_count": 4,
+   "cached": true,
+   "mock": false,
+   "ms": 10,
+   "request": {
+    "filter.type": "urn:entity:podcast",
+    "take": 4,
+    "signal.interests.entities": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal.location.query": "Dublin",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s11",
+   "phase": "stops",
+   "label": "Dublin: brands this audience over-indexes on (sponsors)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "brand",
+    "signals": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal_location": "Dublin",
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": true,
+   "mock": false,
+   "ms": 10,
+   "request": {
+    "filter.type": "urn:entity:brand",
+    "take": 5,
+    "signal.interests.entities": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal.location.query": "Dublin",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s17",
+   "phase": "stops",
+   "label": "Manchester: podcasts for local PR",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "podcast",
+    "signals": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal_location": "Manchester, UK",
+    "limit": 4
+   },
+   "status": "ok",
+   "summary": "4 results",
+   "result_count": 4,
+   "cached": true,
+   "mock": false,
+   "ms": 10,
+   "request": {
+    "filter.type": "urn:entity:podcast",
+    "take": 4,
+    "signal.interests.entities": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal.location.query": "Manchester, UK",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s16",
+   "phase": "stops",
+   "label": "Manchester: brands this audience over-indexes on (sponsors)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "brand",
+    "signals": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal_location": "Manchester, UK",
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": true,
+   "mock": false,
+   "ms": 10,
+   "request": {
+    "filter.type": "urn:entity:brand",
+    "take": 5,
+    "signal.interests.entities": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal.location.query": "Manchester, UK",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s19",
+   "phase": "stops",
+   "label": "Bristol: live music venues with high fan affinity",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "place",
+    "signals": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "filter_location": "Bristol, UK",
+    "include_tags": [
+     "urn:tag:category:place:live_music_venue"
+    ],
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": true,
+   "mock": false,
+   "ms": 10,
+   "request": {
+    "filter.type": "urn:entity:place",
+    "take": 5,
+    "signal.interests.entities": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "filter.location.query": "Bristol, UK",
+    "filter.tags": [
+     "urn:tag:category:place:live_music_venue"
+    ],
+    "operator.filter.tags": "union",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s18",
+   "phase": "stops",
+   "label": "Bristol: artists these fans also love (opener pool)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "artist",
+    "signals": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal_location": "Bristol, UK",
+    "limit": 15
+   },
+   "status": "ok",
+   "summary": "15 results",
+   "result_count": 15,
+   "cached": true,
+   "mock": false,
+   "ms": 10,
+   "request": {
+    "filter.type": "urn:entity:artist",
+    "take": 15,
+    "signal.interests.entities": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal.location.query": "Bristol, UK",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s15",
+   "phase": "stops",
+   "label": "Manchester: bars and restaurants these fans love (pre-show, after-party)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "place",
+    "signals": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "filter_location": "Manchester, UK",
+    "include_tags": [
+     "urn:tag:category:place:bar",
+     "urn:tag:category:place:restaurant"
+    ],
+    "include_tags_operator": "union",
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": true,
+   "mock": false,
+   "ms": 10,
+   "request": {
+    "filter.type": "urn:entity:place",
+    "take": 5,
+    "signal.interests.entities": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "filter.location.query": "Manchester, UK",
+    "filter.tags": [
+     "urn:tag:category:place:bar",
+     "urn:tag:category:place:restaurant"
+    ],
+    "operator.filter.tags": "union",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s22",
+   "phase": "stops",
+   "label": "Bristol: podcasts for local PR",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "podcast",
+    "signals": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal_location": "Bristol, UK",
+    "limit": 4
+   },
+   "status": "ok",
+   "summary": "4 results",
+   "result_count": 4,
+   "cached": true,
+   "mock": false,
+   "ms": 12,
+   "request": {
+    "filter.type": "urn:entity:podcast",
+    "take": 4,
+    "signal.interests.entities": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal.location.query": "Bristol, UK",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s21",
+   "phase": "stops",
+   "label": "Bristol: brands this audience over-indexes on (sponsors)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "brand",
+    "signals": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal_location": "Bristol, UK",
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": true,
+   "mock": false,
+   "ms": 12,
+   "request": {
+    "filter.type": "urn:entity:brand",
+    "take": 5,
+    "signal.interests.entities": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal.location.query": "Bristol, UK",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s23",
+   "phase": "stops",
+   "label": "London: artists these fans also love (opener pool)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "artist",
+    "signals": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal_location": "London",
+    "limit": 15
+   },
+   "status": "ok",
+   "summary": "15 results",
+   "result_count": 15,
+   "cached": true,
+   "mock": false,
+   "ms": 12,
+   "request": {
+    "filter.type": "urn:entity:artist",
+    "take": 15,
+    "signal.interests.entities": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal.location.query": "London",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s24",
+   "phase": "stops",
+   "label": "London: live music venues with high fan affinity",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "place",
+    "signals": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "filter_location": "London",
+    "include_tags": [
+     "urn:tag:category:place:live_music_venue"
+    ],
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": true,
+   "mock": false,
+   "ms": 10,
+   "request": {
+    "filter.type": "urn:entity:place",
+    "take": 5,
+    "signal.interests.entities": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "filter.location.query": "London",
+    "filter.tags": [
+     "urn:tag:category:place:live_music_venue"
+    ],
+    "operator.filter.tags": "union",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s26",
+   "phase": "stops",
+   "label": "London: brands this audience over-indexes on (sponsors)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "brand",
+    "signals": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal_location": "London",
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": true,
+   "mock": false,
+   "ms": 10,
+   "request": {
+    "filter.type": "urn:entity:brand",
+    "take": 5,
+    "signal.interests.entities": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal.location.query": "London",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s27",
+   "phase": "stops",
+   "label": "London: podcasts for local PR",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "podcast",
+    "signals": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal_location": "London",
+    "limit": 4
+   },
+   "status": "ok",
+   "summary": "4 results",
+   "result_count": 4,
+   "cached": true,
+   "mock": false,
+   "ms": 10,
+   "request": {
+    "filter.type": "urn:entity:podcast",
+    "take": 4,
+    "signal.interests.entities": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal.location.query": "London",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s20",
+   "phase": "stops",
+   "label": "Bristol: bars and restaurants these fans love (pre-show, after-party)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "place",
+    "signals": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "filter_location": "Bristol, UK",
+    "include_tags": [
+     "urn:tag:category:place:bar",
+     "urn:tag:category:place:restaurant"
+    ],
+    "include_tags_operator": "union",
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": true,
+   "mock": false,
+   "ms": 13,
+   "request": {
+    "filter.type": "urn:entity:place",
+    "take": 5,
+    "signal.interests.entities": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "filter.location.query": "Bristol, UK",
+    "filter.tags": [
+     "urn:tag:category:place:bar",
+     "urn:tag:category:place:restaurant"
+    ],
+    "operator.filter.tags": "union",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s30",
+   "phase": "stops",
+   "label": "Edinburgh: bars and restaurants these fans love (pre-show, after-party)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "place",
+    "signals": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "filter_location": "Edinburgh",
+    "include_tags": [
+     "urn:tag:category:place:bar",
+     "urn:tag:category:place:restaurant"
+    ],
+    "include_tags_operator": "union",
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "0 results",
+   "result_count": 0,
+   "cached": true,
+   "mock": false,
+   "ms": 10,
+   "request": {
+    "filter.type": "urn:entity:place",
+    "take": 5,
+    "signal.interests.entities": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "filter.location.query": "Edinburgh",
+    "filter.tags": [
+     "urn:tag:category:place:bar",
+     "urn:tag:category:place:restaurant"
+    ],
+    "operator.filter.tags": "union",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s29",
+   "phase": "stops",
+   "label": "Edinburgh: live music venues with high fan affinity",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "place",
+    "signals": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "filter_location": "Edinburgh",
+    "include_tags": [
+     "urn:tag:category:place:live_music_venue"
+    ],
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "0 results",
+   "result_count": 0,
+   "cached": true,
+   "mock": false,
+   "ms": 10,
+   "request": {
+    "filter.type": "urn:entity:place",
+    "take": 5,
+    "signal.interests.entities": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "filter.location.query": "Edinburgh",
+    "filter.tags": [
+     "urn:tag:category:place:live_music_venue"
+    ],
+    "operator.filter.tags": "union",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s28",
+   "phase": "stops",
+   "label": "Edinburgh: artists these fans also love (opener pool)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "artist",
+    "signals": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal_location": "Edinburgh",
+    "limit": 15
+   },
+   "status": "ok",
+   "summary": "15 results",
+   "result_count": 15,
+   "cached": true,
+   "mock": false,
+   "ms": 10,
+   "request": {
+    "filter.type": "urn:entity:artist",
+    "take": 15,
+    "signal.interests.entities": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal.location.query": "Edinburgh",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s25",
+   "phase": "stops",
+   "label": "London: bars and restaurants these fans love (pre-show, after-party)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "place",
+    "signals": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "filter_location": "London",
+    "include_tags": [
+     "urn:tag:category:place:bar",
+     "urn:tag:category:place:restaurant"
+    ],
+    "include_tags_operator": "union",
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": true,
+   "mock": false,
+   "ms": 11,
+   "request": {
+    "filter.type": "urn:entity:place",
+    "take": 5,
+    "signal.interests.entities": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "filter.location.query": "London",
+    "filter.tags": [
+     "urn:tag:category:place:bar",
+     "urn:tag:category:place:restaurant"
+    ],
+    "operator.filter.tags": "union",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s32",
+   "phase": "stops",
+   "label": "Edinburgh: podcasts for local PR",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "podcast",
+    "signals": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal_location": "Edinburgh",
+    "limit": 4
+   },
+   "status": "ok",
+   "summary": "4 results",
+   "result_count": 4,
+   "cached": true,
+   "mock": false,
+   "ms": 11,
+   "request": {
+    "filter.type": "urn:entity:podcast",
+    "take": 4,
+    "signal.interests.entities": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal.location.query": "Edinburgh",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s31",
+   "phase": "stops",
+   "label": "Edinburgh: brands this audience over-indexes on (sponsors)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "brand",
+    "signals": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal_location": "Edinburgh",
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": true,
+   "mock": false,
+   "ms": 11,
+   "request": {
+    "filter.type": "urn:entity:brand",
+    "take": 5,
+    "signal.interests.entities": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal.location.query": "Edinburgh",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s33",
+   "phase": "openers",
+   "label": "Shortlisted 8 opener candidates with less Qloo popularity than Phoebe Bridgers, so the bill stays headliner-led.",
+   "tool": "agent",
+   "status": "done"
+  },
+  {
+   "id": "s34",
+   "phase": "openers",
+   "label": "Dublin: rank the opener shortlist for this crowd",
+   "tool": "qloo_rank",
+   "args": {
+    "options": [
+     "99FBEE0C-2A8A-4EE2-9B20-8CEBD854CD46",
+     "AD420A3F-5F09-4C1C-BB1E-A3DEB937F184",
+     "F919E809-3234-4251-B031-5327E609AD82",
+     "84EAECD1-A605-468E-A066-6AC7208DA4A2",
+     "6B4A457B-EAB3-4BB6-BBA2-5E1B2A374AF4",
+     "4CE60D14-B414-4163-97C3-C1E51108ED90",
+     "5FB0A7DA-C7F0-487B-80C4-CA893D1BC56B",
+     "4607C481-A992-456F-900E-46AB836351EF"
+    ],
+    "option_type": "artist",
+    "signals": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal_location": "Dublin"
+   },
+   "status": "ok",
+   "summary": "8 results",
+   "result_count": 8,
+   "cached": true,
+   "mock": false,
+   "ms": 1,
+   "request": {
+    "filter.type": "urn:entity:artist",
+    "filter.results.entities": [
+     "99FBEE0C-2A8A-4EE2-9B20-8CEBD854CD46",
+     "AD420A3F-5F09-4C1C-BB1E-A3DEB937F184",
+     "F919E809-3234-4251-B031-5327E609AD82",
+     "84EAECD1-A605-468E-A066-6AC7208DA4A2",
+     "6B4A457B-EAB3-4BB6-BBA2-5E1B2A374AF4",
+     "4CE60D14-B414-4163-97C3-C1E51108ED90",
+     "5FB0A7DA-C7F0-487B-80C4-CA893D1BC56B",
+     "4607C481-A992-456F-900E-46AB836351EF"
+    ],
+    "take": 8,
+    "signal.interests.entities": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal.location.query": "Dublin"
+   }
+  },
+  {
+   "id": "s35",
+   "phase": "openers",
+   "label": "Manchester: rank the opener shortlist for this crowd",
+   "tool": "qloo_rank",
+   "args": {
+    "options": [
+     "99FBEE0C-2A8A-4EE2-9B20-8CEBD854CD46",
+     "AD420A3F-5F09-4C1C-BB1E-A3DEB937F184",
+     "F919E809-3234-4251-B031-5327E609AD82",
+     "84EAECD1-A605-468E-A066-6AC7208DA4A2",
+     "6B4A457B-EAB3-4BB6-BBA2-5E1B2A374AF4",
+     "4CE60D14-B414-4163-97C3-C1E51108ED90",
+     "5FB0A7DA-C7F0-487B-80C4-CA893D1BC56B",
+     "4607C481-A992-456F-900E-46AB836351EF"
+    ],
+    "option_type": "artist",
+    "signals": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal_location": "Manchester, UK"
+   },
+   "status": "ok",
+   "summary": "8 results",
+   "result_count": 8,
+   "cached": true,
+   "mock": false,
+   "ms": 2,
+   "request": {
+    "filter.type": "urn:entity:artist",
+    "filter.results.entities": [
+     "99FBEE0C-2A8A-4EE2-9B20-8CEBD854CD46",
+     "AD420A3F-5F09-4C1C-BB1E-A3DEB937F184",
+     "F919E809-3234-4251-B031-5327E609AD82",
+     "84EAECD1-A605-468E-A066-6AC7208DA4A2",
+     "6B4A457B-EAB3-4BB6-BBA2-5E1B2A374AF4",
+     "4CE60D14-B414-4163-97C3-C1E51108ED90",
+     "5FB0A7DA-C7F0-487B-80C4-CA893D1BC56B",
+     "4607C481-A992-456F-900E-46AB836351EF"
+    ],
+    "take": 8,
+    "signal.interests.entities": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal.location.query": "Manchester, UK"
+   }
+  },
+  {
+   "id": "s36",
+   "phase": "openers",
+   "label": "Bristol: rank the opener shortlist for this crowd",
+   "tool": "qloo_rank",
+   "args": {
+    "options": [
+     "99FBEE0C-2A8A-4EE2-9B20-8CEBD854CD46",
+     "AD420A3F-5F09-4C1C-BB1E-A3DEB937F184",
+     "F919E809-3234-4251-B031-5327E609AD82",
+     "84EAECD1-A605-468E-A066-6AC7208DA4A2",
+     "6B4A457B-EAB3-4BB6-BBA2-5E1B2A374AF4",
+     "4CE60D14-B414-4163-97C3-C1E51108ED90",
+     "5FB0A7DA-C7F0-487B-80C4-CA893D1BC56B",
+     "4607C481-A992-456F-900E-46AB836351EF"
+    ],
+    "option_type": "artist",
+    "signals": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal_location": "Bristol, UK"
+   },
+   "status": "ok",
+   "summary": "8 results",
+   "result_count": 8,
+   "cached": true,
+   "mock": false,
+   "ms": 2,
+   "request": {
+    "filter.type": "urn:entity:artist",
+    "filter.results.entities": [
+     "99FBEE0C-2A8A-4EE2-9B20-8CEBD854CD46",
+     "AD420A3F-5F09-4C1C-BB1E-A3DEB937F184",
+     "F919E809-3234-4251-B031-5327E609AD82",
+     "84EAECD1-A605-468E-A066-6AC7208DA4A2",
+     "6B4A457B-EAB3-4BB6-BBA2-5E1B2A374AF4",
+     "4CE60D14-B414-4163-97C3-C1E51108ED90",
+     "5FB0A7DA-C7F0-487B-80C4-CA893D1BC56B",
+     "4607C481-A992-456F-900E-46AB836351EF"
+    ],
+    "take": 8,
+    "signal.interests.entities": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal.location.query": "Bristol, UK"
+   }
+  },
+  {
+   "id": "s37",
+   "phase": "openers",
+   "label": "London: rank the opener shortlist for this crowd",
+   "tool": "qloo_rank",
+   "args": {
+    "options": [
+     "99FBEE0C-2A8A-4EE2-9B20-8CEBD854CD46",
+     "AD420A3F-5F09-4C1C-BB1E-A3DEB937F184",
+     "F919E809-3234-4251-B031-5327E609AD82",
+     "84EAECD1-A605-468E-A066-6AC7208DA4A2",
+     "6B4A457B-EAB3-4BB6-BBA2-5E1B2A374AF4",
+     "4CE60D14-B414-4163-97C3-C1E51108ED90",
+     "5FB0A7DA-C7F0-487B-80C4-CA893D1BC56B",
+     "4607C481-A992-456F-900E-46AB836351EF"
+    ],
+    "option_type": "artist",
+    "signals": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal_location": "London"
+   },
+   "status": "ok",
+   "summary": "8 results",
+   "result_count": 8,
+   "cached": true,
+   "mock": false,
+   "ms": 1,
+   "request": {
+    "filter.type": "urn:entity:artist",
+    "filter.results.entities": [
+     "99FBEE0C-2A8A-4EE2-9B20-8CEBD854CD46",
+     "AD420A3F-5F09-4C1C-BB1E-A3DEB937F184",
+     "F919E809-3234-4251-B031-5327E609AD82",
+     "84EAECD1-A605-468E-A066-6AC7208DA4A2",
+     "6B4A457B-EAB3-4BB6-BBA2-5E1B2A374AF4",
+     "4CE60D14-B414-4163-97C3-C1E51108ED90",
+     "5FB0A7DA-C7F0-487B-80C4-CA893D1BC56B",
+     "4607C481-A992-456F-900E-46AB836351EF"
+    ],
+    "take": 8,
+    "signal.interests.entities": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal.location.query": "London"
+   }
+  },
+  {
+   "id": "s38",
+   "phase": "openers",
+   "label": "Edinburgh: rank the opener shortlist for this crowd",
+   "tool": "qloo_rank",
+   "args": {
+    "options": [
+     "99FBEE0C-2A8A-4EE2-9B20-8CEBD854CD46",
+     "AD420A3F-5F09-4C1C-BB1E-A3DEB937F184",
+     "F919E809-3234-4251-B031-5327E609AD82",
+     "84EAECD1-A605-468E-A066-6AC7208DA4A2",
+     "6B4A457B-EAB3-4BB6-BBA2-5E1B2A374AF4",
+     "4CE60D14-B414-4163-97C3-C1E51108ED90",
+     "5FB0A7DA-C7F0-487B-80C4-CA893D1BC56B",
+     "4607C481-A992-456F-900E-46AB836351EF"
+    ],
+    "option_type": "artist",
+    "signals": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal_location": "Edinburgh"
+   },
+   "status": "ok",
+   "summary": "0 results",
+   "result_count": 0,
+   "cached": true,
+   "mock": false,
+   "ms": 1,
+   "request": {
+    "filter.type": "urn:entity:artist",
+    "filter.results.entities": [
+     "99FBEE0C-2A8A-4EE2-9B20-8CEBD854CD46",
+     "AD420A3F-5F09-4C1C-BB1E-A3DEB937F184",
+     "F919E809-3234-4251-B031-5327E609AD82",
+     "84EAECD1-A605-468E-A066-6AC7208DA4A2",
+     "6B4A457B-EAB3-4BB6-BBA2-5E1B2A374AF4",
+     "4CE60D14-B414-4163-97C3-C1E51108ED90",
+     "5FB0A7DA-C7F0-487B-80C4-CA893D1BC56B",
+     "4607C481-A992-456F-900E-46AB836351EF"
+    ],
+    "take": 8,
+    "signal.interests.entities": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "signal.location.query": "Edinburgh"
+   }
+  },
+  {
+   "id": "s39",
+   "phase": "openers",
+   "label": "Shared taste: Phoebe Bridgers fans vs Lucy Dacus fans",
+   "tool": "qloo_compare_audiences",
+   "args": {
+    "group_a": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "group_b": [
+     "99FBEE0C-2A8A-4EE2-9B20-8CEBD854CD46"
+    ],
+    "limit": 20
+   },
+   "status": "ok",
+   "summary": "0 results",
+   "cached": true,
+   "mock": false,
+   "ms": 2,
+   "request": {
+    "a.signal.interests.entities": [
+     "AFBC71A7-9439-4AB0-AB68-D14B11AAF836"
+    ],
+    "b.signal.interests.entities": [
+     "99FBEE0C-2A8A-4EE2-9B20-8CEBD854CD46"
+    ],
+    "take": 20
+   }
+  }
+ ],
+ "calls": 36,
+ "act": {
+  "id": "AFBC71A7-9439-4AB0-AB68-D14B11AAF836",
+  "name": "Phoebe Bridgers",
+  "kind": "artist",
+  "popularity": 0.9944367786620605,
+  "description": "Phoebe Bridgers is an American singer-songwriter known for her emotive indie rock and folk music.",
+  "image": "https://images.qloo.com/i/AFBC71A7-9439-4AB0-AB68-D14B11AAF836-420x-auto.jpg"
+ },
+ "heat": [
+  {
+   "lat": 55.9863,
+   "lng": -3.3398,
+   "affinity": 1,
+   "popularity": 0.996
+  },
+  {
+   "lat": 53.3496,
+   "lng": -6.1523,
+   "affinity": 0.9989,
+   "popularity": 0.998
+  },
+  {
+   "lat": 55.8105,
+   "lng": -4.3945,
+   "affinity": 0.9978,
+   "popularity": 0.993
+  },
+  {
+   "lat": 51.5918,
+   "lng": -0.1758,
+   "affinity": 0.9967,
+   "popularity": 1
+  },
+  {
+   "lat": 52.998,
+   "lng": -9.3164,
+   "affinity": 0.9957,
+   "popularity": 0.973
+  },
+  {
+   "lat": 57.041,
+   "lng": -5.0977,
+   "affinity": 0.9946,
+   "popularity": 0.938
+  },
+  {
+   "lat": 51.416,
+   "lng": -0.1758,
+   "affinity": 0.9935,
+   "popularity": 0.999
+  },
+  {
+   "lat": 50.8887,
+   "lng": -0.1758,
+   "affinity": 0.9924,
+   "popularity": 0.995
+  },
+  {
+   "lat": 55.9863,
+   "lng": -2.9883,
+   "affinity": 0.9913,
+   "popularity": 0.965
+  },
+  {
+   "lat": 53.3496,
+   "lng": -8.9648,
+   "affinity": 0.9902,
+   "popularity": 0.978
+  },
+  {
+   "lat": 57.3926,
+   "lng": -6.1523,
+   "affinity": 0.9891,
+   "popularity": 0.866
+  },
+  {
+   "lat": 56.6895,
+   "lng": -5.0977,
+   "affinity": 0.988,
+   "popularity": 0.907
+  },
+  {
+   "lat": 57.041,
+   "lng": -4.7461,
+   "affinity": 0.987,
+   "popularity": 0.801
+  },
+  {
+   "lat": 51.416,
+   "lng": -2.6367,
+   "affinity": 0.9859,
+   "popularity": 0.991
+  },
+  {
+   "lat": 52.1191,
+   "lng": -10.3711,
+   "affinity": 0.9848,
+   "popularity": 0.917
+  },
+  {
+   "lat": 51.7676,
+   "lng": -1.2305,
+   "affinity": 0.9837,
+   "popularity": 0.986
+  },
+  {
+   "lat": 54.5801,
+   "lng": -5.8008,
+   "affinity": 0.9826,
+   "popularity": 0.985
+  },
+  {
+   "lat": 51.9434,
+   "lng": -8.6133,
+   "affinity": 0.9815,
+   "popularity": 0.963
+  },
+  {
+   "lat": 57.3926,
+   "lng": -4.3945,
+   "affinity": 0.9804,
+   "popularity": 0.895
+  },
+  {
+   "lat": 57.5684,
+   "lng": -6.1523,
+   "affinity": 0.9793,
+   "popularity": 0.746
+  },
+  {
+   "lat": 53.5254,
+   "lng": -2.2852,
+   "affinity": 0.9783,
+   "popularity": 0.997
+  },
+  {
+   "lat": 53.5254,
+   "lng": -10.0195,
+   "affinity": 0.9772,
+   "popularity": 0.828
+  },
+  {
+   "lat": 52.1191,
+   "lng": 0.1758,
+   "affinity": 0.9761,
+   "popularity": 0.972
+  },
+  {
+   "lat": 55.2832,
+   "lng": -6.5039,
+   "affinity": 0.975,
+   "popularity": 0.959
+  },
+  {
+   "lat": 53.5254,
+   "lng": -7.207,
+   "affinity": 0.9739,
+   "popularity": 0.945
+  },
+  {
+   "lat": 57.2168,
+   "lng": -4.3945,
+   "affinity": 0.9728,
+   "popularity": 0.784
+  },
+  {
+   "lat": 52.1191,
+   "lng": -10.0195,
+   "affinity": 0.9717,
+   "popularity": 0.809
+  },
+  {
+   "lat": 57.2168,
+   "lng": -5.8008,
+   "affinity": 0.9707,
+   "popularity": 0.688
+  },
+  {
+   "lat": 53.3496,
+   "lng": -2.9883,
+   "affinity": 0.9696,
+   "popularity": 0.992
+  },
+  {
+   "lat": 51.416,
+   "lng": -2.2852,
+   "affinity": 0.9685,
+   "popularity": 0.976
+  },
+  {
+   "lat": 56.3379,
+   "lng": -2.6367,
+   "affinity": 0.9674,
+   "popularity": 0.926
+  },
+  {
+   "lat": 53.1738,
+   "lng": -6.1523,
+   "affinity": 0.9663,
+   "popularity": 0.96
+  },
+  {
+   "lat": 53.877,
+   "lng": -1.582,
+   "affinity": 0.9652,
+   "popularity": 0.99
+  },
+  {
+   "lat": 51.2402,
+   "lng": -1.9336,
+   "affinity": 0.9641,
+   "popularity": 0.913
+  },
+  {
+   "lat": 52.1191,
+   "lng": -9.668,
+   "affinity": 0.963,
+   "popularity": 0.933
+  },
+  {
+   "lat": 51.2402,
+   "lng": -2.6367,
+   "affinity": 0.962,
+   "popularity": 0.975
+  },
+  {
+   "lat": 53.1738,
+   "lng": -8.9648,
+   "affinity": 0.9609,
+   "popularity": 0.887
+  },
+  {
+   "lat": 56.3379,
+   "lng": -3.3398,
+   "affinity": 0.9598,
+   "popularity": 0.888
+  },
+  {
+   "lat": 53.3496,
+   "lng": -1.582,
+   "affinity": 0.9587,
+   "popularity": 0.984
+  },
+  {
+   "lat": 53.1738,
+   "lng": -9.668,
+   "affinity": 0.9576,
+   "popularity": 0.778
+  },
+  {
+   "lat": 54.9316,
+   "lng": -1.582,
+   "affinity": 0.9565,
+   "popularity": 0.982
+  },
+  {
+   "lat": 51.416,
+   "lng": -3.3398,
+   "affinity": 0.9554,
+   "popularity": 0.977
+  },
+  {
+   "lat": 53.877,
+   "lng": -1.2305,
+   "affinity": 0.9543,
+   "popularity": 0.983
+  },
+  {
+   "lat": 51.9434,
+   "lng": -9.668,
+   "affinity": 0.9533,
+   "popularity": 0.857
+  },
+  {
+   "lat": 56.1621,
+   "lng": -4.7461,
+   "affinity": 0.9522,
+   "popularity": 0.892
+  },
+  {
+   "lat": 51.416,
+   "lng": 0.1758,
+   "affinity": 0.9511,
+   "popularity": 0.989
+  },
+  {
+   "lat": 56.8652,
+   "lng": -5.0977,
+   "affinity": 0.95,
+   "popularity": 0.804
+  },
+  {
+   "lat": 53.3496,
+   "lng": -6.5039,
+   "affinity": 0.9489,
+   "popularity": 0.953
+  },
+  {
+   "lat": 52.998,
+   "lng": -6.1523,
+   "affinity": 0.9478,
+   "popularity": 0.878
+  },
+  {
+   "lat": 51.416,
+   "lng": -0.8789,
+   "affinity": 0.9467,
+   "popularity": 0.974
+  },
+  {
+   "lat": 51.0645,
+   "lng": 1.2305,
+   "affinity": 0.9457,
+   "popularity": 0.94
+  },
+  {
+   "lat": 51.416,
+   "lng": -0.5273,
+   "affinity": 0.9446,
+   "popularity": 0.987
+  },
+  {
+   "lat": 57.2168,
+   "lng": -6.1523,
+   "affinity": 0.9435,
+   "popularity": 0.666
+  },
+  {
+   "lat": 52.4707,
+   "lng": -1.9336,
+   "affinity": 0.9424,
+   "popularity": 0.988
+  },
+  {
+   "lat": 56.5137,
+   "lng": -2.9883,
+   "affinity": 0.9413,
+   "popularity": 0.9
+  },
+  {
+   "lat": 52.998,
+   "lng": -1.2305,
+   "affinity": 0.9402,
+   "popularity": 0.979
+  },
+  {
+   "lat": 52.6465,
+   "lng": 1.2305,
+   "affinity": 0.9391,
+   "popularity": 0.951
+  },
+  {
+   "lat": 57.2168,
+   "lng": -5.4492,
+   "affinity": 0.938,
+   "popularity": 0.703
+  },
+  {
+   "lat": 52.2949,
+   "lng": 0.1758,
+   "affinity": 0.937,
+   "popularity": 0.883
+  },
+  {
+   "lat": 56.1621,
+   "lng": -4.043,
+   "affinity": 0.9359,
+   "popularity": 0.883
+  },
+  {
+   "lat": 51.7676,
+   "lng": -10.0195,
+   "affinity": 0.9348,
+   "popularity": 0.672
+  },
+  {
+   "lat": 50.7129,
+   "lng": 0.1758,
+   "affinity": 0.9337,
+   "popularity": 0.948
+  },
+  {
+   "lat": 50.8887,
+   "lng": -1.2305,
+   "affinity": 0.9326,
+   "popularity": 0.968
+  },
+  {
+   "lat": 56.3379,
+   "lng": -5.4492,
+   "affinity": 0.9315,
+   "popularity": 0.724
+  },
+  {
+   "lat": 54.4043,
+   "lng": -2.9883,
+   "affinity": 0.9304,
+   "popularity": 0.966
+  },
+  {
+   "lat": 51.7676,
+   "lng": -0.5273,
+   "affinity": 0.9293,
+   "popularity": 0.97
+  },
+  {
+   "lat": 51.7676,
+   "lng": -8.6133,
+   "affinity": 0.9283,
+   "popularity": 0.816
+  },
+  {
+   "lat": 53.5254,
+   "lng": -6.1523,
+   "affinity": 0.9272,
+   "popularity": 0.916
+  },
+  {
+   "lat": 57.2168,
+   "lng": -1.9336,
+   "affinity": 0.9261,
+   "popularity": 0.854
+  },
+  {
+   "lat": 54.0527,
+   "lng": -1.9336,
+   "affinity": 0.925,
+   "popularity": 0.949
+  },
+  {
+   "lat": 52.2949,
+   "lng": 1.582,
+   "affinity": 0.9239,
+   "popularity": 0.929
+  },
+  {
+   "lat": 52.6465,
+   "lng": -8.6133,
+   "affinity": 0.9228,
+   "popularity": 0.886
+  },
+  {
+   "lat": 50.7129,
+   "lng": -3.6914,
+   "affinity": 0.9217,
+   "popularity": 0.942
+  },
+  {
+   "lat": 57.2168,
+   "lng": -2.2852,
+   "affinity": 0.9207,
+   "popularity": 0.855
+  },
+  {
+   "lat": 55.9863,
+   "lng": -4.3945,
+   "affinity": 0.9196,
+   "popularity": 0.87
+  },
+  {
+   "lat": 51.2402,
+   "lng": -0.1758,
+   "affinity": 0.9185,
+   "popularity": 0.964
+  },
+  {
+   "lat": 50.7129,
+   "lng": -1.2305,
+   "affinity": 0.9174,
+   "popularity": 0.967
+  },
+  {
+   "lat": 50.3613,
+   "lng": -7.5586,
+   "affinity": 0.9163,
+   "popularity": 0.014
+  },
+  {
+   "lat": 51.9434,
+   "lng": -10.3711,
+   "affinity": 0.9152,
+   "popularity": 0.589
+  },
+  {
+   "lat": 55.9863,
+   "lng": -4.7461,
+   "affinity": 0.9141,
+   "popularity": 0.883
+  },
+  {
+   "lat": 50.1855,
+   "lng": -5.0977,
+   "affinity": 0.913,
+   "popularity": 0.932
+  },
+  {
+   "lat": 51.2402,
+   "lng": -0.5273,
+   "affinity": 0.912,
+   "popularity": 0.95
+  },
+  {
+   "lat": 51.416,
+   "lng": 1.2305,
+   "affinity": 0.9109,
+   "popularity": 0.946
+  },
+  {
+   "lat": 50.7129,
+   "lng": -1.9336,
+   "affinity": 0.9098,
+   "popularity": 0.971
+  },
+  {
+   "lat": 51.9434,
+   "lng": -3.3398,
+   "affinity": 0.9087,
+   "popularity": 0.922
+  },
+  {
+   "lat": 52.998,
+   "lng": -6.5039,
+   "affinity": 0.9076,
+   "popularity": 0.788
+  },
+  {
+   "lat": 56.8652,
+   "lng": -5.4492,
+   "affinity": 0.9065,
+   "popularity": 0.688
+  },
+  {
+   "lat": 50.1855,
+   "lng": -5.4492,
+   "affinity": 0.9054,
+   "popularity": 0.957
+  },
+  {
+   "lat": 56.1621,
+   "lng": -4.3945,
+   "affinity": 0.9043,
+   "popularity": 0.853
+  },
+  {
+   "lat": 52.6465,
+   "lng": -7.207,
+   "affinity": 0.9033,
+   "popularity": 0.861
+  },
+  {
+   "lat": 54.5801,
+   "lng": -7.5586,
+   "affinity": 0.9022,
+   "popularity": 0.718
+  },
+  {
+   "lat": 52.1191,
+   "lng": -1.582,
+   "affinity": 0.9011,
+   "popularity": 0.928
+  },
+  {
+   "lat": 53.7012,
+   "lng": -1.9336,
+   "affinity": 0.9,
+   "popularity": 0.947
+  },
+  {
+   "lat": 50.3613,
+   "lng": -4.7461,
+   "affinity": 0.8989,
+   "popularity": 0.952
+  },
+  {
+   "lat": 55.9863,
+   "lng": -2.6367,
+   "affinity": 0.8978,
+   "popularity": 0.838
+  },
+  {
+   "lat": 51.5918,
+   "lng": 0.1758,
+   "affinity": 0.8967,
+   "popularity": 0.98
+  },
+  {
+   "lat": 53.1738,
+   "lng": -9.3164,
+   "affinity": 0.8957,
+   "popularity": 0.712
+  },
+  {
+   "lat": 54.9316,
+   "lng": -7.207,
+   "affinity": 0.8946,
+   "popularity": 0.824
+  },
+  {
+   "lat": 50.8887,
+   "lng": -1.9336,
+   "affinity": 0.8935,
+   "popularity": 0.872
+  },
+  {
+   "lat": 51.0645,
+   "lng": -4.043,
+   "affinity": 0.8924,
+   "popularity": 0.842
+  },
+  {
+   "lat": 51.0645,
+   "lng": -2.6367,
+   "affinity": 0.8913,
+   "popularity": 0.918
+  },
+  {
+   "lat": 55.8105,
+   "lng": -4.043,
+   "affinity": 0.8902,
+   "popularity": 0.903
+  },
+  {
+   "lat": 51.7676,
+   "lng": -1.9336,
+   "affinity": 0.8891,
+   "popularity": 0.905
+  },
+  {
+   "lat": 50.8887,
+   "lng": 0.1758,
+   "affinity": 0.888,
+   "popularity": 0.915
+  },
+  {
+   "lat": 57.3926,
+   "lng": -6.8555,
+   "affinity": 0.887,
+   "popularity": 0.485
+  },
+  {
+   "lat": 50.8887,
+   "lng": -0.5273,
+   "affinity": 0.8859,
+   "popularity": 0.924
+  },
+  {
+   "lat": 57.2168,
+   "lng": -3.6914,
+   "affinity": 0.8848,
+   "popularity": 0.803
+  },
+  {
+   "lat": 51.7676,
+   "lng": -0.1758,
+   "affinity": 0.8837,
+   "popularity": 0.941
+  },
+  {
+   "lat": 53.3496,
+   "lng": -2.2852,
+   "affinity": 0.8826,
+   "popularity": 0.962
+  },
+  {
+   "lat": 51.5918,
+   "lng": -1.2305,
+   "affinity": 0.8815,
+   "popularity": 0.876
+  },
+  {
+   "lat": 54.2285,
+   "lng": -8.6133,
+   "affinity": 0.8804,
+   "popularity": 0.805
+  },
+  {
+   "lat": 54.5801,
+   "lng": -2.9883,
+   "affinity": 0.8793,
+   "popularity": 0.937
+  },
+  {
+   "lat": 51.2402,
+   "lng": 1.2305,
+   "affinity": 0.8783,
+   "popularity": 0.925
+  },
+  {
+   "lat": 51.5918,
+   "lng": -0.5273,
+   "affinity": 0.8772,
+   "popularity": 0.961
+  },
+  {
+   "lat": 53.877,
+   "lng": -1.9336,
+   "affinity": 0.8761,
+   "popularity": 0.92
+  },
+  {
+   "lat": 50.8887,
+   "lng": -1.582,
+   "affinity": 0.875,
+   "popularity": 0.939
+  },
+  {
+   "lat": 55.6348,
+   "lng": -5.0977,
+   "affinity": 0.8739,
+   "popularity": 0.73
+  },
+  {
+   "lat": 53.7012,
+   "lng": -1.582,
+   "affinity": 0.8728,
+   "popularity": 0.954
+  },
+  {
+   "lat": 54.5801,
+   "lng": -3.3398,
+   "affinity": 0.8717,
+   "popularity": 0.909
+  },
+  {
+   "lat": 50.8887,
+   "lng": 0.5273,
+   "affinity": 0.8707,
+   "popularity": 0.9
+  },
+  {
+   "lat": 53.5254,
+   "lng": -2.9883,
+   "affinity": 0.8696,
+   "popularity": 0.927
+  },
+  {
+   "lat": 50.3613,
+   "lng": -5.0977,
+   "affinity": 0.8685,
+   "popularity": 0.955
+  },
+  {
+   "lat": 53.3496,
+   "lng": -1.9336,
+   "affinity": 0.8674,
+   "popularity": 0.93
+  },
+  {
+   "lat": 53.1738,
+   "lng": -1.582,
+   "affinity": 0.8663,
+   "popularity": 0.943
+  },
+  {
+   "lat": 54.7559,
+   "lng": -1.582,
+   "affinity": 0.8652,
+   "popularity": 0.899
+  },
+  {
+   "lat": 55.1074,
+   "lng": -6.5039,
+   "affinity": 0.8641,
+   "popularity": 0.751
+  },
+  {
+   "lat": 56.6895,
+   "lng": -6.1523,
+   "affinity": 0.863,
+   "popularity": 0.578
+  },
+  {
+   "lat": 51.5918,
+   "lng": -4.043,
+   "affinity": 0.862,
+   "popularity": 0.913
+  },
+  {
+   "lat": 52.8223,
+   "lng": -8.9648,
+   "affinity": 0.8609,
+   "popularity": 0.728
+  },
+  {
+   "lat": 51.9434,
+   "lng": -1.582,
+   "affinity": 0.8598,
+   "popularity": 0.908
+  },
+  {
+   "lat": 53.7012,
+   "lng": -6.5039,
+   "affinity": 0.8587,
+   "popularity": 0.811
+  },
+  {
+   "lat": 51.5918,
+   "lng": -0.8789,
+   "affinity": 0.8576,
+   "popularity": 0.91
+  },
+  {
+   "lat": 54.2285,
+   "lng": -5.8008,
+   "affinity": 0.8565,
+   "popularity": 0.829
+  },
+  {
+   "lat": 55.9863,
+   "lng": -3.6914,
+   "affinity": 0.8554,
+   "popularity": 0.833
+  },
+  {
+   "lat": 52.6465,
+   "lng": -8.9648,
+   "affinity": 0.8543,
+   "popularity": 0.692
+  },
+  {
+   "lat": 57.5684,
+   "lng": -4.3945,
+   "affinity": 0.8533,
+   "popularity": 0.612
+  },
+  {
+   "lat": 51.7676,
+   "lng": -8.2617,
+   "affinity": 0.8522,
+   "popularity": 0.726
+  },
+  {
+   "lat": 55.8105,
+   "lng": -3.3398,
+   "affinity": 0.8511,
+   "popularity": 0.751
+  },
+  {
+   "lat": 54.9316,
+   "lng": -7.9102,
+   "affinity": 0.85,
+   "popularity": 0.753
+  },
+  {
+   "lat": 57.041,
+   "lng": -3.6914,
+   "affinity": 0.8489,
+   "popularity": 0.653
+  },
+  {
+   "lat": 57.3926,
+   "lng": -4.043,
+   "affinity": 0.8478,
+   "popularity": 0.645
+  },
+  {
+   "lat": 50.8887,
+   "lng": 0.8789,
+   "affinity": 0.8467,
+   "popularity": 0.875
+  },
+  {
+   "lat": 50.0098,
+   "lng": -5.8008,
+   "affinity": 0.8457,
+   "popularity": 0.786
+  },
+  {
+   "lat": 54.4043,
+   "lng": -0.5273,
+   "affinity": 0.8446,
+   "popularity": 0.896
+  },
+  {
+   "lat": 52.4707,
+   "lng": -7.9102,
+   "affinity": 0.8435,
+   "popularity": 0.638
+  },
+  {
+   "lat": 50.5371,
+   "lng": -2.2852,
+   "affinity": 0.8424,
+   "popularity": 0.912
+  },
+  {
+   "lat": 52.2949,
+   "lng": -3.6914,
+   "affinity": 0.8413,
+   "popularity": 0.834
+  },
+  {
+   "lat": 53.1738,
+   "lng": -4.043,
+   "affinity": 0.8402,
+   "popularity": 0.898
+  },
+  {
+   "lat": 57.5684,
+   "lng": -6.5039,
+   "affinity": 0.8391,
+   "popularity": 0.479
+  },
+  {
+   "lat": 51.9434,
+   "lng": 0.1758,
+   "affinity": 0.838,
+   "popularity": 0.89
+  },
+  {
+   "lat": 51.0645,
+   "lng": -1.2305,
+   "affinity": 0.837,
+   "popularity": 0.936
+  },
+  {
+   "lat": 51.416,
+   "lng": -2.9883,
+   "affinity": 0.8359,
+   "popularity": 0.891
+  },
+  {
+   "lat": 50.3613,
+   "lng": -4.043,
+   "affinity": 0.8348,
+   "popularity": 0.921
+  },
+  {
+   "lat": 57.3926,
+   "lng": -6.5039,
+   "affinity": 0.8337,
+   "popularity": 0.504
+  },
+  {
+   "lat": 51.9434,
+   "lng": -1.9336,
+   "affinity": 0.8326,
+   "popularity": 0.902
+  },
+  {
+   "lat": 56.3379,
+   "lng": -4.3945,
+   "affinity": 0.8315,
+   "popularity": 0.64
+  },
+  {
+   "lat": 56.6895,
+   "lng": -3.6914,
+   "affinity": 0.8304,
+   "popularity": 0.757
+  },
+  {
+   "lat": 51.416,
+   "lng": 0.8789,
+   "affinity": 0.8293,
+   "popularity": 0.889
+  },
+  {
+   "lat": 52.4707,
+   "lng": -1.582,
+   "affinity": 0.8283,
+   "popularity": 0.958
+  },
+  {
+   "lat": 50.7129,
+   "lng": -3.3398,
+   "affinity": 0.8272,
+   "popularity": 0.871
+  },
+  {
+   "lat": 52.998,
+   "lng": -8.9648,
+   "affinity": 0.8261,
+   "popularity": 0.605
+  },
+  {
+   "lat": 51.0645,
+   "lng": 0.1758,
+   "affinity": 0.825,
+   "popularity": 0.864
+  },
+  {
+   "lat": 52.6465,
+   "lng": -1.2305,
+   "affinity": 0.8239,
+   "popularity": 0.934
+  },
+  {
+   "lat": 53.7012,
+   "lng": -2.6367,
+   "affinity": 0.8228,
+   "popularity": 0.896
+  },
+  {
+   "lat": 57.041,
+   "lng": -5.8008,
+   "affinity": 0.8217,
+   "popularity": 0.559
+  },
+  {
+   "lat": 57.2168,
+   "lng": -4.7461,
+   "affinity": 0.8207,
+   "popularity": 0.535
+  },
+  {
+   "lat": 51.7676,
+   "lng": -2.6367,
+   "affinity": 0.8196,
+   "popularity": 0.821
+  },
+  {
+   "lat": 50.7129,
+   "lng": -2.9883,
+   "affinity": 0.8185,
+   "popularity": 0.846
+  },
+  {
+   "lat": 54.0527,
+   "lng": -1.582,
+   "affinity": 0.8174,
+   "popularity": 0.911
+  },
+  {
+   "lat": 56.8652,
+   "lng": -2.2852,
+   "affinity": 0.8163,
+   "popularity": 0.612
+  },
+  {
+   "lat": 51.7676,
+   "lng": -2.2852,
+   "affinity": 0.8152,
+   "popularity": 0.832
+  },
+  {
+   "lat": 52.2949,
+   "lng": -7.207,
+   "affinity": 0.8141,
+   "popularity": 0.782
+  },
+  {
+   "lat": 53.1738,
+   "lng": -2.9883,
+   "affinity": 0.813,
+   "popularity": 0.935
+  },
+  {
+   "lat": 51.5918,
+   "lng": -3.3398,
+   "affinity": 0.812,
+   "popularity": 0.843
+  },
+  {
+   "lat": 56.3379,
+   "lng": -4.7461,
+   "affinity": 0.8109,
+   "popularity": 0.564
+  },
+  {
+   "lat": 51.9434,
+   "lng": -2.2852,
+   "affinity": 0.8098,
+   "popularity": 0.836
+  },
+  {
+   "lat": 52.998,
+   "lng": -4.043,
+   "affinity": 0.8087,
+   "popularity": 0.893
+  },
+  {
+   "lat": 52.2949,
+   "lng": -1.582,
+   "affinity": 0.8076,
+   "popularity": 0.867
+  },
+  {
+   "lat": 57.041,
+   "lng": -2.2852,
+   "affinity": 0.8065,
+   "popularity": 0.671
+  },
+  {
+   "lat": 51.0645,
+   "lng": -0.1758,
+   "affinity": 0.8054,
+   "popularity": 0.863
+  },
+  {
+   "lat": 57.3926,
+   "lng": -5.8008,
+   "affinity": 0.8043,
+   "popularity": 0.54
+  },
+  {
+   "lat": 53.1738,
+   "lng": -2.2852,
+   "affinity": 0.8033,
+   "popularity": 0.85
+  },
+  {
+   "lat": 50.5371,
+   "lng": -3.6914,
+   "affinity": 0.8022,
+   "popularity": 0.878
+  },
+  {
+   "lat": 52.998,
+   "lng": -7.207,
+   "affinity": 0.8011,
+   "popularity": 0.837
+  },
+  {
+   "lat": 55.1074,
+   "lng": -1.582,
+   "affinity": 0.8,
+   "popularity": 0.877
+  },
+  {
+   "lat": 50.7129,
+   "lng": -1.582,
+   "affinity": 0.7989,
+   "popularity": 0.862
+  },
+  {
+   "lat": 51.7676,
+   "lng": -10.3711,
+   "affinity": 0.7978,
+   "popularity": 0.446
+  },
+  {
+   "lat": 56.5137,
+   "lng": -4.7461,
+   "affinity": 0.7967,
+   "popularity": 0.464
+  },
+  {
+   "lat": 56.6895,
+   "lng": -4.7461,
+   "affinity": 0.7957,
+   "popularity": 0.55
+  },
+  {
+   "lat": 53.3496,
+   "lng": -3.6914,
+   "affinity": 0.7946,
+   "popularity": 0.868
+  },
+  {
+   "lat": 51.0645,
+   "lng": -1.9336,
+   "affinity": 0.7935,
+   "popularity": 0.762
+  },
+  {
+   "lat": 57.9199,
+   "lng": -5.0977,
+   "affinity": 0.7924,
+   "popularity": 0.514
+  },
+  {
+   "lat": 53.7012,
+   "lng": -0.1758,
+   "affinity": 0.7913,
+   "popularity": 0.845
+  },
+  {
+   "lat": 51.9434,
+   "lng": -0.1758,
+   "affinity": 0.7902,
+   "popularity": 0.827
+  },
+  {
+   "lat": 56.3379,
+   "lng": -5.0977,
+   "affinity": 0.7891,
+   "popularity": 0.485
+  },
+  {
+   "lat": 53.5254,
+   "lng": -9.668,
+   "affinity": 0.788,
+   "popularity": 0.53
+  },
+  {
+   "lat": 55.459,
+   "lng": -1.582,
+   "affinity": 0.787,
+   "popularity": 0.798
+  },
+  {
+   "lat": 53.877,
+   "lng": -9.668,
+   "affinity": 0.7859,
+   "popularity": 0.697
+  },
+  {
+   "lat": 51.5918,
+   "lng": -8.9648,
+   "affinity": 0.7848,
+   "popularity": 0.661
+  },
+  {
+   "lat": 53.5254,
+   "lng": -1.9336,
+   "affinity": 0.7837,
+   "popularity": 0.859
+  },
+  {
+   "lat": 52.1191,
+   "lng": -2.2852,
+   "affinity": 0.7826,
+   "popularity": 0.841
+  },
+  {
+   "lat": 50.7129,
+   "lng": -4.7461,
+   "affinity": 0.7815,
+   "popularity": 0.766
+  },
+  {
+   "lat": 55.8105,
+   "lng": -6.1523,
+   "affinity": 0.7804,
+   "popularity": 0.468
+  },
+  {
+   "lat": 51.5918,
+   "lng": -1.9336,
+   "affinity": 0.7793,
+   "popularity": 0.8
+  },
+  {
+   "lat": 51.0645,
+   "lng": -0.8789,
+   "affinity": 0.7783,
+   "popularity": 0.802
+  },
+  {
+   "lat": 51.416,
+   "lng": 1.582,
+   "affinity": 0.7772,
+   "popularity": 0.808
+  },
+  {
+   "lat": 51.2402,
+   "lng": -0.8789,
+   "affinity": 0.7761,
+   "popularity": 0.839
+  },
+  {
+   "lat": 54.5801,
+   "lng": -8.6133,
+   "affinity": 0.775,
+   "popularity": 0.582
+  },
+  {
+   "lat": 53.877,
+   "lng": -2.9883,
+   "affinity": 0.7739,
+   "popularity": 0.922
+  },
+  {
+   "lat": 50.8887,
+   "lng": -0.8789,
+   "affinity": 0.7728,
+   "popularity": 0.859
+  },
+  {
+   "lat": 55.8105,
+   "lng": -4.7461,
+   "affinity": 0.7717,
+   "popularity": 0.696
+  },
+  {
+   "lat": 54.2285,
+   "lng": -2.6367,
+   "affinity": 0.7707,
+   "popularity": 0.758
+  },
+  {
+   "lat": 50.3613,
+   "lng": -3.6914,
+   "affinity": 0.7696,
+   "popularity": 0.858
+  },
+  {
+   "lat": 54.5801,
+   "lng": -1.2305,
+   "affinity": 0.7685,
+   "popularity": 0.851
+  },
+  {
+   "lat": 52.998,
+   "lng": -9.668,
+   "affinity": 0.7674,
+   "popularity": 0.49
+  },
+  {
+   "lat": 55.459,
+   "lng": -4.7461,
+   "affinity": 0.7663,
+   "popularity": 0.774
+  },
+  {
+   "lat": 53.1738,
+   "lng": -0.5273,
+   "affinity": 0.7652,
+   "popularity": 0.88
+  },
+  {
+   "lat": 54.9316,
+   "lng": -2.9883,
+   "affinity": 0.7641,
+   "popularity": 0.721
+  },
+  {
+   "lat": 55.1074,
+   "lng": -6.8555,
+   "affinity": 0.763,
+   "popularity": 0.741
+  },
+  {
+   "lat": 51.9434,
+   "lng": -8.2617,
+   "affinity": 0.762,
+   "popularity": 0.748
+  },
+  {
+   "lat": 53.5254,
+   "lng": -9.3164,
+   "affinity": 0.7609,
+   "popularity": 0.58
+  },
+  {
+   "lat": 54.9316,
+   "lng": -8.2617,
+   "affinity": 0.7598,
+   "popularity": 0.543
+  },
+  {
+   "lat": 52.1191,
+   "lng": -2.9883,
+   "affinity": 0.7587,
+   "popularity": 0.678
+  },
+  {
+   "lat": 55.8105,
+   "lng": -5.0977,
+   "affinity": 0.7576,
+   "popularity": 0.618
+  },
+  {
+   "lat": 51.2402,
+   "lng": -2.2852,
+   "affinity": 0.7565,
+   "popularity": 0.874
+  },
+  {
+   "lat": 55.8105,
+   "lng": -2.9883,
+   "affinity": 0.7554,
+   "popularity": 0.628
+  },
+  {
+   "lat": 52.8223,
+   "lng": -1.2305,
+   "affinity": 0.7543,
+   "popularity": 0.903
+  },
+  {
+   "lat": 51.5918,
+   "lng": -2.6367,
+   "affinity": 0.7533,
+   "popularity": 0.817
+  },
+  {
+   "lat": 53.7012,
+   "lng": -6.8555,
+   "affinity": 0.7522,
+   "popularity": 0.704
+  },
+  {
+   "lat": 51.9434,
+   "lng": -0.5273,
+   "affinity": 0.7511,
+   "popularity": 0.872
+  },
+  {
+   "lat": 56.1621,
+   "lng": -3.6914,
+   "affinity": 0.75,
+   "popularity": 0.615
+  },
+  {
+   "lat": 53.1738,
+   "lng": -1.9336,
+   "affinity": 0.7489,
+   "popularity": 0.848
+  },
+  {
+   "lat": 54.2285,
+   "lng": -0.5273,
+   "affinity": 0.7478,
+   "popularity": 0.852
+  },
+  {
+   "lat": 54.4043,
+   "lng": -2.6367,
+   "affinity": 0.7467,
+   "popularity": 0.709
+  },
+  {
+   "lat": 52.998,
+   "lng": -1.582,
+   "affinity": 0.7457,
+   "popularity": 0.865
+  },
+  {
+   "lat": 51.2402,
+   "lng": 0.1758,
+   "affinity": 0.7446,
+   "popularity": 0.83
+  },
+  {
+   "lat": 57.5684,
+   "lng": -4.043,
+   "affinity": 0.7435,
+   "popularity": 0.608
+  },
+  {
+   "lat": 55.2832,
+   "lng": -6.1523,
+   "affinity": 0.7424,
+   "popularity": 0.59
+  },
+  {
+   "lat": 51.5918,
+   "lng": -4.7461,
+   "affinity": 0.7413,
+   "popularity": 0.797
+  },
+  {
+   "lat": 53.877,
+   "lng": -10.0195,
+   "affinity": 0.7402,
+   "popularity": 0.551
+  },
+  {
+   "lat": 54.0527,
+   "lng": -2.6367,
+   "affinity": 0.7391,
+   "popularity": 0.734
+  },
+  {
+   "lat": 52.6465,
+   "lng": -2.6367,
+   "affinity": 0.738,
+   "popularity": 0.809
+  },
+  {
+   "lat": 56.6895,
+   "lng": -2.6367,
+   "affinity": 0.737,
+   "popularity": 0.528
+  },
+  {
+   "lat": 51.7676,
+   "lng": -1.582,
+   "affinity": 0.7359,
+   "popularity": 0.79
+  },
+  {
+   "lat": 52.2949,
+   "lng": -6.5039,
+   "affinity": 0.7348,
+   "popularity": 0.71
+  },
+  {
+   "lat": 58.9746,
+   "lng": -2.9883,
+   "affinity": 0.7337,
+   "popularity": 0.489
+  },
+  {
+   "lat": 56.1621,
+   "lng": -5.0977,
+   "affinity": 0.7326,
+   "popularity": 0.553
+  },
+  {
+   "lat": 51.416,
+   "lng": -1.9336,
+   "affinity": 0.7315,
+   "popularity": 0.724
+  },
+  {
+   "lat": 51.0645,
+   "lng": -2.2852,
+   "affinity": 0.7304,
+   "popularity": 0.764
+  },
+  {
+   "lat": 56.1621,
+   "lng": -2.6367,
+   "affinity": 0.7293,
+   "popularity": 0.642
+  },
+  {
+   "lat": 50.8887,
+   "lng": -2.9883,
+   "affinity": 0.7283,
+   "popularity": 0.748
+  },
+  {
+   "lat": 52.2949,
+   "lng": -0.8789,
+   "affinity": 0.7272,
+   "popularity": 0.825
+  },
+  {
+   "lat": 51.7676,
+   "lng": -0.8789,
+   "affinity": 0.7261,
+   "popularity": 0.785
+  },
+  {
+   "lat": 52.1191,
+   "lng": 1.2305,
+   "affinity": 0.725,
+   "popularity": 0.775
+  },
+  {
+   "lat": 53.877,
+   "lng": -2.2852,
+   "affinity": 0.7239,
+   "popularity": 0.793
+  },
+  {
+   "lat": 51.5918,
+   "lng": -2.9883,
+   "affinity": 0.7228,
+   "popularity": 0.807
+  },
+  {
+   "lat": 56.5137,
+   "lng": -3.6914,
+   "affinity": 0.7217,
+   "popularity": 0.583
+  },
+  {
+   "lat": 51.0645,
+   "lng": -4.3945,
+   "affinity": 0.7207,
+   "popularity": 0.795
+  },
+  {
+   "lat": 56.1621,
+   "lng": -3.3398,
+   "affinity": 0.7196,
+   "popularity": 0.685
+  },
+  {
+   "lat": 51.9434,
+   "lng": -5.0977,
+   "affinity": 0.7185,
+   "popularity": 0.667
+  },
+  {
+   "lat": 50.7129,
+   "lng": -2.6367,
+   "affinity": 0.7174,
+   "popularity": 0.768
+  },
+  {
+   "lat": 51.2402,
+   "lng": 0.8789,
+   "affinity": 0.7163,
+   "popularity": 0.813
+  },
+  {
+   "lat": 56.1621,
+   "lng": -2.9883,
+   "affinity": 0.7152,
+   "popularity": 0.663
+  },
+  {
+   "lat": 55.6348,
+   "lng": -4.7461,
+   "affinity": 0.7141,
+   "popularity": 0.677
+  },
+  {
+   "lat": 50.0098,
+   "lng": -5.0977,
+   "affinity": 0.713,
+   "popularity": 0.767
+  },
+  {
+   "lat": 51.7676,
+   "lng": -2.9883,
+   "affinity": 0.712,
+   "popularity": 0.711
+  },
+  {
+   "lat": 50.7129,
+   "lng": -2.2852,
+   "affinity": 0.7109,
+   "popularity": 0.789
+  },
+  {
+   "lat": 50.8887,
+   "lng": -2.2852,
+   "affinity": 0.7098,
+   "popularity": 0.717
+  },
+  {
+   "lat": 50.5371,
+   "lng": -4.7461,
+   "affinity": 0.7087,
+   "popularity": 0.799
+  },
+  {
+   "lat": 51.9434,
+   "lng": -0.8789,
+   "affinity": 0.7076,
+   "popularity": 0.773
+  },
+  {
+   "lat": 54.5801,
+   "lng": -6.1523,
+   "affinity": 0.7065,
+   "popularity": 0.73
+  },
+  {
+   "lat": 53.1738,
+   "lng": -6.5039,
+   "affinity": 0.7054,
+   "popularity": 0.718
+  },
+  {
+   "lat": 53.5254,
+   "lng": -2.6367,
+   "affinity": 0.7043,
+   "popularity": 0.847
+  },
+  {
+   "lat": 50.5371,
+   "lng": -5.0977,
+   "affinity": 0.7033,
+   "popularity": 0.835
+  },
+  {
+   "lat": 54.0527,
+   "lng": -2.9883,
+   "affinity": 0.7022,
+   "popularity": 0.707
+  },
+  {
+   "lat": 51.416,
+   "lng": 0.5273,
+   "affinity": 0.7011,
+   "popularity": 0.826
+  },
+  {
+   "lat": 51.7676,
+   "lng": -5.0977,
+   "affinity": 0.7,
+   "popularity": 0.682
+  },
+  {
+   "lat": 51.0645,
+   "lng": -2.9883,
+   "affinity": 0.6989,
+   "popularity": 0.7
+  },
+  {
+   "lat": 56.3379,
+   "lng": -6.5039,
+   "affinity": 0.6978,
+   "popularity": 0.367
+  },
+  {
+   "lat": 52.998,
+   "lng": -2.2852,
+   "affinity": 0.6967,
+   "popularity": 0.822
+  },
+  {
+   "lat": 55.6348,
+   "lng": -1.582,
+   "affinity": 0.6957,
+   "popularity": 0.726
+  },
+  {
+   "lat": 52.8223,
+   "lng": -2.6367,
+   "affinity": 0.6946,
+   "popularity": 0.65
+  },
+  {
+   "lat": 55.8105,
+   "lng": -1.9336,
+   "affinity": 0.6935,
+   "popularity": 0.641
+  },
+  {
+   "lat": 53.1738,
+   "lng": -6.8555,
+   "affinity": 0.6924,
+   "popularity": 0.684
+  },
+  {
+   "lat": 51.2402,
+   "lng": -1.2305,
+   "affinity": 0.6913,
+   "popularity": 0.738
+  },
+  {
+   "lat": 51.5918,
+   "lng": 0.5273,
+   "affinity": 0.6902,
+   "popularity": 0.849
+  },
+  {
+   "lat": 50.5371,
+   "lng": -4.043,
+   "affinity": 0.6891,
+   "popularity": 0.735
+  },
+  {
+   "lat": 52.998,
+   "lng": 1.2305,
+   "affinity": 0.688,
+   "popularity": 0.762
+  },
+  {
+   "lat": 53.7012,
+   "lng": -2.9883,
+   "affinity": 0.687,
+   "popularity": 0.822
+  },
+  {
+   "lat": 52.4707,
+   "lng": -4.043,
+   "affinity": 0.6859,
+   "popularity": 0.743
+  },
+  {
+   "lat": 53.877,
+   "lng": -0.8789,
+   "affinity": 0.6848,
+   "popularity": 0.707
+  },
+  {
+   "lat": 53.7012,
+   "lng": -0.5273,
+   "affinity": 0.6837,
+   "popularity": 0.76
+  },
+  {
+   "lat": 56.5137,
+   "lng": -4.3945,
+   "affinity": 0.6826,
+   "popularity": 0.507
+  },
+  {
+   "lat": 51.2402,
+   "lng": -4.043,
+   "affinity": 0.6815,
+   "popularity": 0.78
+  },
+  {
+   "lat": 54.7559,
+   "lng": -5.8008,
+   "affinity": 0.6804,
+   "popularity": 0.654
+  },
+  {
+   "lat": 52.998,
+   "lng": 0.8789,
+   "affinity": 0.6793,
+   "popularity": 0.783
+  },
+  {
+   "lat": 54.5801,
+   "lng": -8.2617,
+   "affinity": 0.6783,
+   "popularity": 0.618
+  },
+  {
+   "lat": 52.1191,
+   "lng": -0.5273,
+   "affinity": 0.6772,
+   "popularity": 0.772
+  },
+  {
+   "lat": 52.1191,
+   "lng": 1.582,
+   "affinity": 0.6761,
+   "popularity": 0.716
+  },
+  {
+   "lat": 56.5137,
+   "lng": -5.0977,
+   "affinity": 0.675,
+   "popularity": 0.432
+  },
+  {
+   "lat": 53.5254,
+   "lng": -1.2305,
+   "affinity": 0.6739,
+   "popularity": 0.775
+  },
+  {
+   "lat": 52.2949,
+   "lng": -9.668,
+   "affinity": 0.6728,
+   "popularity": 0.596
+  },
+  {
+   "lat": 55.9863,
+   "lng": -4.043,
+   "affinity": 0.6717,
+   "popularity": 0.661
+  },
+  {
+   "lat": 53.1738,
+   "lng": -4.3945,
+   "affinity": 0.6707,
+   "popularity": 0.722
+  },
+  {
+   "lat": 54.0527,
+   "lng": -6.1523,
+   "affinity": 0.6696,
+   "popularity": 0.701
+  },
+  {
+   "lat": 51.5918,
+   "lng": 0.8789,
+   "affinity": 0.6685,
+   "popularity": 0.812
+  },
+  {
+   "lat": 54.5801,
+   "lng": -2.6367,
+   "affinity": 0.6674,
+   "popularity": 0.796
+  },
+  {
+   "lat": 54.2285,
+   "lng": -2.9883,
+   "affinity": 0.6663,
+   "popularity": 0.733
+  },
+  {
+   "lat": 54.2285,
+   "lng": -1.2305,
+   "affinity": 0.6652,
+   "popularity": 0.723
+  },
+  {
+   "lat": 55.1074,
+   "lng": -7.9102,
+   "affinity": 0.6641,
+   "popularity": 0.576
+  },
+  {
+   "lat": 51.5918,
+   "lng": -4.3945,
+   "affinity": 0.663,
+   "popularity": 0.655
+  },
+  {
+   "lat": 51.9434,
+   "lng": 0.8789,
+   "affinity": 0.662,
+   "popularity": 0.814
+  },
+  {
+   "lat": 56.5137,
+   "lng": -5.4492,
+   "affinity": 0.6609,
+   "popularity": 0.451
+  },
+  {
+   "lat": 51.5918,
+   "lng": -9.3164,
+   "affinity": 0.6598,
+   "popularity": 0.525
+  },
+  {
+   "lat": 50.5371,
+   "lng": -1.9336,
+   "affinity": 0.6587,
+   "popularity": 0.664
+  },
+  {
+   "lat": 51.2402,
+   "lng": 0.5273,
+   "affinity": 0.6576,
+   "popularity": 0.815
+  },
+  {
+   "lat": 53.7012,
+   "lng": -9.668,
+   "affinity": 0.6565,
+   "popularity": 0.6
+  },
+  {
+   "lat": 53.5254,
+   "lng": -1.582,
+   "affinity": 0.6554,
+   "popularity": 0.758
+  },
+  {
+   "lat": 52.2949,
+   "lng": 0.8789,
+   "affinity": 0.6543,
+   "popularity": 0.639
+  },
+  {
+   "lat": 54.0527,
+   "lng": -2.2852,
+   "affinity": 0.6533,
+   "popularity": 0.755
+  },
+  {
+   "lat": 55.6348,
+   "lng": -3.6914,
+   "affinity": 0.6522,
+   "popularity": 0.588
+  },
+  {
+   "lat": 52.4707,
+   "lng": 0.1758,
+   "affinity": 0.6511,
+   "popularity": 0.603
+  },
+  {
+   "lat": 53.3496,
+   "lng": -2.6367,
+   "affinity": 0.65,
+   "popularity": 0.882
+  },
+  {
+   "lat": 51.5918,
+   "lng": -2.2852,
+   "affinity": 0.6489,
+   "popularity": 0.754
+  },
+  {
+   "lat": 51.416,
+   "lng": -1.2305,
+   "affinity": 0.6478,
+   "popularity": 0.735
+  },
+  {
+   "lat": 54.4043,
+   "lng": -3.3398,
+   "affinity": 0.6467,
+   "popularity": 0.713
+  },
+  {
+   "lat": 52.1191,
+   "lng": 0.8789,
+   "affinity": 0.6457,
+   "popularity": 0.679
+  },
+  {
+   "lat": 56.3379,
+   "lng": -2.9883,
+   "affinity": 0.6446,
+   "popularity": 0.575
+  },
+  {
+   "lat": 50.7129,
+   "lng": -0.8789,
+   "affinity": 0.6435,
+   "popularity": 0.779
+  },
+  {
+   "lat": 52.1191,
+   "lng": -0.8789,
+   "affinity": 0.6424,
+   "popularity": 0.84
+  },
+  {
+   "lat": 53.7012,
+   "lng": -2.2852,
+   "affinity": 0.6413,
+   "popularity": 0.77
+  },
+  {
+   "lat": 51.416,
+   "lng": -9.3164,
+   "affinity": 0.6402,
+   "popularity": 0.471
+  },
+  {
+   "lat": 53.1738,
+   "lng": -3.6914,
+   "affinity": 0.6391,
+   "popularity": 0.75
+  },
+  {
+   "lat": 55.6348,
+   "lng": -6.1523,
+   "affinity": 0.638,
+   "popularity": 0.329
+  },
+  {
+   "lat": 58.0957,
+   "lng": -5.0977,
+   "affinity": 0.637,
+   "popularity": 0.429
+  },
+  {
+   "lat": 51.0645,
+   "lng": 0.5273,
+   "affinity": 0.6359,
+   "popularity": 0.738
+  },
+  {
+   "lat": 53.3496,
+   "lng": -4.7461,
+   "affinity": 0.6348,
+   "popularity": 0.636
+  },
+  {
+   "lat": 50.0098,
+   "lng": -5.4492,
+   "affinity": 0.6337,
+   "popularity": 0.68
+  },
+  {
+   "lat": 51.2402,
+   "lng": -3.6914,
+   "affinity": 0.6326,
+   "popularity": 0.649
+  },
+  {
+   "lat": 54.5801,
+   "lng": -0.8789,
+   "affinity": 0.6315,
+   "popularity": 0.713
+  },
+  {
+   "lat": 51.416,
+   "lng": -3.6914,
+   "affinity": 0.6304,
+   "popularity": 0.742
+  },
+  {
+   "lat": 51.9434,
+   "lng": -2.9883,
+   "affinity": 0.6293,
+   "popularity": 0.616
+  },
+  {
+   "lat": 56.6895,
+   "lng": -4.043,
+   "affinity": 0.6283,
+   "popularity": 0.493
+  },
+  {
+   "lat": 50.3613,
+   "lng": -4.3945,
+   "affinity": 0.6272,
+   "popularity": 0.738
+  },
+  {
+   "lat": 53.7012,
+   "lng": -1.2305,
+   "affinity": 0.6261,
+   "popularity": 0.728
+  },
+  {
+   "lat": 54.2285,
+   "lng": -4.3945,
+   "affinity": 0.625,
+   "popularity": 0.557
+  },
+  {
+   "lat": 53.3496,
+   "lng": -1.2305,
+   "affinity": 0.6239,
+   "popularity": 0.79
+  },
+  {
+   "lat": 54.2285,
+   "lng": -1.9336,
+   "affinity": 0.6228,
+   "popularity": 0.687
+  },
+  {
+   "lat": 53.5254,
+   "lng": -6.5039,
+   "affinity": 0.6217,
+   "popularity": 0.668
+  },
+  {
+   "lat": 52.6465,
+   "lng": -1.9336,
+   "affinity": 0.6207,
+   "popularity": 0.79
+  },
+  {
+   "lat": 56.5137,
+   "lng": -2.6367,
+   "affinity": 0.6196,
+   "popularity": 0.543
+  },
+  {
+   "lat": 54.4043,
+   "lng": -8.2617,
+   "affinity": 0.6185,
+   "popularity": 0.598
+  },
+  {
+   "lat": 52.6465,
+   "lng": -2.2852,
+   "affinity": 0.6174,
+   "popularity": 0.818
+  },
+  {
+   "lat": 55.6348,
+   "lng": -2.6367,
+   "affinity": 0.6163,
+   "popularity": 0.542
+  },
+  {
+   "lat": 55.1074,
+   "lng": -7.5586,
+   "affinity": 0.6152,
+   "popularity": 0.559
+  },
+  {
+   "lat": 53.3496,
+   "lng": -7.9102,
+   "affinity": 0.6141,
+   "popularity": 0.568
+  },
+  {
+   "lat": 50.8887,
+   "lng": 1.9336,
+   "affinity": 0.613,
+   "popularity": 0.699
+  },
+  {
+   "lat": 51.5918,
+   "lng": -8.6133,
+   "affinity": 0.612,
+   "popularity": 0.501
+  },
+  {
+   "lat": 51.7676,
+   "lng": -4.7461,
+   "affinity": 0.6109,
+   "popularity": 0.686
+  },
+  {
+   "lat": 50.5371,
+   "lng": -3.3398,
+   "affinity": 0.6098,
+   "popularity": 0.746
+  },
+  {
+   "lat": 56.8652,
+   "lng": -5.8008,
+   "affinity": 0.6087,
+   "popularity": 0.417
+  },
+  {
+   "lat": 54.4043,
+   "lng": -8.6133,
+   "affinity": 0.6076,
+   "popularity": 0.504
+  },
+  {
+   "lat": 53.3496,
+   "lng": -3.3398,
+   "affinity": 0.6065,
+   "popularity": 0.737
+  },
+  {
+   "lat": 54.0527,
+   "lng": -6.5039,
+   "affinity": 0.6054,
+   "popularity": 0.624
+  },
+  {
+   "lat": 57.2168,
+   "lng": -6.5039,
+   "affinity": 0.6043,
+   "popularity": 0.335
+  },
+  {
+   "lat": 55.2832,
+   "lng": -2.6367,
+   "affinity": 0.6033,
+   "popularity": 0.551
+  },
+  {
+   "lat": 53.5254,
+   "lng": -4.7461,
+   "affinity": 0.6022,
+   "popularity": 0.475
+  },
+  {
+   "lat": 52.1191,
+   "lng": -2.6367,
+   "affinity": 0.6011,
+   "popularity": 0.674
+  },
+  {
+   "lat": 56.8652,
+   "lng": -4.3945,
+   "affinity": 0.6,
+   "popularity": 0.348
+  },
+  {
+   "lat": 56.5137,
+   "lng": -5.8008,
+   "affinity": 0.5989,
+   "popularity": 0.379
+  },
+  {
+   "lat": 52.6465,
+   "lng": 0.8789,
+   "affinity": 0.5978,
+   "popularity": 0.618
+  },
+  {
+   "lat": 52.6465,
+   "lng": -1.582,
+   "affinity": 0.5967,
+   "popularity": 0.765
+  },
+  {
+   "lat": 51.9434,
+   "lng": 1.2305,
+   "affinity": 0.5957,
+   "popularity": 0.676
+  },
+  {
+   "lat": 52.1191,
+   "lng": -1.9336,
+   "affinity": 0.5946,
+   "popularity": 0.683
+  },
+  {
+   "lat": 53.1738,
+   "lng": -1.2305,
+   "affinity": 0.5935,
+   "popularity": 0.787
+  },
+  {
+   "lat": 52.2949,
+   "lng": -0.1758,
+   "affinity": 0.5924,
+   "popularity": 0.715
+  },
+  {
+   "lat": 54.9316,
+   "lng": -1.2305,
+   "affinity": 0.5913,
+   "popularity": 0.771
+  },
+  {
+   "lat": 52.998,
+   "lng": -2.9883,
+   "affinity": 0.5902,
+   "popularity": 0.69
+  },
+  {
+   "lat": 50.1855,
+   "lng": -3.6914,
+   "affinity": 0.5891,
+   "popularity": 0.705
+  },
+  {
+   "lat": 51.0645,
+   "lng": -0.5273,
+   "affinity": 0.588,
+   "popularity": 0.657
+  },
+  {
+   "lat": 54.2285,
+   "lng": -6.1523,
+   "affinity": 0.587,
+   "popularity": 0.601
+  },
+  {
+   "lat": 58.9746,
+   "lng": -3.3398,
+   "affinity": 0.5859,
+   "popularity": 0.392
+  },
+  {
+   "lat": 52.6465,
+   "lng": 1.582,
+   "affinity": 0.5848,
+   "popularity": 0.76
+  },
+  {
+   "lat": 56.5137,
+   "lng": -4.043,
+   "affinity": 0.5837,
+   "popularity": 0.53
+  },
+  {
+   "lat": 54.9316,
+   "lng": -6.1523,
+   "affinity": 0.5826,
+   "popularity": 0.574
+  },
+  {
+   "lat": 55.6348,
+   "lng": -4.3945,
+   "affinity": 0.5815,
+   "popularity": 0.561
+  },
+  {
+   "lat": 51.7676,
+   "lng": 0.1758,
+   "affinity": 0.5804,
+   "popularity": 0.743
+  },
+  {
+   "lat": 57.3926,
+   "lng": -3.3398,
+   "affinity": 0.5793,
+   "popularity": 0.398
+  },
+  {
+   "lat": 52.8223,
+   "lng": -3.6914,
+   "affinity": 0.5783,
+   "popularity": 0.598
+  },
+  {
+   "lat": 51.7676,
+   "lng": -3.6914,
+   "affinity": 0.5772,
+   "popularity": 0.648
+  },
+  {
+   "lat": 51.7676,
+   "lng": 0.5273,
+   "affinity": 0.5761,
+   "popularity": 0.82
+  },
+  {
+   "lat": 55.2832,
+   "lng": -3.3398,
+   "affinity": 0.575,
+   "popularity": 0.421
+  },
+  {
+   "lat": 52.1191,
+   "lng": -1.2305,
+   "affinity": 0.5739,
+   "popularity": 0.617
+  },
+  {
+   "lat": 57.041,
+   "lng": -4.043,
+   "affinity": 0.5728,
+   "popularity": 0.484
+  },
+  {
+   "lat": 52.4707,
+   "lng": -0.8789,
+   "affinity": 0.5717,
+   "popularity": 0.695
+  },
+  {
+   "lat": 57.3926,
+   "lng": -5.4492,
+   "affinity": 0.5707,
+   "popularity": 0.285
+  },
+  {
+   "lat": 52.1191,
+   "lng": -4.7461,
+   "affinity": 0.5696,
+   "popularity": 0.567
+  },
+  {
+   "lat": 51.7676,
+   "lng": -9.668,
+   "affinity": 0.5685,
+   "popularity": 0.437
+  },
+  {
+   "lat": 53.877,
+   "lng": -9.3164,
+   "affinity": 0.5674,
+   "popularity": 0.523
+  },
+  {
+   "lat": 53.1738,
+   "lng": -2.6367,
+   "affinity": 0.5663,
+   "popularity": 0.777
+  },
+  {
+   "lat": 52.2949,
+   "lng": -1.9336,
+   "affinity": 0.5652,
+   "popularity": 0.698
+  },
+  {
+   "lat": 56.3379,
+   "lng": -3.6914,
+   "affinity": 0.5641,
+   "popularity": 0.604
+  },
+  {
+   "lat": 57.9199,
+   "lng": -6.8555,
+   "affinity": 0.563,
+   "popularity": 0.417
+  },
+  {
+   "lat": 50.8887,
+   "lng": -4.3945,
+   "affinity": 0.562,
+   "popularity": 0.632
+  },
+  {
+   "lat": 57.041,
+   "lng": -3.3398,
+   "affinity": 0.5609,
+   "popularity": 0.483
+  },
+  {
+   "lat": 51.9434,
+   "lng": -1.2305,
+   "affinity": 0.5598,
+   "popularity": 0.691
+  },
+  {
+   "lat": 51.416,
+   "lng": -1.582,
+   "affinity": 0.5587,
+   "popularity": 0.563
+  },
+  {
+   "lat": 50.8887,
+   "lng": -2.6367,
+   "affinity": 0.5576,
+   "popularity": 0.623
+  },
+  {
+   "lat": 55.1074,
+   "lng": -3.6914,
+   "affinity": 0.5565,
+   "popularity": 0.482
+  },
+  {
+   "lat": 55.1074,
+   "lng": -8.2617,
+   "affinity": 0.5554,
+   "popularity": 0.51
+  },
+  {
+   "lat": 56.5137,
+   "lng": -6.1523,
+   "affinity": 0.5543,
+   "popularity": 0.367
+  },
+  {
+   "lat": 54.0527,
+   "lng": -0.8789,
+   "affinity": 0.5533,
+   "popularity": 0.629
+  },
+  {
+   "lat": 54.0527,
+   "lng": -1.2305,
+   "affinity": 0.5522,
+   "popularity": 0.633
+  },
+  {
+   "lat": 51.416,
+   "lng": -9.668,
+   "affinity": 0.5511,
+   "popularity": 0.421
+  },
+  {
+   "lat": 52.6465,
+   "lng": -4.043,
+   "affinity": 0.55,
+   "popularity": 0.635
+  },
+  {
+   "lat": 55.1074,
+   "lng": -1.9336,
+   "affinity": 0.5489,
+   "popularity": 0.583
+  },
+  {
+   "lat": 56.5137,
+   "lng": -6.5039,
+   "affinity": 0.5478,
+   "popularity": 0.235
+  },
+  {
+   "lat": 54.4043,
+   "lng": -5.4492,
+   "affinity": 0.5467,
+   "popularity": 0.522
+  },
+  {
+   "lat": 51.5918,
+   "lng": -1.582,
+   "affinity": 0.5457,
+   "popularity": 0.579
+  },
+  {
+   "lat": 57.5684,
+   "lng": -3.3398,
+   "affinity": 0.5446,
+   "popularity": 0.439
+  },
+  {
+   "lat": 58.623,
+   "lng": -4.7461,
+   "affinity": 0.5435,
+   "popularity": 0.386
+  },
+  {
+   "lat": 51.5918,
+   "lng": -10.0195,
+   "affinity": 0.5424,
+   "popularity": 0.277
+  },
+  {
+   "lat": 51.0645,
+   "lng": -1.582,
+   "affinity": 0.5413,
+   "popularity": 0.611
+  },
+  {
+   "lat": 55.9863,
+   "lng": -2.2852,
+   "affinity": 0.5402,
+   "popularity": 0.457
+  },
+  {
+   "lat": 54.5801,
+   "lng": -1.582,
+   "affinity": 0.5391,
+   "popularity": 0.665
+  },
+  {
+   "lat": 52.8223,
+   "lng": -4.043,
+   "affinity": 0.538,
+   "popularity": 0.614
+  },
+  {
+   "lat": 52.8223,
+   "lng": -6.1523,
+   "affinity": 0.537,
+   "popularity": 0.515
+  },
+  {
+   "lat": 51.5918,
+   "lng": -9.668,
+   "affinity": 0.5359,
+   "popularity": 0.4
+  },
+  {
+   "lat": 52.1191,
+   "lng": -6.8555,
+   "affinity": 0.5348,
+   "popularity": 0.51
+  },
+  {
+   "lat": 51.5918,
+   "lng": -3.6914,
+   "affinity": 0.5337,
+   "popularity": 0.652
+  },
+  {
+   "lat": 51.2402,
+   "lng": -2.9883,
+   "affinity": 0.5326,
+   "popularity": 0.647
+  },
+  {
+   "lat": 57.7441,
+   "lng": -4.043,
+   "affinity": 0.5315,
+   "popularity": 0.382
+  },
+  {
+   "lat": 52.6465,
+   "lng": -0.5273,
+   "affinity": 0.5304,
+   "popularity": 0.66
+  },
+  {
+   "lat": 52.998,
+   "lng": -1.9336,
+   "affinity": 0.5293,
+   "popularity": 0.702
+  },
+  {
+   "lat": 52.2949,
+   "lng": -2.6367,
+   "affinity": 0.5283,
+   "popularity": 0.572
+  },
+  {
+   "lat": 52.2949,
+   "lng": -1.2305,
+   "affinity": 0.5272,
+   "popularity": 0.646
+  },
+  {
+   "lat": 51.9434,
+   "lng": -7.9102,
+   "affinity": 0.5261,
+   "popularity": 0.518
+  },
+  {
+   "lat": 54.9316,
+   "lng": -1.9336,
+   "affinity": 0.525,
+   "popularity": 0.634
+  },
+  {
+   "lat": 51.9434,
+   "lng": -4.7461,
+   "affinity": 0.5239,
+   "popularity": 0.501
+  },
+  {
+   "lat": 55.2832,
+   "lng": -4.7461,
+   "affinity": 0.5228,
+   "popularity": 0.508
+  },
+  {
+   "lat": 54.0527,
+   "lng": -10.0195,
+   "affinity": 0.5217,
+   "popularity": 0.409
+  },
+  {
+   "lat": 54.4043,
+   "lng": -5.8008,
+   "affinity": 0.5207,
+   "popularity": 0.538
+  },
+  {
+   "lat": 52.998,
+   "lng": 0.5273,
+   "affinity": 0.5196,
+   "popularity": 0.651
+  },
+  {
+   "lat": 51.0645,
+   "lng": 0.8789,
+   "affinity": 0.5185,
+   "popularity": 0.675
+  },
+  {
+   "lat": 52.8223,
+   "lng": -0.5273,
+   "affinity": 0.5174,
+   "popularity": 0.499
+  },
+  {
+   "lat": 58.2715,
+   "lng": -6.5039,
+   "affinity": 0.5163,
+   "popularity": 0.396
+  },
+  {
+   "lat": 53.3496,
+   "lng": -4.3945,
+   "affinity": 0.5152,
+   "popularity": 0.597
+  },
+  {
+   "lat": 53.3496,
+   "lng": -10.0195,
+   "affinity": 0.5141,
+   "popularity": 0.371
+  },
+  {
+   "lat": 54.4043,
+   "lng": -6.1523,
+   "affinity": 0.513,
+   "popularity": 0.572
+  },
+  {
+   "lat": 57.3926,
+   "lng": -1.9336,
+   "affinity": 0.512,
+   "popularity": 0.439
+  },
+  {
+   "lat": 52.8223,
+   "lng": -1.582,
+   "affinity": 0.5109,
+   "popularity": 0.693
+  },
+  {
+   "lat": 55.9863,
+   "lng": -5.0977,
+   "affinity": 0.5098,
+   "popularity": 0.386
+  },
+  {
+   "lat": 51.7676,
+   "lng": 0.8789,
+   "affinity": 0.5087,
+   "popularity": 0.657
+  },
+  {
+   "lat": 55.8105,
+   "lng": -5.4492,
+   "affinity": 0.5076,
+   "popularity": 0.407
+  },
+  {
+   "lat": 55.1074,
+   "lng": -6.1523,
+   "affinity": 0.5065,
+   "popularity": 0.445
+  },
+  {
+   "lat": 55.2832,
+   "lng": -7.5586,
+   "affinity": 0.5054,
+   "popularity": 0.48
+  },
+  {
+   "lat": 53.5254,
+   "lng": -0.1758,
+   "affinity": 0.5043,
+   "popularity": 0.618
+  },
+  {
+   "lat": 54.4043,
+   "lng": -6.5039,
+   "affinity": 0.5033,
+   "popularity": 0.53
+  },
+  {
+   "lat": 57.041,
+   "lng": -2.9883,
+   "affinity": 0.5022,
+   "popularity": 0.459
+  },
+  {
+   "lat": 52.8223,
+   "lng": 0.5273,
+   "affinity": 0.5011,
+   "popularity": 0.624
+  },
+  {
+   "lat": 50.1855,
+   "lng": -5.8008,
+   "affinity": 0.5,
+   "popularity": 0.437
+  },
+  {
+   "lat": 54.7559,
+   "lng": -1.2305,
+   "affinity": 0.4989,
+   "popularity": 0.637
+  },
+  {
+   "lat": 55.6348,
+   "lng": -1.9336,
+   "affinity": 0.4978,
+   "popularity": 0.525
+  },
+  {
+   "lat": 54.0527,
+   "lng": -0.1758,
+   "affinity": 0.4967,
+   "popularity": 0.67
+  },
+  {
+   "lat": 52.4707,
+   "lng": -2.2852,
+   "affinity": 0.4957,
+   "popularity": 0.673
+  },
+  {
+   "lat": 55.6348,
+   "lng": -2.9883,
+   "affinity": 0.4946,
+   "popularity": 0.451
+  },
+  {
+   "lat": 50.5371,
+   "lng": -1.2305,
+   "affinity": 0.4935,
+   "popularity": 0.498
+  },
+  {
+   "lat": 54.9316,
+   "lng": -7.5586,
+   "affinity": 0.4924,
+   "popularity": 0.496
+  },
+  {
+   "lat": 57.3926,
+   "lng": -2.9883,
+   "affinity": 0.4913,
+   "popularity": 0.299
+  },
+  {
+   "lat": 52.998,
+   "lng": -4.3945,
+   "affinity": 0.4902,
+   "popularity": 0.57
+  },
+  {
+   "lat": 52.8223,
+   "lng": -2.2852,
+   "affinity": 0.4891,
+   "popularity": 0.592
+  },
+  {
+   "lat": 51.7676,
+   "lng": -4.043,
+   "affinity": 0.488,
+   "popularity": 0.557
+  },
+  {
+   "lat": 57.9199,
+   "lng": -4.043,
+   "affinity": 0.487,
+   "popularity": 0.424
+  },
+  {
+   "lat": 52.4707,
+   "lng": -6.5039,
+   "affinity": 0.4859,
+   "popularity": 0.516
+  },
+  {
+   "lat": 51.7676,
+   "lng": -3.3398,
+   "affinity": 0.4848,
+   "popularity": 0.605
+  },
+  {
+   "lat": 51.0645,
+   "lng": 1.582,
+   "affinity": 0.4837,
+   "popularity": 0.304
+  },
+  {
+   "lat": 55.459,
+   "lng": -4.043,
+   "affinity": 0.4826,
+   "popularity": 0.218
+  },
+  {
+   "lat": 52.8223,
+   "lng": 1.2305,
+   "affinity": 0.4815,
+   "popularity": 0.583
+  },
+  {
+   "lat": 51.7676,
+   "lng": -9.3164,
+   "affinity": 0.4804,
+   "popularity": 0.435
+  },
+  {
+   "lat": 56.8652,
+   "lng": -4.7461,
+   "affinity": 0.4793,
+   "popularity": 0.238
+  },
+  {
+   "lat": 51.9434,
+   "lng": -2.6367,
+   "affinity": 0.4783,
+   "popularity": 0.529
+  },
+  {
+   "lat": 52.2949,
+   "lng": -7.5586,
+   "affinity": 0.4772,
+   "popularity": 0.512
+  },
+  {
+   "lat": 52.2949,
+   "lng": 1.2305,
+   "affinity": 0.4761,
+   "popularity": 0.499
+  },
+  {
+   "lat": 55.1074,
+   "lng": -2.2852,
+   "affinity": 0.475,
+   "popularity": 0.466
+  },
+  {
+   "lat": 52.1191,
+   "lng": -0.1758,
+   "affinity": 0.4739,
+   "popularity": 0.608
+  },
+  {
+   "lat": 54.2285,
+   "lng": -2.2852,
+   "affinity": 0.4728,
+   "popularity": 0.626
+  },
+  {
+   "lat": 52.6465,
+   "lng": -9.668,
+   "affinity": 0.4717,
+   "popularity": 0.424
+  },
+  {
+   "lat": 53.5254,
+   "lng": -6.8555,
+   "affinity": 0.4707,
+   "popularity": 0.478
+  },
+  {
+   "lat": 52.8223,
+   "lng": 1.582,
+   "affinity": 0.4696,
+   "popularity": 0.587
+  },
+  {
+   "lat": 52.6465,
+   "lng": -0.1758,
+   "affinity": 0.4685,
+   "popularity": 0.626
+  },
+  {
+   "lat": 52.6465,
+   "lng": -6.1523,
+   "affinity": 0.4674,
+   "popularity": 0.454
+  },
+  {
+   "lat": 54.9316,
+   "lng": -2.2852,
+   "affinity": 0.4663,
+   "popularity": 0.495
+  },
+  {
+   "lat": 52.1191,
+   "lng": -7.207,
+   "affinity": 0.4652,
+   "popularity": 0.513
+  },
+  {
+   "lat": 54.9316,
+   "lng": -5.8008,
+   "affinity": 0.4641,
+   "popularity": 0.443
+  },
+  {
+   "lat": 54.4043,
+   "lng": -7.5586,
+   "affinity": 0.463,
+   "popularity": 0.496
+  },
+  {
+   "lat": 54.9316,
+   "lng": -5.0977,
+   "affinity": 0.462,
+   "popularity": 0.371
+  },
+  {
+   "lat": 52.4707,
+   "lng": -2.9883,
+   "affinity": 0.4609,
+   "popularity": 0.518
+  },
+  {
+   "lat": 57.5684,
+   "lng": -5.4492,
+   "affinity": 0.4598,
+   "popularity": 0.246
+  },
+  {
+   "lat": 55.459,
+   "lng": -5.4492,
+   "affinity": 0.4587,
+   "popularity": 0.337
+  },
+  {
+   "lat": 52.2949,
+   "lng": -10.0195,
+   "affinity": 0.4576,
+   "popularity": 0.382
+  },
+  {
+   "lat": 52.998,
+   "lng": -3.3398,
+   "affinity": 0.4565,
+   "popularity": 0.576
+  },
+  {
+   "lat": 53.877,
+   "lng": -2.6367,
+   "affinity": 0.4554,
+   "popularity": 0.642
+  },
+  {
+   "lat": 52.8223,
+   "lng": -1.9336,
+   "affinity": 0.4543,
+   "popularity": 0.657
+  },
+  {
+   "lat": 56.8652,
+   "lng": -3.3398,
+   "affinity": 0.4533,
+   "popularity": 0.439
+  },
+  {
+   "lat": 58.2715,
+   "lng": -6.8555,
+   "affinity": 0.4522,
+   "popularity": 0.326
+  },
+  {
+   "lat": 52.998,
+   "lng": -0.8789,
+   "affinity": 0.4511,
+   "popularity": 0.61
+  },
+  {
+   "lat": 52.4707,
+   "lng": 1.582,
+   "affinity": 0.45,
+   "popularity": 0.593
+  },
+  {
+   "lat": 57.5684,
+   "lng": -3.6914,
+   "affinity": 0.4489,
+   "popularity": 0.436
+  },
+  {
+   "lat": 54.2285,
+   "lng": -1.582,
+   "affinity": 0.4478,
+   "popularity": 0.547
+  },
+  {
+   "lat": 51.7676,
+   "lng": -4.3945,
+   "affinity": 0.4467,
+   "popularity": 0.527
+  },
+  {
+   "lat": 57.7441,
+   "lng": -6.1523,
+   "affinity": 0.4457,
+   "popularity": 0.152
+  },
+  {
+   "lat": 57.5684,
+   "lng": -2.9883,
+   "affinity": 0.4446,
+   "popularity": 0.322
+  },
+  {
+   "lat": 55.2832,
+   "lng": -7.207,
+   "affinity": 0.4435,
+   "popularity": 0.403
+  },
+  {
+   "lat": 52.2949,
+   "lng": 0.5273,
+   "affinity": 0.4424,
+   "popularity": 0.571
+  },
+  {
+   "lat": 52.1191,
+   "lng": -4.3945,
+   "affinity": 0.4413,
+   "popularity": 0.487
+  },
+  {
+   "lat": 53.1738,
+   "lng": -7.5586,
+   "affinity": 0.4402,
+   "popularity": 0.471
+  },
+  {
+   "lat": 53.3496,
+   "lng": -4.043,
+   "affinity": 0.4391,
+   "popularity": 0.543
+  },
+  {
+   "lat": 52.4707,
+   "lng": 0.5273,
+   "affinity": 0.438,
+   "popularity": 0.593
+  },
+  {
+   "lat": 50.8887,
+   "lng": -3.3398,
+   "affinity": 0.437,
+   "popularity": 0.49
+  },
+  {
+   "lat": 55.2832,
+   "lng": -1.582,
+   "affinity": 0.4359,
+   "popularity": 0.547
+  },
+  {
+   "lat": 51.2402,
+   "lng": -3.3398,
+   "affinity": 0.4348,
+   "popularity": 0.565
+  },
+  {
+   "lat": 54.4043,
+   "lng": -1.582,
+   "affinity": 0.4337,
+   "popularity": 0.602
+  },
+  {
+   "lat": 54.9316,
+   "lng": -2.6367,
+   "affinity": 0.4326,
+   "popularity": 0.412
+  },
+  {
+   "lat": 58.623,
+   "lng": -2.9883,
+   "affinity": 0.4315,
+   "popularity": 0.397
+  },
+  {
+   "lat": 54.5801,
+   "lng": -5.4492,
+   "affinity": 0.4304,
+   "popularity": 0.492
+  },
+  {
+   "lat": 54.4043,
+   "lng": -0.8789,
+   "affinity": 0.4293,
+   "popularity": 0.518
+  },
+  {
+   "lat": 53.3496,
+   "lng": -9.3164,
+   "affinity": 0.4283,
+   "popularity": 0.315
+  },
+  {
+   "lat": 54.5801,
+   "lng": -1.9336,
+   "affinity": 0.4272,
+   "popularity": 0.534
+  },
+  {
+   "lat": 52.8223,
+   "lng": -6.8555,
+   "affinity": 0.4261,
+   "popularity": 0.475
+  },
+  {
+   "lat": 51.9434,
+   "lng": 0.5273,
+   "affinity": 0.425,
+   "popularity": 0.586
+  },
+  {
+   "lat": 51.9434,
+   "lng": -5.4492,
+   "affinity": 0.4239,
+   "popularity": 0.361
+  },
+  {
+   "lat": 55.459,
+   "lng": -5.0977,
+   "affinity": 0.4228,
+   "popularity": 0.332
+  },
+  {
+   "lat": 56.5137,
+   "lng": -3.3398,
+   "affinity": 0.4217,
+   "popularity": 0.417
+  },
+  {
+   "lat": 55.459,
+   "lng": -7.207,
+   "affinity": 0.4207,
+   "popularity": 0.322
+  },
+  {
+   "lat": 53.7012,
+   "lng": -10.3711,
+   "affinity": 0.4196,
+   "popularity": 0.257
+  },
+  {
+   "lat": 50.5371,
+   "lng": -4.3945,
+   "affinity": 0.4185,
+   "popularity": 0.516
+  },
+  {
+   "lat": 50.7129,
+   "lng": -0.5273,
+   "affinity": 0.4174,
+   "popularity": 0.538
+  },
+  {
+   "lat": 52.8223,
+   "lng": -4.3945,
+   "affinity": 0.4163,
+   "popularity": 0.509
+  },
+  {
+   "lat": 57.7441,
+   "lng": -5.8008,
+   "affinity": 0.4152,
+   "popularity": 0.271
+  },
+  {
+   "lat": 51.7676,
+   "lng": 1.2305,
+   "affinity": 0.4141,
+   "popularity": 0.59
+  },
+  {
+   "lat": 58.0957,
+   "lng": -5.4492,
+   "affinity": 0.413,
+   "popularity": 0.299
+  },
+  {
+   "lat": 50.7129,
+   "lng": -4.043,
+   "affinity": 0.412,
+   "popularity": 0.461
+  },
+  {
+   "lat": 56.3379,
+   "lng": -4.043,
+   "affinity": 0.4109,
+   "popularity": 0.364
+  },
+  {
+   "lat": 56.1621,
+   "lng": -5.4492,
+   "affinity": 0.4098,
+   "popularity": 0.277
+  },
+  {
+   "lat": 53.877,
+   "lng": -6.5039,
+   "affinity": 0.4087,
+   "popularity": 0.462
+  },
+  {
+   "lat": 54.0527,
+   "lng": -7.207,
+   "affinity": 0.4076,
+   "popularity": 0.423
+  },
+  {
+   "lat": 57.7441,
+   "lng": -3.3398,
+   "affinity": 0.4065,
+   "popularity": 0.398
+  },
+  {
+   "lat": 52.2949,
+   "lng": -2.2852,
+   "affinity": 0.4054,
+   "popularity": 0.629
+  },
+  {
+   "lat": 52.4707,
+   "lng": -1.2305,
+   "affinity": 0.4043,
+   "popularity": 0.555
+  },
+  {
+   "lat": 54.7559,
+   "lng": -8.6133,
+   "affinity": 0.4033,
+   "popularity": 0.34
+  },
+  {
+   "lat": 53.3496,
+   "lng": -7.5586,
+   "affinity": 0.4022,
+   "popularity": 0.416
+  },
+  {
+   "lat": 53.7012,
+   "lng": -5.0977,
+   "affinity": 0.4011,
+   "popularity": 0.229
+  },
+  {
+   "lat": 53.7012,
+   "lng": -6.1523,
+   "affinity": 0.4,
+   "popularity": 0.424
+  },
+  {
+   "lat": 52.4707,
+   "lng": -8.6133,
+   "affinity": 0.3989,
+   "popularity": 0.332
+  },
+  {
+   "lat": 52.4707,
+   "lng": -7.207,
+   "affinity": 0.3978,
+   "popularity": 0.382
+  },
+  {
+   "lat": 50.1855,
+   "lng": -4.7461,
+   "affinity": 0.3967,
+   "popularity": 0.501
+  },
+  {
+   "lat": 55.6348,
+   "lng": -3.3398,
+   "affinity": 0.3957,
+   "popularity": 0.432
+  },
+  {
+   "lat": 55.8105,
+   "lng": -3.6914,
+   "affinity": 0.3946,
+   "popularity": 0.45
+  },
+  {
+   "lat": 51.0645,
+   "lng": -3.3398,
+   "affinity": 0.3935,
+   "popularity": 0.454
+  },
+  {
+   "lat": 57.7441,
+   "lng": -1.9336,
+   "affinity": 0.3924,
+   "popularity": 0.197
+  },
+  {
+   "lat": 54.2285,
+   "lng": -0.1758,
+   "affinity": 0.3913,
+   "popularity": 0.566
+  },
+  {
+   "lat": 57.2168,
+   "lng": -2.6367,
+   "affinity": 0.3902,
+   "popularity": 0.382
+  },
+  {
+   "lat": 52.1191,
+   "lng": -7.5586,
+   "affinity": 0.3891,
+   "popularity": 0.413
+  },
+  {
+   "lat": 51.5918,
+   "lng": -5.0977,
+   "affinity": 0.388,
+   "popularity": 0.371
+  },
+  {
+   "lat": 53.1738,
+   "lng": -0.8789,
+   "affinity": 0.387,
+   "popularity": 0.561
+  },
+  {
+   "lat": 52.998,
+   "lng": -3.6914,
+   "affinity": 0.3859,
+   "popularity": 0.477
+  },
+  {
+   "lat": 53.877,
+   "lng": -0.5273,
+   "affinity": 0.3848,
+   "popularity": 0.537
+  },
+  {
+   "lat": 54.7559,
+   "lng": -6.1523,
+   "affinity": 0.3837,
+   "popularity": 0.466
+  },
+  {
+   "lat": 57.041,
+   "lng": -2.6367,
+   "affinity": 0.3826,
+   "popularity": 0.408
+  },
+  {
+   "lat": 51.9434,
+   "lng": -4.3945,
+   "affinity": 0.3815,
+   "popularity": 0.41
+  },
+  {
+   "lat": 55.2832,
+   "lng": -1.9336,
+   "affinity": 0.3804,
+   "popularity": 0.447
+  },
+  {
+   "lat": 54.2285,
+   "lng": -8.9648,
+   "affinity": 0.3793,
+   "popularity": 0.392
+  },
+  {
+   "lat": 52.8223,
+   "lng": -8.6133,
+   "affinity": 0.3783,
+   "popularity": 0.392
+  },
+  {
+   "lat": 53.1738,
+   "lng": -3.3398,
+   "affinity": 0.3772,
+   "popularity": 0.553
+  },
+  {
+   "lat": 50.3613,
+   "lng": -3.3398,
+   "affinity": 0.3761,
+   "popularity": 0.465
+  },
+  {
+   "lat": 53.877,
+   "lng": -8.9648,
+   "affinity": 0.375,
+   "popularity": 0.253
+  },
+  {
+   "lat": 54.2285,
+   "lng": -0.8789,
+   "affinity": 0.3739,
+   "popularity": 0.536
+  },
+  {
+   "lat": 51.2402,
+   "lng": -1.582,
+   "affinity": 0.3728,
+   "popularity": 0.47
+  },
+  {
+   "lat": 53.7012,
+   "lng": -8.2617,
+   "affinity": 0.3717,
+   "popularity": 0.332
+  },
+  {
+   "lat": 57.5684,
+   "lng": -5.0977,
+   "affinity": 0.3707,
+   "popularity": 0.129
+  },
+  {
+   "lat": 56.6895,
+   "lng": -2.9883,
+   "affinity": 0.3696,
+   "popularity": 0.32
+  },
+  {
+   "lat": 53.5254,
+   "lng": -8.9648,
+   "affinity": 0.3685,
+   "popularity": 0.259
+  },
+  {
+   "lat": 54.0527,
+   "lng": -9.3164,
+   "affinity": 0.3674,
+   "popularity": 0.35
+  },
+  {
+   "lat": 54.2285,
+   "lng": -7.9102,
+   "affinity": 0.3663,
+   "popularity": 0.4
+  },
+  {
+   "lat": 52.4707,
+   "lng": -2.6367,
+   "affinity": 0.3652,
+   "popularity": 0.411
+  },
+  {
+   "lat": 52.8223,
+   "lng": -9.3164,
+   "affinity": 0.3641,
+   "popularity": 0.37
+  },
+  {
+   "lat": 57.3926,
+   "lng": -4.7461,
+   "affinity": 0.363,
+   "popularity": 0.195
+  },
+  {
+   "lat": 51.9434,
+   "lng": -3.6914,
+   "affinity": 0.362,
+   "popularity": 0.35
+  },
+  {
+   "lat": 52.6465,
+   "lng": -3.6914,
+   "affinity": 0.3609,
+   "popularity": 0.386
+  },
+  {
+   "lat": 57.2168,
+   "lng": -5.0977,
+   "affinity": 0.3598,
+   "popularity": 0.189
+  },
+  {
+   "lat": 58.2715,
+   "lng": -5.0977,
+   "affinity": 0.3587,
+   "popularity": 0.227
+  },
+  {
+   "lat": 52.998,
+   "lng": -2.6367,
+   "affinity": 0.3576,
+   "popularity": 0.54
+  },
+  {
+   "lat": 55.8105,
+   "lng": -2.2852,
+   "affinity": 0.3565,
+   "popularity": 0.347
+  },
+  {
+   "lat": 53.7012,
+   "lng": -8.9648,
+   "affinity": 0.3554,
+   "popularity": 0.309
+  },
+  {
+   "lat": 53.1738,
+   "lng": 0.1758,
+   "affinity": 0.3543,
+   "popularity": 0.549
+  },
+  {
+   "lat": 52.8223,
+   "lng": -3.3398,
+   "affinity": 0.3533,
+   "popularity": 0.434
+  },
+  {
+   "lat": 52.1191,
+   "lng": -8.6133,
+   "affinity": 0.3522,
+   "popularity": 0.299
+  },
+  {
+   "lat": 53.7012,
+   "lng": -4.7461,
+   "affinity": 0.3511,
+   "popularity": 0.167
+  },
+  {
+   "lat": 52.2949,
+   "lng": -6.8555,
+   "affinity": 0.35,
+   "popularity": 0.376
+  },
+  {
+   "lat": 52.6465,
+   "lng": -2.9883,
+   "affinity": 0.3489,
+   "popularity": 0.453
+  }
+ ],
+ "cities": [
+  {
+   "name": "London",
+   "query": "London",
+   "lat": 51.5074,
+   "lng": -0.1278,
+   "score": 98,
+   "affinity": 0.98,
+   "popularity": 0.918,
+   "cells": 16
+  },
+  {
+   "name": "Edinburgh",
+   "query": "Edinburgh",
+   "lat": 55.9533,
+   "lng": -3.1883,
+   "score": 98,
+   "affinity": 0.984,
+   "popularity": 0.645,
+   "cells": 18
+  },
+  {
+   "name": "Bristol",
+   "query": "Bristol, UK",
+   "lat": 51.4545,
+   "lng": -2.5879,
+   "score": 97,
+   "affinity": 0.972,
+   "popularity": 0.831,
+   "cells": 16
+  },
+  {
+   "name": "Dublin",
+   "query": "Dublin",
+   "lat": 53.3498,
+   "lng": -6.2603,
+   "score": 97,
+   "affinity": 0.971,
+   "popularity": 0.742,
+   "cells": 13
+  },
+  {
+   "name": "Cardiff",
+   "query": "Cardiff",
+   "lat": 51.4816,
+   "lng": -3.1791,
+   "score": 97,
+   "affinity": 0.968,
+   "popularity": 0.75,
+   "cells": 18
+  },
+  {
+   "name": "Glasgow",
+   "query": "Glasgow",
+   "lat": 55.8642,
+   "lng": -4.2518,
+   "score": 96,
+   "affinity": 0.962,
+   "popularity": 0.672,
+   "cells": 18
+  },
+  {
+   "name": "Manchester",
+   "query": "Manchester, UK",
+   "lat": 53.4808,
+   "lng": -2.2426,
+   "score": 95,
+   "affinity": 0.946,
+   "popularity": 0.879,
+   "cells": 17
+  },
+  {
+   "name": "Leeds",
+   "query": "Leeds",
+   "lat": 53.8008,
+   "lng": -1.5491,
+   "score": 95,
+   "affinity": 0.948,
+   "popularity": 0.796,
+   "cells": 17
+  },
+  {
+   "name": "Liverpool",
+   "query": "Liverpool",
+   "lat": 53.4084,
+   "lng": -2.9916,
+   "score": 94,
+   "affinity": 0.943,
+   "popularity": 0.849,
+   "cells": 14
+  },
+  {
+   "name": "Birmingham",
+   "query": "Birmingham, UK",
+   "lat": 52.4862,
+   "lng": -1.8904,
+   "score": 89,
+   "affinity": 0.891,
+   "popularity": 0.762,
+   "cells": 18
+  },
+  {
+   "name": "Newcastle",
+   "query": "Newcastle upon Tyne",
+   "lat": 54.9783,
+   "lng": -1.6178,
+   "score": 87,
+   "affinity": 0.874,
+   "popularity": 0.609,
+   "cells": 15
+  },
+  {
+   "name": "Belfast",
+   "query": "Belfast",
+   "lat": 54.5973,
+   "lng": -5.9301,
+   "score": 85,
+   "affinity": 0.849,
+   "popularity": 0.538,
+   "cells": 16
+  }
+ ],
+ "profile": {
+  "tags": [
+   {
+    "id": "urn:tag:motif:qloo:loss",
+    "name": "Loss",
+    "affinity": 1
+   },
+   {
+    "id": "urn:tag:motif:qloo:art",
+    "name": "Art",
+    "affinity": 1
+   },
+   {
+    "id": "urn:tag:motif:qloo:cats",
+    "name": "Cats",
+    "affinity": 1
+   },
+   {
+    "id": "urn:tag:genre:qloo:short_story",
+    "name": "Short Story",
+    "affinity": 1
+   },
+   {
+    "id": "urn:tag:subgenre:qloo:media_commentary",
+    "name": "Media Commentary",
+    "affinity": 1
+   },
+   {
+    "id": "urn:tag:keyword:media:lesbian",
+    "name": "Lesbian",
+    "affinity": 0.9997621010521538
+   },
+   {
+    "id": "urn:tag:keyword:media:female_protagonist",
+    "name": "Female protagonist",
+    "affinity": 0.9996589358799455
+   },
+   {
+    "id": "urn:tag:artist:qloo:sensitive",
+    "name": "Sensitive",
+    "affinity": 0.999191992167077
+   },
+   {
+    "id": "urn:tag:keyword:media:friend",
+    "name": "Friend",
+    "affinity": 0.99890049118092
+   },
+   {
+    "id": "urn:tag:keyword:media:teenager",
+    "name": "Teenager",
+    "affinity": 0.9987822466538234
+   }
+  ],
+  "demographics": {
+   "age": {
+    "24_and_younger": 0.29,
+    "25_to_29": 0.33,
+    "30_to_34": 0.2,
+    "35_to_44": -0.63,
+    "45_to_54": -0.44,
+    "55_and_older": -0.53
+   },
+   "gender": {
+    "male": -0.47000000000000003,
+    "female": 0.47000000000000003
+   }
+  },
+  "trend": [],
+  "momentum": null
+ },
+ "route": [
+  {
+   "name": "London",
+   "query": "London",
+   "lat": 51.5074,
+   "lng": -0.1278,
+   "score": 98,
+   "affinity": 0.98,
+   "popularity": 0.918,
+   "cells": 16,
+   "why": "Top tier affinity (0.98) and massive scene size popularity (0.918) make this a lock."
+  },
+  {
+   "name": "Bristol",
+   "query": "Bristol, UK",
+   "lat": 51.4545,
+   "lng": -2.5879,
+   "score": 97,
+   "affinity": 0.972,
+   "popularity": 0.831,
+   "cells": 16,
+   "why": "Strong affinity (0.972) and high engagement popularity (0.831) fit mid-size venues perfectly."
+  },
+  {
+   "name": "Manchester",
+   "query": "Manchester, UK",
+   "lat": 53.4808,
+   "lng": -2.2426,
+   "score": 95,
+   "affinity": 0.946,
+   "popularity": 0.879,
+   "cells": 17,
+   "why": "Swapped in for Cardiff/Leeds due to superior venue infrastructure and high popularity (0.879) paired with 0.946 affinity."
+  },
+  {
+   "name": "Dublin",
+   "query": "Dublin",
+   "lat": 53.3498,
+   "lng": -6.2603,
+   "score": 97,
+   "affinity": 0.971,
+   "popularity": 0.742,
+   "cells": 13,
+   "why": "Excellent affinity (0.971) anchoring the Irish leg despite moderate popularity (0.742)."
+  },
+  {
+   "name": "Edinburgh",
+   "query": "Edinburgh",
+   "lat": 55.9533,
+   "lng": -3.1883,
+   "score": 98,
+   "affinity": 0.984,
+   "popularity": 0.645,
+   "cells": 18,
+   "why": "Highest regional affinity (0.984) with solid mid-size venue potential at 0.645 popularity."
+  }
+ ],
+ "dropped": [
+  {
+   "city": "Cardiff",
+   "score": 97,
+   "reason": "Lower fan affinity than the kept markets"
+  },
+  {
+   "city": "Glasgow",
+   "score": 96,
+   "reason": "Lower fan affinity than the kept markets"
+  },
+  {
+   "city": "Leeds",
+   "score": 95,
+   "reason": "Lower fan affinity than the kept markets"
+  },
+  {
+   "city": "Liverpool",
+   "score": 94,
+   "reason": "Lower fan affinity than the kept markets"
+  },
+  {
+   "city": "Birmingham",
+   "score": 89,
+   "reason": "Weakest score (89) and affinity (0.891) in the candidate pool, signaling poor regional fit."
+  },
+  {
+   "city": "Newcastle",
+   "score": 87,
+   "reason": "Lower fan affinity than the kept markets"
+  },
+  {
+   "city": "Belfast",
+   "score": 85,
+   "reason": "Lower fan affinity than the kept markets"
+  }
+ ],
+ "rationale": "We targeted top-scoring markets to match the artist's indie-leaning audience profile while prioritizing mid-size venue viability. Birmingham was dropped due to a sharp drop-off in affinity (0.891) compared to the rest of the tour.",
+ "stops": [
+  {
+   "name": "London",
+   "query": "London",
+   "lat": 51.5074,
+   "lng": -0.1278,
+   "score": 98,
+   "affinity": 0.98,
+   "popularity": 0.918,
+   "cells": 16,
+   "why": "Top tier affinity (0.98) and massive scene size popularity (0.918) make this a lock.",
+   "peers": [
+    {
+     "id": "99FBEE0C-2A8A-4EE2-9B20-8CEBD854CD46",
+     "name": "Lucy Dacus",
+     "affinity": 0.98,
+     "popularity": 0.983,
+     "image": "https://images.qloo.com/i/99FBEE0C-2A8A-4EE2-9B20-8CEBD854CD46-420x-auto.jpg"
+    },
+    {
+     "id": "F919E809-3234-4251-B031-5327E609AD82",
+     "name": "Adrianne Lenker",
+     "affinity": 0.979,
+     "popularity": 0.981,
+     "image": "https://images.qloo.com/i/F919E809-3234-4251-B031-5327E609AD82-420x-auto.jpg"
+    },
+    {
+     "id": "AD420A3F-5F09-4C1C-BB1E-A3DEB937F184",
+     "name": "Big Thief",
+     "affinity": 0.979,
+     "popularity": 0.991,
+     "image": "https://images.qloo.com/i/AD420A3F-5F09-4C1C-BB1E-A3DEB937F184-420x-auto.jpg"
+    },
+    {
+     "id": "84EAECD1-A605-468E-A066-6AC7208DA4A2",
+     "name": "Matt Berninger",
+     "affinity": 0.978,
+     "popularity": 0.855,
+     "image": "https://images.qloo.com/i/84EAECD1-A605-468E-A066-6AC7208DA4A2-420x-auto.jpg"
+    },
+    {
+     "id": "4CE60D14-B414-4163-97C3-C1E51108ED90",
+     "name": "Julia Jacklin",
+     "affinity": 0.978,
+     "popularity": 0.974,
+     "image": "https://images.qloo.com/i/4CE60D14-B414-4163-97C3-C1E51108ED90-420x-auto.jpg"
+    },
+    {
+     "id": "6B4A457B-EAB3-4BB6-BBA2-5E1B2A374AF4",
+     "name": "Julien Baker",
+     "affinity": 0.976,
+     "popularity": 0.983,
+     "image": "https://images.qloo.com/i/6B4A457B-EAB3-4BB6-BBA2-5E1B2A374AF4-420x-auto.jpg"
+    },
+    {
+     "id": "D0DFD941-A7DB-4310-9B39-1D51BD7F085F",
+     "name": "Maggie Rogers",
+     "affinity": 0.973,
+     "popularity": 0.985,
+     "image": "https://images.qloo.com/i/D0DFD941-A7DB-4310-9B39-1D51BD7F085F-420x-auto.jpg"
+    },
+    {
+     "id": "AA21934D-3A6E-4973-983F-28604C44E3AC",
+     "name": "Japanese Breakfast",
+     "affinity": 0.973,
+     "popularity": 0.992,
+     "image": "https://images.qloo.com/i/AA21934D-3A6E-4973-983F-28604C44E3AC-420x-auto.jpg"
+    },
+    {
+     "id": "4607C481-A992-456F-900E-46AB836351EF",
+     "name": "Suki Waterhouse",
+     "affinity": 0.973,
+     "popularity": 0.963,
+     "image": "https://images.qloo.com/i/4607C481-A992-456F-900E-46AB836351EF-420x-auto.jpg"
+    },
+    {
+     "id": "5FB0A7DA-C7F0-487B-80C4-CA893D1BC56B",
+     "name": "Better Oblivion Community Center",
+     "affinity": 0.972,
+     "popularity": 0.961,
+     "image": "https://images.qloo.com/i/5FB0A7DA-C7F0-487B-80C4-CA893D1BC56B-420x-auto.jpg"
+    },
+    {
+     "id": "C8B165BC-286E-4840-9417-AF68A8A690ED",
+     "name": "Big Red Machine",
+     "affinity": 0.97,
+     "popularity": 0.955,
+     "image": "https://images.qloo.com/i/C8B165BC-286E-4840-9417-AF68A8A690ED-420x-auto.jpg"
+    },
+    {
+     "id": "E3BD2650-8E5C-43FB-B5A7-C1C7753A6293",
+     "name": "Mitski",
+     "affinity": 0.97,
+     "popularity": 0.996,
+     "image": "https://images.qloo.com/i/E3BD2650-8E5C-43FB-B5A7-C1C7753A6293-420x-auto.jpg"
+    },
+    {
+     "id": "294FB758-F339-4A5D-A549-0CD69B46EE0A",
+     "name": "boygenius",
+     "affinity": 0.97,
+     "popularity": 0.985,
+     "image": "https://images.qloo.com/i/294FB758-F339-4A5D-A549-0CD69B46EE0A-420x-auto.jpg"
+    },
+    {
+     "id": "2CD563F9-B62E-4D02-8FA0-63BB8D9FCB0D",
+     "name": "Aldous Harding",
+     "affinity": 0.97,
+     "popularity": 0.965,
+     "image": "https://images.qloo.com/i/2CD563F9-B62E-4D02-8FA0-63BB8D9FCB0D-420x-auto.jpg"
+    },
+    {
+     "id": "144F1259-C207-44A7-8367-D5CCC51FF5A9",
+     "name": "Snail Mail",
+     "affinity": 0.97,
+     "popularity": 0.983,
+     "image": "https://images.qloo.com/i/144F1259-C207-44A7-8367-D5CCC51FF5A9-420x-auto.jpg"
+    }
+   ],
+   "rooms": [
+    {
+     "id": "EEC86B56-C557-4B45-BE57-9BE37D102E56",
+     "name": "Handel Hendrix House",
+     "affinity": 0.745,
+     "popularity": 0.963,
+     "address": "25 Brook St London W1K 4HB United Kingdom",
+     "image": "https://images.qloo.com/i/EEC86B56-C557-4B45-BE57-9BE37D102E56-420x-auto.jpg",
+     "description": "Dual historic London houses showcasing George Frideric Handel's Georgian home and Jimi Hendrix's flat, with period rooms, musical artifacts, recitals, and guided tours."
+    },
+    {
+     "id": "6609710C-28E2-48C0-857B-A816C6DCC1BE",
+     "name": "LSO St Luke's",
+     "affinity": 0.733,
+     "popularity": 0.961,
+     "address": "161 Old St London EC1V 9NG United Kingdom",
+     "image": "https://images.qloo.com/i/6609710C-28E2-48C0-857B-A816C6DCC1BE-420x-auto.jpg",
+     "description": "Converted 18th-century church hosting the London Symphony Orchestra's rehearsal, performance and education spaces, with flexible event, recording and community programmes in central London."
+    },
+    {
+     "id": "66294C74-186C-4B8C-BC3A-7D714753EAD7",
+     "name": "Institute of Contemporary Arts",
+     "affinity": 0.73,
+     "popularity": 0.997,
+     "address": "The Mall London SW1Y 5AH United Kingdom",
+     "image": "https://images.qloo.com/i/66294C74-186C-4B8C-BC3A-7D714753EAD7-420x-auto.jpg",
+     "description": "Contemporary arts venue showcasing experimental visual art, performance and film across galleries, a theatre and two cinemas, with café-bar and specialist bookshop near Trafalgar Square."
+    },
+    {
+     "id": "866EF5E2-2AAD-4DEB-9661-5775368B608C",
+     "name": "IKLECTIK",
+     "affinity": 0.729,
+     "popularity": 0.83,
+     "address": "Old Paradise Yard 20 Carlisle Ln London SE1 7LG United Kingdom",
+     "image": "https://images.qloo.com/i/866EF5E2-2AAD-4DEB-9661-5775368B608C-420x-auto.jpg",
+     "description": "Grassroots cross-disciplinary venue in south London's Old Paradise Yard showcasing experimental sound, performance, embodied practices, and accessible technologies."
+    },
+    {
+     "id": "C59219C6-390B-4FFE-8A8E-AAF34528442E",
+     "name": "Dulwich Picture Gallery",
+     "affinity": 0.723,
+     "popularity": 0.995,
+     "address": "London SE21 7AD United Kingdom",
+     "image": "https://images.qloo.com/i/C59219C6-390B-4FFE-8A8E-AAF34528442E-420x-auto.jpg",
+     "description": "Soane-designed gallery housing a renowned collection of 17th- and 18th-century European Old Masters in tranquil grounds."
+    }
+   ],
+   "places": [
+    {
+     "id": "873C4A12-AF6D-4EC4-9200-8A67D8CA8538",
+     "name": "Queen Elizabeth Hall Roof Garden",
+     "affinity": 0.749,
+     "popularity": 0.558,
+     "address": "Southbank Centre London SE1 8XX United Kingdom",
+     "image": "https://images.qloo.com/i/873C4A12-AF6D-4EC4-9200-8A67D8CA8538-420x-auto.jpg",
+     "description": "Rooftop cafe-bar on the Southbank offering cocktails, coffee, beer and river views above Festival Pier."
+    },
+    {
+     "id": "FA73A8D9-1974-4FCC-B066-F79799A8F2BD",
+     "name": "The Camden Pub Crawl",
+     "affinity": 0.748,
+     "popularity": 0.552,
+     "address": "48-50 Camden High St London NW1 0LT United Kingdom",
+     "image": "https://images.qloo.com/i/FA73A8D9-1974-4FCC-B066-F79799A8F2BD-420x-auto.jpg",
+     "description": "Guided nightlife tour combining historic pubs, bars, clubs and restaurants along Camden High Street."
+    },
+    {
+     "id": "8725C169-4292-4D06-9EA1-62288090A676",
+     "name": "The British Library",
+     "affinity": 0.741,
+     "popularity": 0.999,
+     "address": "96 Euston Rd. London NW1 2DB United Kingdom",
+     "image": "https://images.qloo.com/i/8725C169-4292-4D06-9EA1-62288090A676-420x-auto.jpg",
+     "description": "National library housing iconic treasures such as the Magna Carta and Beatles handwritten lyrics across approximately 400 miles of shelving."
+    },
+    {
+     "id": "E768C5C4-C1C1-4BC2-B303-E5D98892A1EF",
+     "name": "The Orangery Restaurant",
+     "affinity": 0.731,
+     "popularity": 0.958,
+     "address": "Kensington Palace Gardens London W8 4PX United Kingdom",
+     "image": "https://images.qloo.com/i/E768C5C4-C1C1-4BC2-B303-E5D98892A1EF-420x-auto.jpg",
+     "description": "Dining in a garden pavilion built for Queen Anne (1704), offering lunches, classic afternoon tea, cakes and traditional English breakfasts."
+    },
+    {
+     "id": "5EE8EB6A-947A-4385-B6B5-81DDC0BEE3B7",
+     "name": "The English Restaurant",
+     "affinity": 0.73,
+     "popularity": 0.71,
+     "address": "Brushfield St London E1 6AG United Kingdom",
+     "image": "https://images.qloo.com/i/5EE8EB6A-947A-4385-B6B5-81DDC0BEE3B7-420x-auto.jpg",
+     "description": "Cozy British restaurant evoking an old English tavern atmosphere, serving small plates, coffee, wine, and nostalgic desserts."
+    }
+   ],
+   "brands": [
+    {
+     "id": "F59D6DB5-5A85-48C6-A2EC-CAAE334D4348",
+     "name": "Dr. Martens",
+     "affinity": 0.962,
+     "popularity": 0.992,
+     "image": "https://images.qloo.com/i/F59D6DB5-5A85-48C6-A2EC-CAAE334D4348-420x-auto.jpg",
+     "description": "Dr. Martens is a British footwear and clothing brand known for its iconic durable boots and shoes with distinctive yellow stitching."
+    },
+    {
+     "id": "A5707876-D5A1-49F0-ABF9-A793EA7736D2",
+     "name": "Vice",
+     "affinity": 0.948,
+     "popularity": 0.998,
+     "image": "https://images.qloo.com/i/A5707876-D5A1-49F0-ABF9-A793EA7736D2-420x-auto.jpg",
+     "description": "VICE is a global media brand known for original journalism and content covering diverse cultural, social, and political topics, including its Spanish-language platform VICE en Español."
+    },
+    {
+     "id": "62926E8D-2D7E-4428-819E-BF2477D3233F",
+     "name": "Polaroid",
+     "affinity": 0.948,
+     "popularity": 0.98,
+     "image": "https://images.qloo.com/i/62926E8D-2D7E-4428-819E-BF2477D3233F-420x-auto.jpg",
+     "description": "Polaroid is a brand known for instant photography products, including instant cameras and film, continuing the legacy of the original Polaroid Corporation."
+    },
+    {
+     "id": "977160CE-28F9-4BC9-A0B5-C022BF3A5572",
+     "name": "Free People",
+     "affinity": 0.94,
+     "popularity": 0.996,
+     "image": "https://images.qloo.com/i/977160CE-28F9-4BC9-A0B5-C022BF3A5572-420x-auto.jpg",
+     "description": "Free People is a women's clothing brand specializing in bohemian fashion, offering trendy and vintage-inspired apparel and accessories."
+    },
+    {
+     "id": "8EA998B6-B9B0-4EF8-BFD3-7C1E3AFADF63",
+     "name": "Marshall Headphones",
+     "affinity": 0.939,
+     "popularity": 0.807,
+     "image": "https://images.qloo.com/i/8EA998B6-B9B0-4EF8-BFD3-7C1E3AFADF63-420x-auto.jpg",
+     "description": "Marshall Headphones is a brand offering headphones and portable speakers known for custom-tuned sound with roaring bass, smooth mids, and brilliant treble."
+    }
+   ],
+   "podcasts": [
+    {
+     "id": "D95B20A8-0CEA-4BDC-8074-60A303FA1980",
+     "name": "Song Exploder",
+     "affinity": 0.95,
+     "popularity": 0.978,
+     "image": "https://images.qloo.com/i/D95B20A8-0CEA-4BDC-8074-60A303FA1980-420x-auto.jpg",
+     "description": "Musicians dissect their songs, sharing the creative process and stories behind the music."
+    },
+    {
+     "id": "656C8017-53E3-4754-A951-7A48CEC1179C",
+     "name": "2 Dope Queens",
+     "affinity": 0.948,
+     "popularity": 0.996,
+     "image": "https://images.qloo.com/i/656C8017-53E3-4754-A951-7A48CEC1179C-420x-auto.jpg",
+     "description": "Two best friends host a live comedy show featuring diverse comedians discussing race, romance, and life in New York."
+    },
+    {
+     "id": "14EECB60-E987-47CA-8582-D8FEB225C945",
+     "name": "Las Culturistas with Matt Rogers and Bowen Yang",
+     "affinity": 0.944,
+     "popularity": 0.992,
+     "image": "https://images.qloo.com/i/14EECB60-E987-47CA-8582-D8FEB225C945-420x-auto.jpg",
+     "description": "Matt Rogers and Bowen Yang explore pop culture and personal stories with special guests, sharing insights and humor."
+    },
+    {
+     "id": "ED9D4C2F-37B4-476F-B3DE-5F5EEB95E859",
+     "name": "Getting Curious with Jonathan Van Ness",
+     "affinity": 0.943,
+     "popularity": 0.993,
+     "image": "https://images.qloo.com/i/ED9D4C2F-37B4-476F-B3DE-5F5EEB95E859-420x-auto.jpg",
+     "description": "Jonathan Van Ness explores diverse topics with experts, from science to entertainment, in an engaging and curious format."
+    }
+   ],
+   "opener": {
+    "id": "99FBEE0C-2A8A-4EE2-9B20-8CEBD854CD46",
+    "name": "Lucy Dacus",
+    "affinity": 0.98,
+    "popularity": 0.983,
+    "image": "https://images.qloo.com/i/99FBEE0C-2A8A-4EE2-9B20-8CEBD854CD46-420x-auto.jpg"
+   }
+  },
+  {
+   "name": "Bristol",
+   "query": "Bristol, UK",
+   "lat": 51.4545,
+   "lng": -2.5879,
+   "score": 97,
+   "affinity": 0.972,
+   "popularity": 0.831,
+   "cells": 16,
+   "why": "Strong affinity (0.972) and high engagement popularity (0.831) fit mid-size venues perfectly.",
+   "peers": [
+    {
+     "id": "99FBEE0C-2A8A-4EE2-9B20-8CEBD854CD46",
+     "name": "Lucy Dacus",
+     "affinity": 0.981,
+     "popularity": 0.983,
+     "image": "https://images.qloo.com/i/99FBEE0C-2A8A-4EE2-9B20-8CEBD854CD46-420x-auto.jpg"
+    },
+    {
+     "id": "AD420A3F-5F09-4C1C-BB1E-A3DEB937F184",
+     "name": "Big Thief",
+     "affinity": 0.98,
+     "popularity": 0.991,
+     "image": "https://images.qloo.com/i/AD420A3F-5F09-4C1C-BB1E-A3DEB937F184-420x-auto.jpg"
+    },
+    {
+     "id": "F919E809-3234-4251-B031-5327E609AD82",
+     "name": "Adrianne Lenker",
+     "affinity": 0.98,
+     "popularity": 0.981,
+     "image": "https://images.qloo.com/i/F919E809-3234-4251-B031-5327E609AD82-420x-auto.jpg"
+    },
+    {
+     "id": "6B4A457B-EAB3-4BB6-BBA2-5E1B2A374AF4",
+     "name": "Julien Baker",
+     "affinity": 0.978,
+     "popularity": 0.983,
+     "image": "https://images.qloo.com/i/6B4A457B-EAB3-4BB6-BBA2-5E1B2A374AF4-420x-auto.jpg"
+    },
+    {
+     "id": "4CE60D14-B414-4163-97C3-C1E51108ED90",
+     "name": "Julia Jacklin",
+     "affinity": 0.978,
+     "popularity": 0.974,
+     "image": "https://images.qloo.com/i/4CE60D14-B414-4163-97C3-C1E51108ED90-420x-auto.jpg"
+    },
+    {
+     "id": "5FB0A7DA-C7F0-487B-80C4-CA893D1BC56B",
+     "name": "Better Oblivion Community Center",
+     "affinity": 0.976,
+     "popularity": 0.961,
+     "image": "https://images.qloo.com/i/5FB0A7DA-C7F0-487B-80C4-CA893D1BC56B-420x-auto.jpg"
+    },
+    {
+     "id": "84EAECD1-A605-468E-A066-6AC7208DA4A2",
+     "name": "Matt Berninger",
+     "affinity": 0.976,
+     "popularity": 0.855,
+     "image": "https://images.qloo.com/i/84EAECD1-A605-468E-A066-6AC7208DA4A2-420x-auto.jpg"
+    },
+    {
+     "id": "4607C481-A992-456F-900E-46AB836351EF",
+     "name": "Suki Waterhouse",
+     "affinity": 0.973,
+     "popularity": 0.963,
+     "image": "https://images.qloo.com/i/4607C481-A992-456F-900E-46AB836351EF-420x-auto.jpg"
+    },
+    {
+     "id": "D0DFD941-A7DB-4310-9B39-1D51BD7F085F",
+     "name": "Maggie Rogers",
+     "affinity": 0.972,
+     "popularity": 0.985,
+     "image": "https://images.qloo.com/i/D0DFD941-A7DB-4310-9B39-1D51BD7F085F-420x-auto.jpg"
+    },
+    {
+     "id": "144F1259-C207-44A7-8367-D5CCC51FF5A9",
+     "name": "Snail Mail",
+     "affinity": 0.971,
+     "popularity": 0.983,
+     "image": "https://images.qloo.com/i/144F1259-C207-44A7-8367-D5CCC51FF5A9-420x-auto.jpg"
+    },
+    {
+     "id": "3498CFC6-EC1A-48DF-9DA8-5CE61BA60FE6",
+     "name": "Fenne Lily",
+     "affinity": 0.971,
+     "popularity": 0.935,
+     "image": "https://images.qloo.com/i/3498CFC6-EC1A-48DF-9DA8-5CE61BA60FE6-420x-auto.jpg"
+    },
+    {
+     "id": "2CD563F9-B62E-4D02-8FA0-63BB8D9FCB0D",
+     "name": "Aldous Harding",
+     "affinity": 0.97,
+     "popularity": 0.965,
+     "image": "https://images.qloo.com/i/2CD563F9-B62E-4D02-8FA0-63BB8D9FCB0D-420x-auto.jpg"
+    },
+    {
+     "id": "5A47A7C5-BA00-4081-865E-B8239B0D842C",
+     "name": "Stella Donnelly",
+     "affinity": 0.97,
+     "popularity": 0.942,
+     "image": "https://images.qloo.com/i/5A47A7C5-BA00-4081-865E-B8239B0D842C-420x-auto.jpg"
+    },
+    {
+     "id": "56908E37-B4A6-4466-BF3D-C0158FB9C8C3",
+     "name": "Soccer Mommy",
+     "affinity": 0.97,
+     "popularity": 0.985,
+     "image": "https://images.qloo.com/i/56908E37-B4A6-4466-BF3D-C0158FB9C8C3-420x-auto.jpg"
+    },
+    {
+     "id": "294FB758-F339-4A5D-A549-0CD69B46EE0A",
+     "name": "boygenius",
+     "affinity": 0.97,
+     "popularity": 0.985,
+     "image": "https://images.qloo.com/i/294FB758-F339-4A5D-A549-0CD69B46EE0A-420x-auto.jpg"
+    }
+   ],
+   "rooms": [
+    {
+     "id": "CAFFF7B7-AFE3-41B1-A9FB-CAD5285730C1",
+     "name": "Rough Trade Bristol",
+     "affinity": 0.72,
+     "popularity": 0.989,
+     "address": "3 New Bridewell Nelson St Bristol BS1 2QD, United Kingdom",
+     "image": "https://images.qloo.com/i/CAFFF7B7-AFE3-41B1-A9FB-CAD5285730C1-420x-auto.jpg",
+     "description": "Independent record shop with licensed café, live music venue, and curated vinyl, books, and events in central Bristol."
+    },
+    {
+     "id": "C78F42D1-259E-4A60-AD99-09838F0CF278",
+     "name": "Chapel Arts Centre",
+     "affinity": 0.715,
+     "popularity": 0.902,
+     "address": "Basement St James Memorial Hall Avon 9 Lower Borough Walls Bath BA1 1QR, United Kingdom",
+     "image": "https://images.qloo.com/i/C78F42D1-259E-4A60-AD99-09838F0CF278-420x-auto.jpg",
+     "description": "Intimate alternative cabaret and arts venue in Bath basement, hosting live music, theatre, dance, burlesque and a café-style cabaret seating."
+    },
+    {
+     "id": "1BEBB53A-38EB-4F3E-87D2-62475B4C2653",
+     "name": "St George's Bristol",
+     "affinity": 0.712,
+     "popularity": 0.922,
+     "address": "Great George St Bristol BS1 5RR United Kingdom",
+     "image": "https://images.qloo.com/i/1BEBB53A-38EB-4F3E-87D2-62475B4C2653-420x-auto.jpg",
+     "description": "Acoustically renowned concert hall in a former Georgian church hosting world, jazz and classical music with a café-bar and event hire."
+    },
+    {
+     "id": "5E4345A3-D071-4ED4-9F39-ED3F6894F674",
+     "name": "Christmas at the Spiegeltent",
+     "affinity": 0.708,
+     "popularity": 0.822,
+     "address": "Waterfront Square, Off Canons Way, The Harbourside Bristol BS1 5LL United Kingdom",
+     "image": "https://images.qloo.com/i/5E4345A3-D071-4ED4-9F39-ED3F6894F674-420x-auto.jpg",
+     "description": "Seasonal, ornate mirrored-tent cabaret and pop-up venue on Bristol Harbourside offering live music, themed Christmas shows, food, and bar in a festive atmosphere."
+    },
+    {
+     "id": "6D5C9C91-15E3-41E9-AF2A-4FFD7A469A7A",
+     "name": "Shaftesbury Arts Centre",
+     "affinity": 0.708,
+     "popularity": 0.153,
+     "address": "13 Bell St Shaftesbury SP7 8AR United Kingdom",
+     "image": "https://images.qloo.com/i/6D5C9C91-15E3-41E9-AF2A-4FFD7A469A7A-420x-auto.jpg",
+     "description": "Volunteer-run arts centre in Shaftesbury's medieval hilltop market town, offering year-round theatre, cinema, music, exhibitions, workshops, cafe and community arts programmes."
+    }
+   ],
+   "places": [
+    {
+     "id": "455488AF-8EEB-4853-AF4A-350C00EE28EE",
+     "name": "The Radnor Rooms",
+     "affinity": 0.723,
+     "popularity": 0.336,
+     "address": "30 St Nicholas St Bristol BS1 1TG United Kingdom",
+     "image": "https://images.qloo.com/i/455488AF-8EEB-4853-AF4A-350C00EE28EE-420x-auto.jpg",
+     "description": "Elegantly restored Grade II-listed private hire venue in Bristol’s Old City with rooftop terrace, fully stocked bar, and flexible catering for weddings, parties, and events."
+    },
+    {
+     "id": "DAC44A70-AA1A-4B5A-87CA-4AB4D94EC7AA",
+     "name": "The Plug",
+     "affinity": 0.721,
+     "popularity": 0.137,
+     "address": "Claverton Down Bath BA2 7AY United Kingdom",
+     "image": "https://images.qloo.com/i/DAC44A70-AA1A-4B5A-87CA-4AB4D94EC7AA-420x-auto.jpg",
+     "description": "Student-union bar and club with big screens, pool tables, live sport, cheap pints, and sustainable, student-focused events."
+    },
+    {
+     "id": "CAFFF7B7-AFE3-41B1-A9FB-CAD5285730C1",
+     "name": "Rough Trade Bristol",
+     "affinity": 0.72,
+     "popularity": 0.989,
+     "address": "3 New Bridewell Nelson St Bristol BS1 2QD, United Kingdom",
+     "image": "https://images.qloo.com/i/CAFFF7B7-AFE3-41B1-A9FB-CAD5285730C1-420x-auto.jpg",
+     "description": "Independent record shop with licensed café, live music venue, and curated vinyl, books, and events in central Bristol."
+    },
+    {
+     "id": "E653B373-4C9E-4181-BEFC-AA80BFF1E8A8",
+     "name": "Arnolfini Arts",
+     "affinity": 0.718,
+     "popularity": 0.996,
+     "address": "16 Narrow Quay Bristol BS1 4QA United Kingdom",
+     "image": "https://images.qloo.com/i/E653B373-4C9E-4181-BEFC-AA80BFF1E8A8-420x-auto.jpg",
+     "description": "Contemporary arts centre on Bristol Harbour with exhibitions, live events, bookshop and café bar."
+    },
+    {
+     "id": "BB7DF61A-FC09-4EE4-BC7E-E72A9D908C3D",
+     "name": "Document",
+     "affinity": 0.716,
+     "popularity": 0.363,
+     "address": "30 Pennywell Rd St Jude's Bristol BS5 0TH United Kingdom",
+     "image": "https://images.qloo.com/i/BB7DF61A-FC09-4EE4-BC7E-E72A9D908C3D-420x-auto.jpg",
+     "description": "Creative hub, venue and art space in a converted 1990s document storage facility, offering a mid-sized, stripped-back industrial event and dining space in Bristol."
+    }
+   ],
+   "brands": [
+    {
+     "id": "F59D6DB5-5A85-48C6-A2EC-CAAE334D4348",
+     "name": "Dr. Martens",
+     "affinity": 0.965,
+     "popularity": 0.992,
+     "image": "https://images.qloo.com/i/F59D6DB5-5A85-48C6-A2EC-CAAE334D4348-420x-auto.jpg",
+     "description": "Dr. Martens is a British footwear and clothing brand known for its iconic durable boots and shoes with distinctive yellow stitching."
+    },
+    {
+     "id": "4F94C666-5FFA-4A42-8453-24C2F779EC36",
+     "name": "Urban Outfitters",
+     "affinity": 0.957,
+     "popularity": 0.999,
+     "image": "https://images.qloo.com/i/4F94C666-5FFA-4A42-8453-24C2F779EC36-420x-auto.jpg",
+     "description": "Urban Outfitters is a lifestyle retailer offering clothing, homeware, and accessories inspired by creativity and cultural trends."
+    },
+    {
+     "id": "A5707876-D5A1-49F0-ABF9-A793EA7736D2",
+     "name": "Vice",
+     "affinity": 0.947,
+     "popularity": 0.998,
+     "image": "https://images.qloo.com/i/A5707876-D5A1-49F0-ABF9-A793EA7736D2-420x-auto.jpg",
+     "description": "VICE is a global media brand known for original journalism and content covering diverse cultural, social, and political topics, including its Spanish-language platform VICE en Español."
+    },
+    {
+     "id": "62926E8D-2D7E-4428-819E-BF2477D3233F",
+     "name": "Polaroid",
+     "affinity": 0.946,
+     "popularity": 0.98,
+     "image": "https://images.qloo.com/i/62926E8D-2D7E-4428-819E-BF2477D3233F-420x-auto.jpg",
+     "description": "Polaroid is a brand known for instant photography products, including instant cameras and film, continuing the legacy of the original Polaroid Corporation."
+    },
+    {
+     "id": "DB4CE34E-3A63-4947-946F-9D52502C5762",
+     "name": "Patagonia",
+     "affinity": 0.94,
+     "popularity": 0.996,
+     "image": "https://images.qloo.com/i/DB4CE34E-3A63-4947-946F-9D52502C5762-420x-auto.jpg",
+     "description": "Patagonia is an outdoor apparel company known for sustainable clothing and gear for activities like climbing, surfing, skiing, and trail running."
+    }
+   ],
+   "podcasts": [
+    {
+     "id": "D95B20A8-0CEA-4BDC-8074-60A303FA1980",
+     "name": "Song Exploder",
+     "affinity": 0.95,
+     "popularity": 0.978,
+     "image": "https://images.qloo.com/i/D95B20A8-0CEA-4BDC-8074-60A303FA1980-420x-auto.jpg",
+     "description": "Musicians dissect their songs, sharing the creative process and stories behind the music."
+    },
+    {
+     "id": "5A0446E9-8BC2-4142-81E7-9624D3B43440",
+     "name": "The Allusionist",
+     "affinity": 0.943,
+     "popularity": 0.943,
+     "image": "https://images.qloo.com/i/5A0446E9-8BC2-4142-81E7-9624D3B43440-420x-auto.jpg",
+     "description": "Exploring the intricacies and adventures of language through engaging discussions and insights."
+    },
+    {
+     "id": "ED9D4C2F-37B4-476F-B3DE-5F5EEB95E859",
+     "name": "Getting Curious with Jonathan Van Ness",
+     "affinity": 0.942,
+     "popularity": 0.993,
+     "image": "https://images.qloo.com/i/ED9D4C2F-37B4-476F-B3DE-5F5EEB95E859-420x-auto.jpg",
+     "description": "Jonathan Van Ness explores diverse topics with experts, from science to entertainment, in an engaging and curious format."
+    },
+    {
+     "id": "C1FF708E-8DFF-4C50-A6CF-1A99AC27AA6F",
+     "name": "My Dad Wrote A Porno",
+     "affinity": 0.937,
+     "popularity": 0.994,
+     "image": "https://images.qloo.com/i/C1FF708E-8DFF-4C50-A6CF-1A99AC27AA6F-420x-auto.jpg",
+     "description": "A comedic podcast where Jamie Morton reads a dirty book written by his dad, exploring family dynamics and humor."
+    }
+   ],
+   "opener": {
+    "id": "99FBEE0C-2A8A-4EE2-9B20-8CEBD854CD46",
+    "name": "Lucy Dacus",
+    "affinity": 0.981,
+    "popularity": 0.983,
+    "image": "https://images.qloo.com/i/99FBEE0C-2A8A-4EE2-9B20-8CEBD854CD46-420x-auto.jpg"
+   }
+  },
+  {
+   "name": "Manchester",
+   "query": "Manchester, UK",
+   "lat": 53.4808,
+   "lng": -2.2426,
+   "score": 95,
+   "affinity": 0.946,
+   "popularity": 0.879,
+   "cells": 17,
+   "why": "Swapped in for Cardiff/Leeds due to superior venue infrastructure and high popularity (0.879) paired with 0.946 affinity.",
+   "peers": [
+    {
+     "id": "99FBEE0C-2A8A-4EE2-9B20-8CEBD854CD46",
+     "name": "Lucy Dacus",
+     "affinity": 0.981,
+     "popularity": 0.983,
+     "image": "https://images.qloo.com/i/99FBEE0C-2A8A-4EE2-9B20-8CEBD854CD46-420x-auto.jpg"
+    },
+    {
+     "id": "AD420A3F-5F09-4C1C-BB1E-A3DEB937F184",
+     "name": "Big Thief",
+     "affinity": 0.98,
+     "popularity": 0.991,
+     "image": "https://images.qloo.com/i/AD420A3F-5F09-4C1C-BB1E-A3DEB937F184-420x-auto.jpg"
+    },
+    {
+     "id": "84EAECD1-A605-468E-A066-6AC7208DA4A2",
+     "name": "Matt Berninger",
+     "affinity": 0.978,
+     "popularity": 0.855,
+     "image": "https://images.qloo.com/i/84EAECD1-A605-468E-A066-6AC7208DA4A2-420x-auto.jpg"
+    },
+    {
+     "id": "6B4A457B-EAB3-4BB6-BBA2-5E1B2A374AF4",
+     "name": "Julien Baker",
+     "affinity": 0.978,
+     "popularity": 0.983,
+     "image": "https://images.qloo.com/i/6B4A457B-EAB3-4BB6-BBA2-5E1B2A374AF4-420x-auto.jpg"
+    },
+    {
+     "id": "4CE60D14-B414-4163-97C3-C1E51108ED90",
+     "name": "Julia Jacklin",
+     "affinity": 0.978,
+     "popularity": 0.974,
+     "image": "https://images.qloo.com/i/4CE60D14-B414-4163-97C3-C1E51108ED90-420x-auto.jpg"
+    },
+    {
+     "id": "F919E809-3234-4251-B031-5327E609AD82",
+     "name": "Adrianne Lenker",
+     "affinity": 0.977,
+     "popularity": 0.981,
+     "image": "https://images.qloo.com/i/F919E809-3234-4251-B031-5327E609AD82-420x-auto.jpg"
+    },
+    {
+     "id": "144F1259-C207-44A7-8367-D5CCC51FF5A9",
+     "name": "Snail Mail",
+     "affinity": 0.974,
+     "popularity": 0.983,
+     "image": "https://images.qloo.com/i/144F1259-C207-44A7-8367-D5CCC51FF5A9-420x-auto.jpg"
+    },
+    {
+     "id": "5FB0A7DA-C7F0-487B-80C4-CA893D1BC56B",
+     "name": "Better Oblivion Community Center",
+     "affinity": 0.973,
+     "popularity": 0.961,
+     "image": "https://images.qloo.com/i/5FB0A7DA-C7F0-487B-80C4-CA893D1BC56B-420x-auto.jpg"
+    },
+    {
+     "id": "4607C481-A992-456F-900E-46AB836351EF",
+     "name": "Suki Waterhouse",
+     "affinity": 0.973,
+     "popularity": 0.963,
+     "image": "https://images.qloo.com/i/4607C481-A992-456F-900E-46AB836351EF-420x-auto.jpg"
+    },
+    {
+     "id": "56908E37-B4A6-4466-BF3D-C0158FB9C8C3",
+     "name": "Soccer Mommy",
+     "affinity": 0.973,
+     "popularity": 0.985,
+     "image": "https://images.qloo.com/i/56908E37-B4A6-4466-BF3D-C0158FB9C8C3-420x-auto.jpg"
+    },
+    {
+     "id": "21E391CC-71CD-480F-B8BA-049BD36C6DA5",
+     "name": "beabadoobee",
+     "affinity": 0.972,
+     "popularity": 0.988,
+     "image": "https://images.qloo.com/i/21E391CC-71CD-480F-B8BA-049BD36C6DA5-420x-auto.jpg"
+    },
+    {
+     "id": "5A47A7C5-BA00-4081-865E-B8239B0D842C",
+     "name": "Stella Donnelly",
+     "affinity": 0.97,
+     "popularity": 0.942,
+     "image": "https://images.qloo.com/i/5A47A7C5-BA00-4081-865E-B8239B0D842C-420x-auto.jpg"
+    },
+    {
+     "id": "294FB758-F339-4A5D-A549-0CD69B46EE0A",
+     "name": "boygenius",
+     "affinity": 0.969,
+     "popularity": 0.985,
+     "image": "https://images.qloo.com/i/294FB758-F339-4A5D-A549-0CD69B46EE0A-420x-auto.jpg"
+    },
+    {
+     "id": "2CD563F9-B62E-4D02-8FA0-63BB8D9FCB0D",
+     "name": "Aldous Harding",
+     "affinity": 0.968,
+     "popularity": 0.965,
+     "image": "https://images.qloo.com/i/2CD563F9-B62E-4D02-8FA0-63BB8D9FCB0D-420x-auto.jpg"
+    },
+    {
+     "id": "AA21934D-3A6E-4973-983F-28604C44E3AC",
+     "name": "Japanese Breakfast",
+     "affinity": 0.968,
+     "popularity": 0.992,
+     "image": "https://images.qloo.com/i/AA21934D-3A6E-4973-983F-28604C44E3AC-420x-auto.jpg"
+    }
+   ],
+   "rooms": [
+    {
+     "id": "473BA8A9-7F45-4954-B11F-6FDAF5A8303E",
+     "name": "RNCM (Royal Northern College of Music)",
+     "affinity": 0.706,
+     "popularity": 0.992,
+     "address": "124 Oxford Rd Manchester M13 9RD United Kingdom",
+     "image": "https://images.qloo.com/i/473BA8A9-7F45-4954-B11F-6FDAF5A8303E-420x-auto.jpg",
+     "description": "Premier Manchester conservatoire providing professional music education and frequent public performances in city-centre Oxford Road concert facilities."
+    },
+    {
+     "id": "5FDA0133-0C43-463C-AE8A-F82702788593",
+     "name": "Low Four Studio",
+     "affinity": 0.706,
+     "popularity": 0.251,
+     "address": "Great Northern Warehouse Deansgate Manchester M3 4EN United Kingdom",
+     "image": "https://images.qloo.com/i/5FDA0133-0C43-463C-AE8A-F82702788593-420x-auto.jpg",
+     "description": "Live music venue and high-spec recording studio with an onsite Cloudwater bar offering craft beers, ideal for gigs, filming, and private events."
+    },
+    {
+     "id": "E45F4596-70B4-4910-9D69-67FF2FAD3284",
+     "name": "Band on the Wall",
+     "affinity": 0.706,
+     "popularity": 0.995,
+     "address": "25 Swan St Manchester M4 5JZ United Kingdom",
+     "image": "https://images.qloo.com/i/E45F4596-70B4-4910-9D69-67FF2FAD3284-420x-auto.jpg",
+     "description": "Historic former cinema hosting live music across genres with a cafe/bar serving craft beer, pizza and coffee, plus community music education programs."
+    },
+    {
+     "id": "87EB8EA6-66FD-46C3-A7DB-E0AF04A9B5D2",
+     "name": "Contact Theatre",
+     "affinity": 0.704,
+     "popularity": 0.874,
+     "address": "Oxford Rd Manchester M15 6JA United Kingdom",
+     "image": "https://images.qloo.com/i/87EB8EA6-66FD-46C3-A7DB-E0AF04A9B5D2-420x-auto.jpg",
+     "description": "Charitable arts venue and theatre showcasing young artists with performance spaces, hires, and community creative projects in central Manchester."
+    },
+    {
+     "id": "65BC1589-053C-4F35-B4C6-AEC519159B93",
+     "name": "Hallé St Peter's",
+     "affinity": 0.701,
+     "popularity": 0.875,
+     "address": "40 Blossom St Ancoats Manchester M4 6BF United Kingdom",
+     "image": "https://images.qloo.com/i/65BC1589-053C-4F35-B4C6-AEC519159B93-420x-auto.jpg",
+     "description": "Converted church offering rehearsal, recording, education workshops and small performance space for orchestras and community events in Manchester."
+    }
+   ],
+   "places": [
+    {
+     "id": "C17D4E72-783F-4BE8-8820-F0C44B114857",
+     "name": "Torr Vale Mill",
+     "affinity": 0.708,
+     "popularity": 0.481,
+     "address": "Torrvale Rd High Peak SK22 3HS United Kingdom",
+     "image": "https://images.qloo.com/i/C17D4E72-783F-4BE8-8820-F0C44B114857-420x-auto.jpg",
+     "description": "Grade II* riverside former cotton mill offering heritage self-catering accommodation, bistro bar, wedding and event spaces in New Mills."
+    },
+    {
+     "id": "5FDA0133-0C43-463C-AE8A-F82702788593",
+     "name": "Low Four Studio",
+     "affinity": 0.706,
+     "popularity": 0.251,
+     "address": "Great Northern Warehouse Deansgate Manchester M3 4EN United Kingdom",
+     "image": "https://images.qloo.com/i/5FDA0133-0C43-463C-AE8A-F82702788593-420x-auto.jpg",
+     "description": "Live music venue and high-spec recording studio with an onsite Cloudwater bar offering craft beers, ideal for gigs, filming, and private events."
+    },
+    {
+     "id": "E45F4596-70B4-4910-9D69-67FF2FAD3284",
+     "name": "Band on the Wall",
+     "affinity": 0.706,
+     "popularity": 0.995,
+     "address": "25 Swan St Manchester M4 5JZ United Kingdom",
+     "image": "https://images.qloo.com/i/E45F4596-70B4-4910-9D69-67FF2FAD3284-420x-auto.jpg",
+     "description": "Historic former cinema hosting live music across genres with a cafe/bar serving craft beer, pizza and coffee, plus community music education programs."
+    },
+    {
+     "id": "87EB8EA6-66FD-46C3-A7DB-E0AF04A9B5D2",
+     "name": "Contact Theatre",
+     "affinity": 0.704,
+     "popularity": 0.874,
+     "address": "Oxford Rd Manchester M15 6JA United Kingdom",
+     "image": "https://images.qloo.com/i/87EB8EA6-66FD-46C3-A7DB-E0AF04A9B5D2-420x-auto.jpg",
+     "description": "Charitable arts venue and theatre showcasing young artists with performance spaces, hires, and community creative projects in central Manchester."
+    },
+    {
+     "id": "C93A5531-2CE6-4DF1-9917-154646F2BB94",
+     "name": "Sammy’s Bar",
+     "affinity": 0.699,
+     "popularity": 0.496,
+     "address": "26 Swan St Manchester M4 5JQ United Kingdom",
+     "image": "https://images.qloo.com/i/C93A5531-2CE6-4DF1-9917-154646F2BB94-420x-auto.jpg",
+     "description": "Lively Manchester bar-restaurant offering cocktails, beers, dancing and casual food with takeout, dine-in and delivery options."
+    }
+   ],
+   "brands": [
+    {
+     "id": "F59D6DB5-5A85-48C6-A2EC-CAAE334D4348",
+     "name": "Dr. Martens",
+     "affinity": 0.966,
+     "popularity": 0.992,
+     "image": "https://images.qloo.com/i/F59D6DB5-5A85-48C6-A2EC-CAAE334D4348-420x-auto.jpg",
+     "description": "Dr. Martens is a British footwear and clothing brand known for its iconic durable boots and shoes with distinctive yellow stitching."
+    },
+    {
+     "id": "4584672D-C702-4E58-AEE3-D8DE584C36C8",
+     "name": "Fender",
+     "affinity": 0.962,
+     "popularity": 0.994,
+     "image": "https://images.qloo.com/i/4584672D-C702-4E58-AEE3-D8DE584C36C8-420x-auto.jpg",
+     "description": "Fender is a leading manufacturer of electric and acoustic guitars, bass guitars, amplifiers, and related musical accessories."
+    },
+    {
+     "id": "4F94C666-5FFA-4A42-8453-24C2F779EC36",
+     "name": "Urban Outfitters",
+     "affinity": 0.957,
+     "popularity": 0.999,
+     "image": "https://images.qloo.com/i/4F94C666-5FFA-4A42-8453-24C2F779EC36-420x-auto.jpg",
+     "description": "Urban Outfitters is a lifestyle retailer offering clothing, homeware, and accessories inspired by creativity and cultural trends."
+    },
+    {
+     "id": "93B4EDF6-FF9A-4059-BF78-C1CA1B64B3AD",
+     "name": "Gibson",
+     "affinity": 0.952,
+     "popularity": 0.991,
+     "image": "https://images.qloo.com/i/93B4EDF6-FF9A-4059-BF78-C1CA1B64B3AD-420x-auto.jpg",
+     "description": "American manufacturer of iconic electric and acoustic guitars, amplifiers, and musical instruments known for craftsmanship and sound excellence since 1894."
+    },
+    {
+     "id": "A5707876-D5A1-49F0-ABF9-A793EA7736D2",
+     "name": "Vice",
+     "affinity": 0.948,
+     "popularity": 0.998,
+     "image": "https://images.qloo.com/i/A5707876-D5A1-49F0-ABF9-A793EA7736D2-420x-auto.jpg",
+     "description": "VICE is a global media brand known for original journalism and content covering diverse cultural, social, and political topics, including its Spanish-language platform VICE en Español."
+    }
+   ],
+   "podcasts": [
+    {
+     "id": "ED9D4C2F-37B4-476F-B3DE-5F5EEB95E859",
+     "name": "Getting Curious with Jonathan Van Ness",
+     "affinity": 0.942,
+     "popularity": 0.993,
+     "image": "https://images.qloo.com/i/ED9D4C2F-37B4-476F-B3DE-5F5EEB95E859-420x-auto.jpg",
+     "description": "Jonathan Van Ness explores diverse topics with experts, from science to entertainment, in an engaging and curious format."
+    },
+    {
+     "id": "C1FF708E-8DFF-4C50-A6CF-1A99AC27AA6F",
+     "name": "My Dad Wrote A Porno",
+     "affinity": 0.937,
+     "popularity": 0.994,
+     "image": "https://images.qloo.com/i/C1FF708E-8DFF-4C50-A6CF-1A99AC27AA6F-420x-auto.jpg",
+     "description": "A comedic podcast where Jamie Morton reads a dirty book written by his dad, exploring family dynamics and humor."
+    },
+    {
+     "id": "D95B20A8-0CEA-4BDC-8074-60A303FA1980",
+     "name": "Song Exploder",
+     "affinity": 0.935,
+     "popularity": 0.978,
+     "image": "https://images.qloo.com/i/D95B20A8-0CEA-4BDC-8074-60A303FA1980-420x-auto.jpg",
+     "description": "Musicians dissect their songs, sharing the creative process and stories behind the music."
+    },
+    {
+     "id": "F47C2B62-03C6-4B64-B026-BA35587CB10C",
+     "name": "The Anthropocene Reviewed",
+     "affinity": 0.931,
+     "popularity": 0.985,
+     "image": "https://images.qloo.com/i/F47C2B62-03C6-4B64-B026-BA35587CB10C-420x-auto.jpg",
+     "description": "John Green reviews various aspects of the human-centered planet on a five-star scale, blending personal stories and reflections."
+    }
+   ],
+   "opener": {
+    "id": "99FBEE0C-2A8A-4EE2-9B20-8CEBD854CD46",
+    "name": "Lucy Dacus",
+    "affinity": 0.981,
+    "popularity": 0.983,
+    "image": "https://images.qloo.com/i/99FBEE0C-2A8A-4EE2-9B20-8CEBD854CD46-420x-auto.jpg"
+   }
+  },
+  {
+   "name": "Dublin",
+   "query": "Dublin",
+   "lat": 53.3498,
+   "lng": -6.2603,
+   "score": 97,
+   "affinity": 0.971,
+   "popularity": 0.742,
+   "cells": 13,
+   "why": "Excellent affinity (0.971) anchoring the Irish leg despite moderate popularity (0.742).",
+   "peers": [
+    {
+     "id": "99FBEE0C-2A8A-4EE2-9B20-8CEBD854CD46",
+     "name": "Lucy Dacus",
+     "affinity": 0.982,
+     "popularity": 0.983,
+     "image": "https://images.qloo.com/i/99FBEE0C-2A8A-4EE2-9B20-8CEBD854CD46-420x-auto.jpg"
+    },
+    {
+     "id": "AD420A3F-5F09-4C1C-BB1E-A3DEB937F184",
+     "name": "Big Thief",
+     "affinity": 0.981,
+     "popularity": 0.991,
+     "image": "https://images.qloo.com/i/AD420A3F-5F09-4C1C-BB1E-A3DEB937F184-420x-auto.jpg"
+    },
+    {
+     "id": "F919E809-3234-4251-B031-5327E609AD82",
+     "name": "Adrianne Lenker",
+     "affinity": 0.981,
+     "popularity": 0.981,
+     "image": "https://images.qloo.com/i/F919E809-3234-4251-B031-5327E609AD82-420x-auto.jpg"
+    },
+    {
+     "id": "6B4A457B-EAB3-4BB6-BBA2-5E1B2A374AF4",
+     "name": "Julien Baker",
+     "affinity": 0.98,
+     "popularity": 0.983,
+     "image": "https://images.qloo.com/i/6B4A457B-EAB3-4BB6-BBA2-5E1B2A374AF4-420x-auto.jpg"
+    },
+    {
+     "id": "84EAECD1-A605-468E-A066-6AC7208DA4A2",
+     "name": "Matt Berninger",
+     "affinity": 0.98,
+     "popularity": 0.855,
+     "image": "https://images.qloo.com/i/84EAECD1-A605-468E-A066-6AC7208DA4A2-420x-auto.jpg"
+    },
+    {
+     "id": "4CE60D14-B414-4163-97C3-C1E51108ED90",
+     "name": "Julia Jacklin",
+     "affinity": 0.979,
+     "popularity": 0.974,
+     "image": "https://images.qloo.com/i/4CE60D14-B414-4163-97C3-C1E51108ED90-420x-auto.jpg"
+    },
+    {
+     "id": "5FB0A7DA-C7F0-487B-80C4-CA893D1BC56B",
+     "name": "Better Oblivion Community Center",
+     "affinity": 0.977,
+     "popularity": 0.961,
+     "image": "https://images.qloo.com/i/5FB0A7DA-C7F0-487B-80C4-CA893D1BC56B-420x-auto.jpg"
+    },
+    {
+     "id": "307D43E4-6A18-4FDB-82BA-7CBD9A2A8D82",
+     "name": "Haley Heynderickx",
+     "affinity": 0.975,
+     "popularity": 0.964,
+     "image": "https://images.qloo.com/i/307D43E4-6A18-4FDB-82BA-7CBD9A2A8D82-420x-auto.jpg"
+    },
+    {
+     "id": "C8B165BC-286E-4840-9417-AF68A8A690ED",
+     "name": "Big Red Machine",
+     "affinity": 0.975,
+     "popularity": 0.955,
+     "image": "https://images.qloo.com/i/C8B165BC-286E-4840-9417-AF68A8A690ED-420x-auto.jpg"
+    },
+    {
+     "id": "E3BD2650-8E5C-43FB-B5A7-C1C7753A6293",
+     "name": "Mitski",
+     "affinity": 0.974,
+     "popularity": 0.996,
+     "image": "https://images.qloo.com/i/E3BD2650-8E5C-43FB-B5A7-C1C7753A6293-420x-auto.jpg"
+    },
+    {
+     "id": "5F522BBF-F983-4E0C-B44B-39426491F268",
+     "name": "Christian Lee Hutson",
+     "affinity": 0.973,
+     "popularity": 0.895,
+     "image": "https://images.qloo.com/i/5F522BBF-F983-4E0C-B44B-39426491F268-420x-auto.jpg"
+    },
+    {
+     "id": "4607C481-A992-456F-900E-46AB836351EF",
+     "name": "Suki Waterhouse",
+     "affinity": 0.973,
+     "popularity": 0.963,
+     "image": "https://images.qloo.com/i/4607C481-A992-456F-900E-46AB836351EF-420x-auto.jpg"
+    },
+    {
+     "id": "3A113ED5-2893-4104-9A55-C323CF3B125A",
+     "name": "Orla Gartland",
+     "affinity": 0.971,
+     "popularity": 0.959,
+     "image": "https://images.qloo.com/i/3A113ED5-2893-4104-9A55-C323CF3B125A-420x-auto.jpg"
+    },
+    {
+     "id": "AA21934D-3A6E-4973-983F-28604C44E3AC",
+     "name": "Japanese Breakfast",
+     "affinity": 0.971,
+     "popularity": 0.992,
+     "image": "https://images.qloo.com/i/AA21934D-3A6E-4973-983F-28604C44E3AC-420x-auto.jpg"
+    },
+    {
+     "id": "56908E37-B4A6-4466-BF3D-C0158FB9C8C3",
+     "name": "Soccer Mommy",
+     "affinity": 0.971,
+     "popularity": 0.985,
+     "image": "https://images.qloo.com/i/56908E37-B4A6-4466-BF3D-C0158FB9C8C3-420x-auto.jpg"
+    }
+   ],
+   "rooms": [
+    {
+     "id": "07A08D6E-6394-4DDD-B9D4-A2B1504711E3",
+     "name": "Project Arts Centre🎭",
+     "affinity": 0.733,
+     "popularity": 0.969,
+     "address": "39 Essex St E Temple Bar Dublin 2, Ireland",
+     "image": "https://images.qloo.com/i/07A08D6E-6394-4DDD-B9D4-A2B1504711E3-420x-auto.jpg",
+     "description": "Multi-disciplinary contemporary arts space in Temple Bar hosting performances, exhibitions, and discussions with accessible, community-oriented programming."
+    },
+    {
+     "id": "A57BD795-76B3-4FD7-8916-5B4A8776943E",
+     "name": "Whelan's",
+     "affinity": 0.732,
+     "popularity": 0.998,
+     "address": "25 Wexford St Portobello Dublin 2 D02 H527, Ireland",
+     "image": "https://images.qloo.com/i/A57BD795-76B3-4FD7-8916-5B4A8776943E-420x-auto.jpg",
+     "description": "Historic Dublin live-music venue and nightlife spot with a 1950s sitting-room Parlour, hosting clubs, DJs, and casual dining with a lively bar atmosphere."
+    },
+    {
+     "id": "8FA652AC-BEB9-4C1E-9989-FBE3EE182E28",
+     "name": "National Concert Hall",
+     "affinity": 0.726,
+     "popularity": 0.995,
+     "address": "Earlsfort Terrace Saint Kevin's Dublin 2 D02 N527, Ireland",
+     "image": "https://images.qloo.com/i/8FA652AC-BEB9-4C1E-9989-FBE3EE182E28-420x-auto.jpg",
+     "description": "Elaborately fitted classical concert hall in Dublin hosting orchestral, opera, jazz performances and education and community music programmes."
+    },
+    {
+     "id": "BB9D5ADD-FC37-4C5B-8434-01B356F51C9D",
+     "name": "The Ark",
+     "affinity": 0.721,
+     "popularity": 0.726,
+     "address": "11A Eustace St Temple Bar Dublin 2 D02 A590, Ireland",
+     "image": "https://images.qloo.com/i/BB9D5ADD-FC37-4C5B-8434-01B356F51C9D-420x-auto.jpg",
+     "description": "Dedicated children's cultural centre offering music, theatre, dance, workshops, exhibitions and family-focused performances in Dublin's Temple Bar."
+    },
+    {
+     "id": "9E42F2F0-527A-4D33-B300-7101D1D6B3E1",
+     "name": "Button Factory",
+     "affinity": 0.719,
+     "popularity": 0.997,
+     "address": "Curved St Temple Bar Dublin D02 RD26, Ireland",
+     "image": "https://images.qloo.com/i/9E42F2F0-527A-4D33-B300-7101D1D6B3E1-420x-auto.jpg",
+     "description": "Intimate buzzing live music and clubbing venue showcasing innovative bands and DJ sets."
+    }
+   ],
+   "places": [
+    {
+     "id": "C072859E-962D-46C1-842E-56DC3B4A9582",
+     "name": "Jameson Distillery Bow St.",
+     "affinity": 0.765,
+     "popularity": 0.999,
+     "address": "Bow St Smithfield Dublin 7 D07 V57C, Ireland",
+     "image": "https://images.qloo.com/i/C072859E-962D-46C1-842E-56DC3B4A9582-420x-auto.jpg",
+     "description": "Recreated distillery exhibits with guided whiskey tastings and on-site dining in a historic Smithfield visitor center."
+    },
+    {
+     "id": "BB4A4824-DB75-4730-9725-4FE6D63974D4",
+     "name": "Gravity Bar",
+     "affinity": 0.744,
+     "popularity": 0.989,
+     "address": "Market St S The Liberties Dublin Ireland",
+     "image": "https://images.qloo.com/i/BB4A4824-DB75-4730-9725-4FE6D63974D4-420x-auto.jpg",
+     "description": "Lively bar-restaurant in The Liberties offering cocktails, dancing, and a full menu with dine-in, takeout, and delivery."
+    },
+    {
+     "id": "4221FDEA-1546-42DA-8D37-83D03F79A34D",
+     "name": "The Fumbally Stables",
+     "affinity": 0.732,
+     "popularity": 0.765,
+     "address": "Fumbally Ln The Liberties Dublin Ireland",
+     "image": "https://images.qloo.com/i/4221FDEA-1546-42DA-8D37-83D03F79A34D-420x-auto.jpg",
+     "description": "Adaptive reuse 18th-century stables turned cultural event space and restaurant focusing on food, community, workshops, and private hires in Dublin's Liberties."
+    },
+    {
+     "id": "A57BD795-76B3-4FD7-8916-5B4A8776943E",
+     "name": "Whelan's",
+     "affinity": 0.732,
+     "popularity": 0.998,
+     "address": "25 Wexford St Portobello Dublin 2 D02 H527, Ireland",
+     "image": "https://images.qloo.com/i/A57BD795-76B3-4FD7-8916-5B4A8776943E-420x-auto.jpg",
+     "description": "Historic Dublin live-music venue and nightlife spot with a 1950s sitting-room Parlour, hosting clubs, DJs, and casual dining with a lively bar atmosphere."
+    },
+    {
+     "id": "FE3A5439-4513-4A6A-ADD4-EEF8D29F7B70",
+     "name": "Temple Bar Square",
+     "affinity": 0.721,
+     "popularity": 1,
+     "address": "13 Temple Bar Dublin 2 Ireland",
+     "image": "https://images.qloo.com/i/FE3A5439-4513-4A6A-ADD4-EEF8D29F7B70-420x-auto.jpg",
+     "description": "Pub and tourist-attraction in Dublin's Temple Bar, offering beer, wine, spirits and coffee with dine-in and delivery options."
+    }
+   ],
+   "brands": [
+    {
+     "id": "F59D6DB5-5A85-48C6-A2EC-CAAE334D4348",
+     "name": "Dr. Martens",
+     "affinity": 0.965,
+     "popularity": 0.992,
+     "image": "https://images.qloo.com/i/F59D6DB5-5A85-48C6-A2EC-CAAE334D4348-420x-auto.jpg",
+     "description": "Dr. Martens is a British footwear and clothing brand known for its iconic durable boots and shoes with distinctive yellow stitching."
+    },
+    {
+     "id": "4F94C666-5FFA-4A42-8453-24C2F779EC36",
+     "name": "Urban Outfitters",
+     "affinity": 0.957,
+     "popularity": 0.999,
+     "image": "https://images.qloo.com/i/4F94C666-5FFA-4A42-8453-24C2F779EC36-420x-auto.jpg",
+     "description": "Urban Outfitters is a lifestyle retailer offering clothing, homeware, and accessories inspired by creativity and cultural trends."
+    },
+    {
+     "id": "F1C02FB3-D0DD-428C-A9B1-0A0EE9F22925",
+     "name": "Rolling Stone",
+     "affinity": 0.948,
+     "popularity": 0.999,
+     "image": "https://images.qloo.com/i/F1C02FB3-D0DD-428C-A9B1-0A0EE9F22925-420x-auto.jpg",
+     "description": "Rolling Stone is a renowned magazine brand known for music, pop culture, and political journalism."
+    },
+    {
+     "id": "62926E8D-2D7E-4428-819E-BF2477D3233F",
+     "name": "Polaroid",
+     "affinity": 0.948,
+     "popularity": 0.98,
+     "image": "https://images.qloo.com/i/62926E8D-2D7E-4428-819E-BF2477D3233F-420x-auto.jpg",
+     "description": "Polaroid is a brand known for instant photography products, including instant cameras and film, continuing the legacy of the original Polaroid Corporation."
+    },
+    {
+     "id": "A5707876-D5A1-49F0-ABF9-A793EA7736D2",
+     "name": "Vice",
+     "affinity": 0.947,
+     "popularity": 0.998,
+     "image": "https://images.qloo.com/i/A5707876-D5A1-49F0-ABF9-A793EA7736D2-420x-auto.jpg",
+     "description": "VICE is a global media brand known for original journalism and content covering diverse cultural, social, and political topics, including its Spanish-language platform VICE en Español."
+    }
+   ],
+   "podcasts": [
+    {
+     "id": "ED9D4C2F-37B4-476F-B3DE-5F5EEB95E859",
+     "name": "Getting Curious with Jonathan Van Ness",
+     "affinity": 0.943,
+     "popularity": 0.993,
+     "image": "https://images.qloo.com/i/ED9D4C2F-37B4-476F-B3DE-5F5EEB95E859-420x-auto.jpg",
+     "description": "Jonathan Van Ness explores diverse topics with experts, from science to entertainment, in an engaging and curious format."
+    },
+    {
+     "id": "D95B20A8-0CEA-4BDC-8074-60A303FA1980",
+     "name": "Song Exploder",
+     "affinity": 0.941,
+     "popularity": 0.978,
+     "image": "https://images.qloo.com/i/D95B20A8-0CEA-4BDC-8074-60A303FA1980-420x-auto.jpg",
+     "description": "Musicians dissect their songs, sharing the creative process and stories behind the music."
+    },
+    {
+     "id": "656C8017-53E3-4754-A951-7A48CEC1179C",
+     "name": "2 Dope Queens",
+     "affinity": 0.937,
+     "popularity": 0.996,
+     "image": "https://images.qloo.com/i/656C8017-53E3-4754-A951-7A48CEC1179C-420x-auto.jpg",
+     "description": "Two best friends host a live comedy show featuring diverse comedians discussing race, romance, and life in New York."
+    },
+    {
+     "id": "C1FF708E-8DFF-4C50-A6CF-1A99AC27AA6F",
+     "name": "My Dad Wrote A Porno",
+     "affinity": 0.937,
+     "popularity": 0.994,
+     "image": "https://images.qloo.com/i/C1FF708E-8DFF-4C50-A6CF-1A99AC27AA6F-420x-auto.jpg",
+     "description": "A comedic podcast where Jamie Morton reads a dirty book written by his dad, exploring family dynamics and humor."
+    }
+   ],
+   "opener": {
+    "id": "99FBEE0C-2A8A-4EE2-9B20-8CEBD854CD46",
+    "name": "Lucy Dacus",
+    "affinity": 0.982,
+    "popularity": 0.983,
+    "image": "https://images.qloo.com/i/99FBEE0C-2A8A-4EE2-9B20-8CEBD854CD46-420x-auto.jpg"
+   }
+  },
+  {
+   "name": "Edinburgh",
+   "query": "Edinburgh",
+   "lat": 55.9533,
+   "lng": -3.1883,
+   "score": 98,
+   "affinity": 0.984,
+   "popularity": 0.645,
+   "cells": 18,
+   "why": "Highest regional affinity (0.984) with solid mid-size venue potential at 0.645 popularity.",
+   "peers": [
+    {
+     "id": "9AAE0224-F8E2-447A-BD05-26D2A9E72573",
+     "name": "Kacey Musgraves",
+     "affinity": 0.949,
+     "popularity": 0.993,
+     "image": "https://images.qloo.com/i/9AAE0224-F8E2-447A-BD05-26D2A9E72573-420x-auto.jpg"
+    },
+    {
+     "id": "9B5028F6-5808-4BF4-A623-24C6C148D24B",
+     "name": "Tyler Childers",
+     "affinity": 0.944,
+     "popularity": 0.963,
+     "image": "https://images.qloo.com/i/9B5028F6-5808-4BF4-A623-24C6C148D24B-420x-auto.jpg"
+    },
+    {
+     "id": "4BBEF799-A0C4-4110-AB01-39216993C312",
+     "name": "Taylor Swift",
+     "affinity": 0.932,
+     "popularity": 1,
+     "image": "https://images.qloo.com/i/4BBEF799-A0C4-4110-AB01-39216993C312-420x-auto.jpg"
+    },
+    {
+     "id": "47FA29CA-A1E6-4EA6-8219-D75190AA6BD1",
+     "name": "Dolly Parton",
+     "affinity": 0.928,
+     "popularity": 0.996,
+     "image": "https://images.qloo.com/i/47FA29CA-A1E6-4EA6-8219-D75190AA6BD1-420x-auto.jpg"
+    },
+    {
+     "id": "2D3A5E81-92E2-48C4-99F7-9AB7AC02C48D",
+     "name": "Colter Wall",
+     "affinity": 0.925,
+     "popularity": 0.958,
+     "image": "https://images.qloo.com/i/2D3A5E81-92E2-48C4-99F7-9AB7AC02C48D-420x-auto.jpg"
+    },
+    {
+     "id": "8647D824-3C54-4444-A4E0-B22AD2DD96ED",
+     "name": "Maren Morris",
+     "affinity": 0.925,
+     "popularity": 0.965,
+     "image": "https://images.qloo.com/i/8647D824-3C54-4444-A4E0-B22AD2DD96ED-420x-auto.jpg"
+    },
+    {
+     "id": "59DCDFA8-5082-47D9-B3E5-2B49CF2A778F",
+     "name": "Morgan Wallen",
+     "affinity": 0.922,
+     "popularity": 0.973,
+     "image": "https://images.qloo.com/i/59DCDFA8-5082-47D9-B3E5-2B49CF2A778F-420x-auto.jpg"
+    },
+    {
+     "id": "D02F6752-D4A5-40FE-87E3-0C721E2D1F60",
+     "name": "The Highwomen",
+     "affinity": 0.922,
+     "popularity": 0.888,
+     "image": "https://images.qloo.com/i/D02F6752-D4A5-40FE-87E3-0C721E2D1F60-420x-auto.jpg"
+    },
+    {
+     "id": "50D63FB3-3D36-46FD-B047-EC073A3D35BD",
+     "name": "Chris Stapleton",
+     "affinity": 0.922,
+     "popularity": 0.984,
+     "image": "https://images.qloo.com/i/50D63FB3-3D36-46FD-B047-EC073A3D35BD-420x-auto.jpg"
+    },
+    {
+     "id": "488C7F63-9D38-49A2-9544-51A802B4FE35",
+     "name": "Halsey",
+     "affinity": 0.921,
+     "popularity": 0.997,
+     "image": "https://images.qloo.com/i/488C7F63-9D38-49A2-9544-51A802B4FE35-420x-auto.jpg"
+    },
+    {
+     "id": "ADB51D79-491A-49E7-9A99-E1F739382E9F",
+     "name": "Post Malone",
+     "affinity": 0.918,
+     "popularity": 0.998,
+     "image": "https://images.qloo.com/i/ADB51D79-491A-49E7-9A99-E1F739382E9F-420x-auto.jpg"
+    },
+    {
+     "id": "695390C4-C3D4-472F-AFB4-FB29921B2686",
+     "name": "Mason Ramsey",
+     "affinity": 0.917,
+     "popularity": 0.809,
+     "image": "https://images.qloo.com/i/695390C4-C3D4-472F-AFB4-FB29921B2686-420x-auto.jpg"
+    },
+    {
+     "id": "2D1676A1-EC6D-482C-A778-4B2BAAD2D92E",
+     "name": "Lizzo",
+     "affinity": 0.917,
+     "popularity": 0.994,
+     "image": "https://images.qloo.com/i/2D1676A1-EC6D-482C-A778-4B2BAAD2D92E-420x-auto.jpg"
+    },
+    {
+     "id": "3CBD78B1-D2F2-4551-A342-4621B6BDB5E2",
+     "name": "Luke Combs",
+     "affinity": 0.917,
+     "popularity": 0.975,
+     "image": "https://images.qloo.com/i/3CBD78B1-D2F2-4551-A342-4621B6BDB5E2-420x-auto.jpg"
+    },
+    {
+     "id": "2DD16851-9C75-4A98-B3E5-7114F7EA016E",
+     "name": "Kelsea Ballerini",
+     "affinity": 0.917,
+     "popularity": 0.964,
+     "image": "https://images.qloo.com/i/2DD16851-9C75-4A98-B3E5-7114F7EA016E-420x-auto.jpg"
+    }
+   ],
+   "rooms": [],
+   "places": [],
+   "brands": [
+    {
+     "id": "DB4CE34E-3A63-4947-946F-9D52502C5762",
+     "name": "Patagonia",
+     "affinity": 0.918,
+     "popularity": 0.996,
+     "image": "https://images.qloo.com/i/DB4CE34E-3A63-4947-946F-9D52502C5762-420x-auto.jpg",
+     "description": "Patagonia is an outdoor apparel company known for sustainable clothing and gear for activities like climbing, surfing, skiing, and trail running."
+    },
+    {
+     "id": "36A3F981-5BFB-45B5-A8CF-A16F273B04F0",
+     "name": "NPR",
+     "affinity": 0.913,
+     "popularity": 0.999,
+     "image": "https://images.qloo.com/i/36A3F981-5BFB-45B5-A8CF-A16F273B04F0-420x-auto.jpg",
+     "description": "NPR is a nonprofit media organization known for its news, cultural programming, and music content, including the popular Tiny Desk Concert series."
+    },
+    {
+     "id": "205AF33F-118E-4C49-9721-6BDBAF981DA0",
+     "name": "Recreational Equipment Inc",
+     "affinity": 0.913,
+     "popularity": 0.993,
+     "image": "https://images.qloo.com/i/205AF33F-118E-4C49-9721-6BDBAF981DA0-420x-auto.jpg",
+     "description": "REI is a retail co-op specializing in outdoor gear, clothing, and equipment, promoting a life outdoors since 1938."
+    },
+    {
+     "id": "B13C02E3-BA3C-4B39-85B4-ACF12FEBC892",
+     "name": "Starbucks",
+     "affinity": 0.908,
+     "popularity": 1,
+     "image": "https://images.qloo.com/i/B13C02E3-BA3C-4B39-85B4-ACF12FEBC892-420x-auto.jpg",
+     "description": "Starbucks is a global coffee company known for its handcrafted beverages, coffee products, and café experience."
+    },
+    {
+     "id": "2D890327-8794-4C5A-898F-FFF0323325CF",
+     "name": "American Eagle Outfitters",
+     "affinity": 0.907,
+     "popularity": 0.995,
+     "image": "https://images.qloo.com/i/2D890327-8794-4C5A-898F-FFF0323325CF-420x-auto.jpg",
+     "description": "American Eagle Outfitters is a fashion brand offering men's and women's jeans, tops, bottoms, activewear, loungewear, and accessories."
+    }
+   ],
+   "podcasts": [
+    {
+     "id": "ED9D4C2F-37B4-476F-B3DE-5F5EEB95E859",
+     "name": "Getting Curious with Jonathan Van Ness",
+     "affinity": 0.93,
+     "popularity": 0.993,
+     "image": "https://images.qloo.com/i/ED9D4C2F-37B4-476F-B3DE-5F5EEB95E859-420x-auto.jpg",
+     "description": "Jonathan Van Ness explores diverse topics with experts, from science to entertainment, in an engaging and curious format."
+    },
+    {
+     "id": "F47C2B62-03C6-4B64-B026-BA35587CB10C",
+     "name": "The Anthropocene Reviewed",
+     "affinity": 0.924,
+     "popularity": 0.985,
+     "image": "https://images.qloo.com/i/F47C2B62-03C6-4B64-B026-BA35587CB10C-420x-auto.jpg",
+     "description": "John Green reviews various aspects of the human-centered planet on a five-star scale, blending personal stories and reflections."
+    },
+    {
+     "id": "085EA15C-B7FE-4C6E-98D6-727A967ACC0E",
+     "name": "Dear Hank & John",
+     "affinity": 0.922,
+     "popularity": 0.982,
+     "image": "https://images.qloo.com/i/085EA15C-B7FE-4C6E-98D6-727A967ACC0E-420x-auto.jpg",
+     "description": "John and Hank Green provide humorous and heartfelt advice on life's questions, sharing news from Mars and AFC Wimbledon."
+    },
+    {
+     "id": "78160D1E-A84C-40F3-B0FE-A527D60C24F1",
+     "name": "Oh, Hello: the P'dcast",
+     "affinity": 0.922,
+     "popularity": 0.974,
+     "image": "https://images.qloo.com/i/78160D1E-A84C-40F3-B0FE-A527D60C24F1-420x-auto.jpg",
+     "description": "A comedic podcast exploring the life and legacy of Princess Diana through the lens of two fictional characters."
+    }
+   ],
+   "opener": {
+    "id": "9AAE0224-F8E2-447A-BD05-26D2A9E72573",
+    "name": "Kacey Musgraves",
+    "affinity": 0.949,
+    "popularity": 0.993,
+    "image": "https://images.qloo.com/i/9AAE0224-F8E2-447A-BD05-26D2A9E72573-420x-auto.jpg"
+   }
+  }
+ ],
+ "openers": {
+  "shortlist": [
+   "Lucy Dacus",
+   "Big Thief",
+   "Adrianne Lenker",
+   "Matt Berninger",
+   "Julien Baker",
+   "Julia Jacklin",
+   "Better Oblivion Community Center",
+   "Suki Waterhouse"
+  ],
+  "board": [
+   {
+    "id": "99FBEE0C-2A8A-4EE2-9B20-8CEBD854CD46",
+    "name": "Lucy Dacus",
+    "avg_rank": 1,
+    "first_in": 4,
+    "cities": 4,
+    "user": false
+   },
+   {
+    "id": "AD420A3F-5F09-4C1C-BB1E-A3DEB937F184",
+    "name": "Big Thief",
+    "avg_rank": 2.25,
+    "first_in": 0,
+    "cities": 4,
+    "user": false
+   },
+   {
+    "id": "F919E809-3234-4251-B031-5327E609AD82",
+    "name": "Adrianne Lenker",
+    "avg_rank": 3.5,
+    "first_in": 0,
+    "cities": 4,
+    "user": false
+   },
+   {
+    "id": "6B4A457B-EAB3-4BB6-BBA2-5E1B2A374AF4",
+    "name": "Julien Baker",
+    "avg_rank": 4.5,
+    "first_in": 0,
+    "cities": 4,
+    "user": false
+   },
+   {
+    "id": "84EAECD1-A605-468E-A066-6AC7208DA4A2",
+    "name": "Matt Berninger",
+    "avg_rank": 4.75,
+    "first_in": 0,
+    "cities": 4,
+    "user": false
+   },
+   {
+    "id": "4CE60D14-B414-4163-97C3-C1E51108ED90",
+    "name": "Julia Jacklin",
+    "avg_rank": 5.25,
+    "first_in": 0,
+    "cities": 4,
+    "user": false
+   },
+   {
+    "id": "5FB0A7DA-C7F0-487B-80C4-CA893D1BC56B",
+    "name": "Better Oblivion Community Center",
+    "avg_rank": 7,
+    "first_in": 0,
+    "cities": 4,
+    "user": false
+   },
+   {
+    "id": "4607C481-A992-456F-900E-46AB836351EF",
+    "name": "Suki Waterhouse",
+    "avg_rank": 7.75,
+    "first_in": 0,
+    "cities": 4,
+    "user": false
+   }
+  ],
+  "perCity": {
+   "Dublin": [
+    "Lucy Dacus",
+    "Big Thief",
+    "Adrianne Lenker",
+    "Julien Baker",
+    "Matt Berninger",
+    "Julia Jacklin",
+    "Better Oblivion Community Center",
+    "Suki Waterhouse"
+   ],
+   "Manchester": [
+    "Lucy Dacus",
+    "Big Thief",
+    "Matt Berninger",
+    "Julien Baker",
+    "Julia Jacklin",
+    "Adrianne Lenker",
+    "Better Oblivion Community Center",
+    "Suki Waterhouse"
+   ],
+   "Bristol": [
+    "Lucy Dacus",
+    "Big Thief",
+    "Adrianne Lenker",
+    "Julien Baker",
+    "Julia Jacklin",
+    "Better Oblivion Community Center",
+    "Matt Berninger",
+    "Suki Waterhouse"
+   ],
+   "London": [
+    "Lucy Dacus",
+    "Adrianne Lenker",
+    "Big Thief",
+    "Matt Berninger",
+    "Julia Jacklin",
+    "Julien Baker",
+    "Suki Waterhouse",
+    "Better Oblivion Community Center"
+   ],
+   "Edinburgh": []
+  }
+ },
+ "compare": {
+  "with": "Lucy Dacus",
+  "shared": [
+   {
+    "name": "Straightforward",
+    "score": 0.9819094175366204
+   },
+   {
+    "name": "United States",
+    "score": 0.9819094175366204
+   },
+   {
+    "name": "Melodic",
+    "score": 0.9819094175366204
+   },
+   {
+    "name": "Folk",
+    "score": 0.9819094175366204
+   },
+   {
+    "name": "Emotional",
+    "score": 0.8552837261798981
+   },
+   {
+    "name": "4/4 Time",
+    "score": 0.8552837261798981
+   },
+   {
+    "name": "Indie",
+    "score": 0.7309812497448915
+   },
+   {
+    "name": "Singer & Songwriter",
+    "score": 0.7308882208212064
+   },
+   {
+    "name": "Post Punk",
+    "score": 0.7307091392292362
+   },
+   {
+    "name": "Brooklyn",
+    "score": 0.7307091392292362
+   }
+  ]
+ },
+ "copy": {
+  "source": "llm",
+  "stops": [
+   {
+    "city": "London",
+    "generic": "See Phoebe Bridgers live in London for an unforgettable night of music.",
+    "hook": "Snap your Polaroids with Lucy Dacus opening this special night in town.",
+    "caption": "London is feeling all the short story vibes tonight.",
+    "references": [
+     "Lucy Dacus",
+     "Polaroid"
+    ]
+   },
+   {
+    "city": "Bristol",
+    "generic": "See Phoebe Bridgers live in Bristol for an unforgettable night of music.",
+    "hook": "Start your night with Lucy Dacus at Rough Trade Bristol for the ultimate sensitive indie experience.",
+    "caption": "Bristol, get ready for art and loss.",
+    "references": [
+     "Lucy Dacus",
+     "Rough Trade Bristol"
+    ]
+   },
+   {
+    "city": "Manchester",
+    "generic": "See Phoebe Bridgers live in Manchester for an unforgettable night of music.",
+    "hook": "Lucy Dacus opens tonight—lace up your Dr. Martens and let the sensitive storytelling begin.",
+    "caption": "Cat lovers and sensitive souls, Manchester awaits.",
+    "references": [
+     "Lucy Dacus",
+     "Dr. Martens"
+    ]
+   },
+   {
+    "city": "Dublin",
+    "generic": "See Phoebe Bridgers live in Dublin for an unforgettable night of music.",
+    "hook": "Catch Lucy Dacus opening before grabbing a pre-show whiskey at Jameson Distillery Bow St.",
+    "caption": "Feel every sensitive lyric live in Dublin.",
+    "references": [
+     "Lucy Dacus",
+     "Jameson Distillery Bow St."
+    ]
+   },
+   {
+    "city": "Edinburgh",
+    "generic": "See Phoebe Bridgers live in Edinburgh for an unforgettable night of music.",
+    "hook": "Wear your Patagonia and brave the Scottish chill for a night of profound, sensitive artistry.",
+    "caption": "Edinburgh, let's embrace the loss together.",
+    "references": [
+     "Patagonia"
+    ]
+   }
+  ]
+ },
+ "brief": "Phoebe Bridgers' UK and Ireland tour is routed through Dublin (97), Manchester (95), Bristol (97), London (98), and Edinburgh (98) to match her indie-leaning audience profile in top-scoring markets. Birmingham, Cardiff, Glasgow, Leeds, and Liverpool were dropped due to lower fan affinity scores ranging from 89 to 96, with Birmingham specifically showing the weakest score (89) and affinity (0.891). Lucy Dacus is the top opener, sharing taste profiles in straightforward, United States, melodic, and folk music."
+}

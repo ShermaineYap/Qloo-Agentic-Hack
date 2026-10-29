@@ -17,6 +17,7 @@ const AGE_LABELS = { "24_and_younger": "Under 25", "25_to_29": "25–29", "30_to
 
 let status = null;
 let region = "us";
+let actType = "";
 let T = null; // the tour being built or viewed
 let map, heatLayer, cityLayer, routeLayer;
 const cityMarkers = new Map();
@@ -83,6 +84,7 @@ function renderPresets() {
     b.textContent = `${p.act} (${p.label})`;
     b.onclick = () => {
       $("#act").value = p.act;
+      setKind(p.actType);
       $("#notes").value = p.notes || "";
       $("#stops").value = p.stops;
       $("#stopsOut").textContent = p.stops;
@@ -108,6 +110,11 @@ async function renderSaved() {
 }
 
 $("#stops").addEventListener("input", (e) => ($("#stopsOut").textContent = e.target.value));
+function setKind(kind) {
+  actType = kind || "";
+  document.querySelectorAll("#kinds button").forEach((b) => b.setAttribute("aria-checked", String(b.dataset.kind === actType)));
+}
+document.querySelectorAll("#kinds button").forEach((b) => (b.onclick = () => setKind(b.dataset.kind)));
 
 // ---------------------------------------------------------------- map
 function initMap() {
@@ -142,16 +149,18 @@ function drawCity(c) {
   m.setTooltipContent(
     c.score == null
       ? `${esc(c.name)}: ${esc(c.note || "no Qloo signal")}`
-      : `<b>${esc(c.name)}</b>: score ${c.score}<br>affinity ${fmt(c.affinity)} · popularity ${fmt(c.popularity)} · ${c.cells} map cells`,
+      : `<b>${esc(c.name)}</b>: fan affinity ${c.score}<br>${c.cells} Qloo grid cells within 50 km, scene density ${fmt(c.popularity)}`,
   );
 }
 
 function drawHeat(points) {
   heatLayer.clearLayers();
-  const max = Math.max(...points.map((p) => p.affinity ?? 0), 0.0001);
+  // Affinity is a 0–1 rank across the region; stretch the top band for contrast.
+  const vals = points.map((p) => p.affinity ?? 0);
+  const lo = Math.min(...vals), hi = Math.max(...vals, lo + 0.0001);
   for (const p of points) {
-    const a = (p.affinity ?? 0) / max;
-    L.circle([p.lat, p.lng], { radius: 60000, stroke: false, fillColor: "#c42a79", fillOpacity: 0.12 + 0.35 * a, interactive: false }).addTo(heatLayer);
+    const a = ((p.affinity ?? 0) - lo) / (hi - lo);
+    L.circle([p.lat, p.lng], { radius: 14000, stroke: false, fillColor: "#c42a79", fillOpacity: Math.max(0.04, 0.55 * a * a), interactive: false }).addTo(heatLayer);
   }
 }
 
@@ -180,6 +189,7 @@ $("#plan").addEventListener("submit", async (e) => {
   resetRun();
   const body = {
     act,
+    ...(actType ? { actType } : {}),
     region,
     stops: Number($("#stops").value),
     notes: $("#notes").value.trim(),
@@ -405,8 +415,9 @@ function renderProfile() {
     const span = Math.max(max - min, 1);
     const coords = pts.map((x, i) => `${(i / (pts.length - 1)) * 300},${80 - ((x.percentile - min) / span) * 70}`).join(" ");
     const label = p.momentum ? `${p.momentum.label[0].toUpperCase() + p.momentum.label.slice(1)} (${p.momentum.delta > 0 ? "+" : ""}${p.momentum.delta} percentile points)` : "";
-    $("#trend").innerHTML = `<svg viewBox="0 0 300 90" preserveAspectRatio="none" role="img" aria-label="Popularity percentile trend"><polyline points="${coords}" fill="none" stroke="#1c1f3f" stroke-width="2.5" vector-effect="non-scaling-stroke"/></svg><p class="label">${esc(label)}</p><p class="muted" style="font-size:12px;margin:0">Population percentile, ${esc(pts[0].date)} to ${esc(pts[pts.length - 1].date)}</p>`;
-  } else $("#trend").innerHTML = `<p class="muted">No trend data for this act.</p>`;
+    const flat = max - min < 0.01;
+    $("#trend").innerHTML = `<svg viewBox="0 0 300 90" preserveAspectRatio="none" role="img" aria-label="Popularity percentile trend"><polyline points="${coords}" fill="none" stroke="#1c1f3f" stroke-width="2.5" vector-effect="non-scaling-stroke"/></svg><p class="label">${esc(flat ? `Steady around the ${Math.round(max)}th percentile` : label)}</p><p class="muted" style="font-size:12px;margin:0">Population percentile, ${esc(pts[0].date)} to ${esc(pts[pts.length - 1].date)}</p>`;
+  } else $("#trend").innerHTML = `<p class="muted">Qloo doesn't publish weekly trend data for this kind of entity.</p>`;
 }
 
 function renderRoute() {
@@ -419,7 +430,7 @@ function renderRoute() {
     li.querySelector(".n").textContent = i + 1;
     li.querySelector(".city").textContent = s.name;
     li.querySelector(".score").textContent = s.score ?? "–";
-    li.querySelector(".score").title = `Fan score ${s.score} = 75% Qloo affinity (${fmt(s.affinity)}) + 25% popularity (${fmt(s.popularity)})`;
+    li.querySelector(".score").title = `Fan affinity ${s.score}: mean of the top 3 Qloo heatmap cells within 50 km (scene density ${fmt(s.popularity)})`;
     const btn = li.querySelector(".stop-row");
     const body = li.querySelector(".stop-body");
     btn.onclick = () => {
@@ -473,7 +484,8 @@ function renderStopBody(i) {
     <div><h4>Opener</h4>${
       s.opener ? `<ul><li><span><b>${esc(s.opener.name)}</b></span><span>${ranked ? "ranked 1st here" : ""}</span></li></ul>` : ""
     }${ranked && ranked.length > 1 ? `<p style="font-size:13px;color:#9ea3c4;margin:6px 0 0">Then: ${ranked.slice(1, 4).map(esc).join(", ")}</p>` : list(s.peers.slice(1), 3, "No local peers found.")}</div>
-    <div><h4>Pre-show and after-party</h4>${list(s.places, 4, "No venues with enough signal in this city.")}</div>
+    <div><h4>Rooms to play</h4>${list(s.rooms, 4, "No rooms with enough Qloo signal here.")}</div>
+    <div><h4>Pre-show and after-party</h4>${list(s.places, 4, "No bars or restaurants with enough signal here.")}</div>
     <div><h4>Sponsor fit</h4>${list(s.brands, 4, "No brand signal here.")}</div>
     <div><h4>Local PR</h4>${list(s.podcasts, 3, "No podcast signal here.")}</div>
     ${

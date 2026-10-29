@@ -1,8 +1,8 @@
-// First-hour sanity check: is the key live, and does Qloo have enough data on
-// the demo acts and cities? Spends roughly 2 Qloo calls per preset.
+// Sanity check: is the key live, and does Qloo have heat data for the demo
+// acts? Spends about 2 Qloo calls per act.
 //   npm run check
-//   npm run check -- "Another Comedian" us
-import { startQloo, callQloo } from "../server/qloo.js";
+//   npm run check -- "Another Comedian" us person
+import { startQloo, callQloo, regionHeatmap } from "../server/qloo.js";
 import { REGIONS } from "../server/cities.js";
 const { PRESETS } = await import("../server/presets.js");
 
@@ -10,15 +10,20 @@ const s = await startQloo();
 console.log(`Qloo mode: ${s.mode}${s.error ? ` (${s.error})` : ""}`);
 if (s.mode !== "live") process.exit(1);
 
-const [act, region] = process.argv.slice(2);
-const list = act ? [{ act, region: region || "us" }] : PRESETS;
+const [act, region, actType] = process.argv.slice(2);
+const list = act ? [{ act, region: region || "us", actType }] : PRESETS;
 for (const p of list) {
-  const d = await callQloo("qloo_describe", { entity: p.act });
-  const e = d.envelope.results?.[0];
-  console.log(`\n${p.act}: ${d.envelope.status} → ${e ? `${e.name} (${e.type}, popularity ${e.popularity})` : d.envelope.summary}`);
+  const d = await callQloo("qloo_describe", { entity: p.act, ...(p.actType ? { type: p.actType } : {}) });
+  const env = d.envelope;
+  if (env.status === "needs_input") {
+    const c = env.resolution?.issues?.[0]?.candidates || [];
+    console.log(`\n${p.act}: ambiguous, add a type. Candidates: ${c.map((x) => `${x.name} (${x.type}, popularity ${x.popularity?.toFixed?.(2)})`).join("; ")}`);
+    continue;
+  }
+  const e = env.results?.[0];
+  console.log(`\n${p.act}: ${env.status} → ${e ? `${e.name} (${e.subtype || e.type})` : env.summary}`);
   if (!e) continue;
-  const city = REGIONS[p.region].cities[0];
-  const w = await callQloo("qloo_where_popular", { entity: e.entity_id, within: city.query, limit: 10 });
-  console.log(`  heatmap in ${city.name}: ${w.envelope.status}, ${w.envelope.result_count ?? 0} cells`);
+  const h = await regionHeatmap(e.entity_id, REGIONS[p.region].wkt);
+  console.log(`  heatmap across ${REGIONS[p.region].label}: ${h.status}, ${h.points?.length ?? 0} grid cells`);
 }
 process.exit(0);

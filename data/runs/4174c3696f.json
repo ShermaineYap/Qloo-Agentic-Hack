@@ -1,0 +1,6807 @@
+{
+ "id": "4174c3696f",
+ "created_at": "2026-10-29T17:56:25.057Z",
+ "input": {
+  "id": "music-apac",
+  "label": "Malaysian artist, SEA + Australia",
+  "act": "Yuna",
+  "actType": "artist",
+  "region": "apac",
+  "stops": 5,
+  "notes": "Intimate, mid-size rooms; open to any market in Southeast Asia or Australia"
+ },
+ "region": {
+  "id": "apac",
+  "label": "Southeast Asia & Australia",
+  "center": [
+   -5,
+   120
+  ],
+  "zoom": 3
+ },
+ "llm": {
+  "provider": "gemini",
+  "model": "gemini-3.5-flash"
+ },
+ "mock": false,
+ "steps": [
+  {
+   "id": "s1",
+   "phase": "act",
+   "label": "Find \"Yuna\" in Qloo's taste graph",
+   "tool": "qloo_describe",
+   "args": {
+    "entity": "Yuna",
+    "type": "artist"
+   },
+   "status": "ok",
+   "summary": "1 results",
+   "result_count": 1,
+   "cached": true,
+   "mock": false,
+   "ms": 1,
+   "request": {
+    "entity_ids": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ]
+   }
+  },
+  {
+   "id": "s2",
+   "phase": "route",
+   "label": "Heatmap of Yuna's fans across Southeast Asia & Australia",
+   "tool": "qloo heatmap",
+   "args": {
+    "entity": "Yuna",
+    "boundary": "Southeast Asia & Australia"
+   },
+   "status": "ok",
+   "summary": "6,455 grid cells, each with an affinity and popularity score",
+   "cached": true,
+   "ms": 7,
+   "request": {
+    "filter.type": "urn:heatmap",
+    "signal.interests.entities": "4BBECA32-1999-4EA9-8BFA-275AF5E8F177",
+    "filter.location": "POLYGON((95 22, 180 22, 180 -48, 95 -48, 95 22))",
+    "take": "50"
+   }
+  },
+  {
+   "id": "s3",
+   "phase": "route",
+   "label": "Scored 12 markets from the grid: Kuala Lumpur leads (100), Brisbane trails (65).",
+   "tool": "agent",
+   "status": "done"
+  },
+  {
+   "id": "s4",
+   "phase": "audience",
+   "label": "What concepts define this act's fan base?",
+   "tool": "qloo_entity_tags",
+   "args": {
+    "entities": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "limit": 20
+   },
+   "status": "ok",
+   "summary": "20 results",
+   "result_count": 20,
+   "cached": true,
+   "mock": false,
+   "ms": 4,
+   "request": {
+    "filter.type": "urn:tag",
+    "signal.interests.entities": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "take": 20
+   }
+  },
+  {
+   "id": "s5",
+   "phase": "audience",
+   "label": "Who are the fans? (age and gender skew)",
+   "tool": "qloo_audience_demographics",
+   "args": {
+    "entity": "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+   },
+   "status": "ok",
+   "summary": "1 results",
+   "result_count": 1,
+   "cached": true,
+   "mock": false,
+   "ms": 4,
+   "request": {
+    "filter.type": "urn:demographics",
+    "signal.interests.entities": "4BBECA32-1999-4EA9-8BFA-275AF5E8F177",
+    "take": 10
+   }
+  },
+  {
+   "id": "s6",
+   "phase": "audience",
+   "label": "Is the act rising or fading?",
+   "tool": "qloo_trends",
+   "args": {
+    "entities": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "entity_type": "artist",
+    "start_date": "2026-06-11",
+    "end_date": "2026-10-29",
+    "limit": 20
+   },
+   "status": "ok",
+   "summary": "1 results",
+   "result_count": 1,
+   "cached": true,
+   "mock": false,
+   "ms": 4,
+   "request": {
+    "filter.type": "urn:entity:artist",
+    "filter.start_date": "2026-06-11",
+    "filter.end_date": "2026-10-29",
+    "signal.interests.entities": "4BBECA32-1999-4EA9-8BFA-275AF5E8F177",
+    "take": 20
+   }
+  },
+  {
+   "id": "s7",
+   "phase": "route",
+   "label": "We focus entirely on top-scoring Southeast Asian markets where Yuna's cultural fan-base concepts yield maximum affinity and intimate room viability. Major Australian cities like Sydney and Melbourne score lower (83), proving that her audience concentration heavily favors the ASEAN region.",
+   "tool": "agent",
+   "status": "done"
+  },
+  {
+   "id": "s8",
+   "phase": "stops",
+   "label": "Penang: artists these fans also love (opener pool)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "artist",
+    "signals": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal_location": "George Town, Penang",
+    "limit": 15
+   },
+   "status": "ok",
+   "summary": "15 results",
+   "result_count": 15,
+   "cached": true,
+   "mock": false,
+   "ms": 8,
+   "request": {
+    "filter.type": "urn:entity:artist",
+    "take": 15,
+    "signal.interests.entities": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal.location.query": "George Town, Penang",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s9",
+   "phase": "stops",
+   "label": "Penang: live music venues with high fan affinity",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "place",
+    "signals": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "filter_location": "George Town, Penang",
+    "include_tags": [
+     "urn:tag:category:place:live_music_venue"
+    ],
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "1 results",
+   "result_count": 1,
+   "cached": true,
+   "mock": false,
+   "ms": 8,
+   "request": {
+    "filter.type": "urn:entity:place",
+    "take": 5,
+    "signal.interests.entities": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "filter.location.query": "George Town, Penang",
+    "filter.tags": [
+     "urn:tag:category:place:live_music_venue"
+    ],
+    "operator.filter.tags": "union",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s10",
+   "phase": "stops",
+   "label": "Penang: bars and restaurants these fans love (pre-show, after-party)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "place",
+    "signals": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "filter_location": "George Town, Penang",
+    "include_tags": [
+     "urn:tag:category:place:bar",
+     "urn:tag:category:place:restaurant"
+    ],
+    "include_tags_operator": "union",
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": true,
+   "mock": false,
+   "ms": 9,
+   "request": {
+    "filter.type": "urn:entity:place",
+    "take": 5,
+    "signal.interests.entities": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "filter.location.query": "George Town, Penang",
+    "filter.tags": [
+     "urn:tag:category:place:bar",
+     "urn:tag:category:place:restaurant"
+    ],
+    "operator.filter.tags": "union",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s11",
+   "phase": "stops",
+   "label": "Penang: brands this audience over-indexes on (sponsors)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "brand",
+    "signals": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal_location": "George Town, Penang",
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": true,
+   "mock": false,
+   "ms": 8,
+   "request": {
+    "filter.type": "urn:entity:brand",
+    "take": 5,
+    "signal.interests.entities": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal.location.query": "George Town, Penang",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s12",
+   "phase": "stops",
+   "label": "Penang: podcasts for local PR",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "podcast",
+    "signals": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal_location": "George Town, Penang",
+    "limit": 4
+   },
+   "status": "ok",
+   "summary": "4 results",
+   "result_count": 4,
+   "cached": true,
+   "mock": false,
+   "ms": 8,
+   "request": {
+    "filter.type": "urn:entity:podcast",
+    "take": 4,
+    "signal.interests.entities": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal.location.query": "George Town, Penang",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s13",
+   "phase": "stops",
+   "label": "Kuala Lumpur: artists these fans also love (opener pool)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "artist",
+    "signals": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal_location": "Kuala Lumpur",
+    "limit": 15
+   },
+   "status": "ok",
+   "summary": "15 results",
+   "result_count": 15,
+   "cached": true,
+   "mock": false,
+   "ms": 10,
+   "request": {
+    "filter.type": "urn:entity:artist",
+    "take": 15,
+    "signal.interests.entities": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal.location.query": "Kuala Lumpur",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s14",
+   "phase": "stops",
+   "label": "Kuala Lumpur: live music venues with high fan affinity",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "place",
+    "signals": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "filter_location": "Kuala Lumpur",
+    "include_tags": [
+     "urn:tag:category:place:live_music_venue"
+    ],
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": true,
+   "mock": false,
+   "ms": 10,
+   "request": {
+    "filter.type": "urn:entity:place",
+    "take": 5,
+    "signal.interests.entities": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "filter.location.query": "Kuala Lumpur",
+    "filter.tags": [
+     "urn:tag:category:place:live_music_venue"
+    ],
+    "operator.filter.tags": "union",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s15",
+   "phase": "stops",
+   "label": "Kuala Lumpur: bars and restaurants these fans love (pre-show, after-party)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "place",
+    "signals": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "filter_location": "Kuala Lumpur",
+    "include_tags": [
+     "urn:tag:category:place:bar",
+     "urn:tag:category:place:restaurant"
+    ],
+    "include_tags_operator": "union",
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": true,
+   "mock": false,
+   "ms": 10,
+   "request": {
+    "filter.type": "urn:entity:place",
+    "take": 5,
+    "signal.interests.entities": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "filter.location.query": "Kuala Lumpur",
+    "filter.tags": [
+     "urn:tag:category:place:bar",
+     "urn:tag:category:place:restaurant"
+    ],
+    "operator.filter.tags": "union",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s16",
+   "phase": "stops",
+   "label": "Kuala Lumpur: brands this audience over-indexes on (sponsors)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "brand",
+    "signals": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal_location": "Kuala Lumpur",
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": true,
+   "mock": false,
+   "ms": 10,
+   "request": {
+    "filter.type": "urn:entity:brand",
+    "take": 5,
+    "signal.interests.entities": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal.location.query": "Kuala Lumpur",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s17",
+   "phase": "stops",
+   "label": "Kuala Lumpur: podcasts for local PR",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "podcast",
+    "signals": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal_location": "Kuala Lumpur",
+    "limit": 4
+   },
+   "status": "ok",
+   "summary": "4 results",
+   "result_count": 4,
+   "cached": true,
+   "mock": false,
+   "ms": 10,
+   "request": {
+    "filter.type": "urn:entity:podcast",
+    "take": 4,
+    "signal.interests.entities": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal.location.query": "Kuala Lumpur",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s18",
+   "phase": "stops",
+   "label": "Singapore: artists these fans also love (opener pool)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "artist",
+    "signals": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal_location": "Singapore",
+    "limit": 15
+   },
+   "status": "ok",
+   "summary": "15 results",
+   "result_count": 15,
+   "cached": true,
+   "mock": false,
+   "ms": 11,
+   "request": {
+    "filter.type": "urn:entity:artist",
+    "take": 15,
+    "signal.interests.entities": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal.location.query": "Singapore",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s19",
+   "phase": "stops",
+   "label": "Singapore: live music venues with high fan affinity",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "place",
+    "signals": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "filter_location": "Singapore",
+    "include_tags": [
+     "urn:tag:category:place:live_music_venue"
+    ],
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": true,
+   "mock": false,
+   "ms": 11,
+   "request": {
+    "filter.type": "urn:entity:place",
+    "take": 5,
+    "signal.interests.entities": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "filter.location.query": "Singapore",
+    "filter.tags": [
+     "urn:tag:category:place:live_music_venue"
+    ],
+    "operator.filter.tags": "union",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s20",
+   "phase": "stops",
+   "label": "Singapore: bars and restaurants these fans love (pre-show, after-party)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "place",
+    "signals": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "filter_location": "Singapore",
+    "include_tags": [
+     "urn:tag:category:place:bar",
+     "urn:tag:category:place:restaurant"
+    ],
+    "include_tags_operator": "union",
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": true,
+   "mock": false,
+   "ms": 11,
+   "request": {
+    "filter.type": "urn:entity:place",
+    "take": 5,
+    "signal.interests.entities": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "filter.location.query": "Singapore",
+    "filter.tags": [
+     "urn:tag:category:place:bar",
+     "urn:tag:category:place:restaurant"
+    ],
+    "operator.filter.tags": "union",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s21",
+   "phase": "stops",
+   "label": "Singapore: brands this audience over-indexes on (sponsors)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "brand",
+    "signals": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal_location": "Singapore",
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": true,
+   "mock": false,
+   "ms": 10,
+   "request": {
+    "filter.type": "urn:entity:brand",
+    "take": 5,
+    "signal.interests.entities": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal.location.query": "Singapore",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s22",
+   "phase": "stops",
+   "label": "Singapore: podcasts for local PR",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "podcast",
+    "signals": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal_location": "Singapore",
+    "limit": 4
+   },
+   "status": "ok",
+   "summary": "4 results",
+   "result_count": 4,
+   "cached": true,
+   "mock": false,
+   "ms": 10,
+   "request": {
+    "filter.type": "urn:entity:podcast",
+    "take": 4,
+    "signal.interests.entities": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal.location.query": "Singapore",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s23",
+   "phase": "stops",
+   "label": "Jakarta: artists these fans also love (opener pool)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "artist",
+    "signals": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal_location": "Jakarta",
+    "limit": 15
+   },
+   "status": "ok",
+   "summary": "15 results",
+   "result_count": 15,
+   "cached": true,
+   "mock": false,
+   "ms": 11,
+   "request": {
+    "filter.type": "urn:entity:artist",
+    "take": 15,
+    "signal.interests.entities": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal.location.query": "Jakarta",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s24",
+   "phase": "stops",
+   "label": "Jakarta: live music venues with high fan affinity",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "place",
+    "signals": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "filter_location": "Jakarta",
+    "include_tags": [
+     "urn:tag:category:place:live_music_venue"
+    ],
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": true,
+   "mock": false,
+   "ms": 11,
+   "request": {
+    "filter.type": "urn:entity:place",
+    "take": 5,
+    "signal.interests.entities": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "filter.location.query": "Jakarta",
+    "filter.tags": [
+     "urn:tag:category:place:live_music_venue"
+    ],
+    "operator.filter.tags": "union",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s25",
+   "phase": "stops",
+   "label": "Jakarta: bars and restaurants these fans love (pre-show, after-party)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "place",
+    "signals": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "filter_location": "Jakarta",
+    "include_tags": [
+     "urn:tag:category:place:bar",
+     "urn:tag:category:place:restaurant"
+    ],
+    "include_tags_operator": "union",
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": true,
+   "mock": false,
+   "ms": 11,
+   "request": {
+    "filter.type": "urn:entity:place",
+    "take": 5,
+    "signal.interests.entities": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "filter.location.query": "Jakarta",
+    "filter.tags": [
+     "urn:tag:category:place:bar",
+     "urn:tag:category:place:restaurant"
+    ],
+    "operator.filter.tags": "union",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s26",
+   "phase": "stops",
+   "label": "Jakarta: brands this audience over-indexes on (sponsors)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "brand",
+    "signals": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal_location": "Jakarta",
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": true,
+   "mock": false,
+   "ms": 11,
+   "request": {
+    "filter.type": "urn:entity:brand",
+    "take": 5,
+    "signal.interests.entities": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal.location.query": "Jakarta",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s27",
+   "phase": "stops",
+   "label": "Jakarta: podcasts for local PR",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "podcast",
+    "signals": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal_location": "Jakarta",
+    "limit": 4
+   },
+   "status": "ok",
+   "summary": "4 results",
+   "result_count": 4,
+   "cached": true,
+   "mock": false,
+   "ms": 11,
+   "request": {
+    "filter.type": "urn:entity:podcast",
+    "take": 4,
+    "signal.interests.entities": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal.location.query": "Jakarta",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s28",
+   "phase": "stops",
+   "label": "Bangkok: artists these fans also love (opener pool)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "artist",
+    "signals": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal_location": "Bangkok",
+    "limit": 15
+   },
+   "status": "ok",
+   "summary": "15 results",
+   "result_count": 15,
+   "cached": true,
+   "mock": false,
+   "ms": 11,
+   "request": {
+    "filter.type": "urn:entity:artist",
+    "take": 15,
+    "signal.interests.entities": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal.location.query": "Bangkok",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s29",
+   "phase": "stops",
+   "label": "Bangkok: live music venues with high fan affinity",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "place",
+    "signals": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "filter_location": "Bangkok",
+    "include_tags": [
+     "urn:tag:category:place:live_music_venue"
+    ],
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": true,
+   "mock": false,
+   "ms": 11,
+   "request": {
+    "filter.type": "urn:entity:place",
+    "take": 5,
+    "signal.interests.entities": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "filter.location.query": "Bangkok",
+    "filter.tags": [
+     "urn:tag:category:place:live_music_venue"
+    ],
+    "operator.filter.tags": "union",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s30",
+   "phase": "stops",
+   "label": "Bangkok: bars and restaurants these fans love (pre-show, after-party)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "place",
+    "signals": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "filter_location": "Bangkok",
+    "include_tags": [
+     "urn:tag:category:place:bar",
+     "urn:tag:category:place:restaurant"
+    ],
+    "include_tags_operator": "union",
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": true,
+   "mock": false,
+   "ms": 12,
+   "request": {
+    "filter.type": "urn:entity:place",
+    "take": 5,
+    "signal.interests.entities": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "filter.location.query": "Bangkok",
+    "filter.tags": [
+     "urn:tag:category:place:bar",
+     "urn:tag:category:place:restaurant"
+    ],
+    "operator.filter.tags": "union",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s31",
+   "phase": "stops",
+   "label": "Bangkok: brands this audience over-indexes on (sponsors)",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "brand",
+    "signals": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal_location": "Bangkok",
+    "limit": 5
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": true,
+   "mock": false,
+   "ms": 12,
+   "request": {
+    "filter.type": "urn:entity:brand",
+    "take": 5,
+    "signal.interests.entities": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal.location.query": "Bangkok",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s32",
+   "phase": "stops",
+   "label": "Bangkok: podcasts for local PR",
+   "tool": "qloo_recommend",
+   "args": {
+    "target_type": "podcast",
+    "signals": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal_location": "Bangkok",
+    "limit": 4
+   },
+   "status": "ok",
+   "summary": "4 results",
+   "result_count": 4,
+   "cached": true,
+   "mock": false,
+   "ms": 12,
+   "request": {
+    "filter.type": "urn:entity:podcast",
+    "take": 4,
+    "signal.interests.entities": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal.location.query": "Bangkok",
+    "feature.explainability": true
+   }
+  },
+  {
+   "id": "s33",
+   "phase": "openers",
+   "label": "Shortlisted 8 opener candidates with less Qloo popularity than Yuna, so the bill stays headliner-led.",
+   "tool": "agent",
+   "status": "done"
+  },
+  {
+   "id": "s34",
+   "phase": "openers",
+   "label": "Penang: rank the opener shortlist for this crowd",
+   "tool": "qloo_rank",
+   "args": {
+    "options": [
+     "345B890E-38F8-4E89-9CE6-A21201BA8893",
+     "FF2E980F-4BA0-4E2B-8BA8-20BC30DE4F9A",
+     "0D85212C-DEA2-40A7-B2B4-19DBD210B650",
+     "F74972E5-F3BF-47C6-84B5-913D5558E15F",
+     "0B56A7A9-3438-41CF-B2A3-723FA85F1BB4",
+     "7AFC0B14-0285-457C-8C5B-30C1174E500E",
+     "BC5AF895-7162-4395-8D42-75C6481B0E60",
+     "A8C5EA6D-BE89-4FE4-86F2-7C73EA6EFCC4"
+    ],
+    "option_type": "artist",
+    "signals": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal_location": "George Town, Penang"
+   },
+   "status": "ok",
+   "summary": "6 results",
+   "result_count": 6,
+   "cached": true,
+   "mock": false,
+   "ms": 2,
+   "request": {
+    "filter.type": "urn:entity:artist",
+    "filter.results.entities": [
+     "345B890E-38F8-4E89-9CE6-A21201BA8893",
+     "FF2E980F-4BA0-4E2B-8BA8-20BC30DE4F9A",
+     "0D85212C-DEA2-40A7-B2B4-19DBD210B650",
+     "F74972E5-F3BF-47C6-84B5-913D5558E15F",
+     "0B56A7A9-3438-41CF-B2A3-723FA85F1BB4",
+     "7AFC0B14-0285-457C-8C5B-30C1174E500E",
+     "BC5AF895-7162-4395-8D42-75C6481B0E60",
+     "A8C5EA6D-BE89-4FE4-86F2-7C73EA6EFCC4"
+    ],
+    "take": 8,
+    "signal.interests.entities": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal.location.query": "George Town, Penang"
+   }
+  },
+  {
+   "id": "s35",
+   "phase": "openers",
+   "label": "Kuala Lumpur: rank the opener shortlist for this crowd",
+   "tool": "qloo_rank",
+   "args": {
+    "options": [
+     "345B890E-38F8-4E89-9CE6-A21201BA8893",
+     "FF2E980F-4BA0-4E2B-8BA8-20BC30DE4F9A",
+     "0D85212C-DEA2-40A7-B2B4-19DBD210B650",
+     "F74972E5-F3BF-47C6-84B5-913D5558E15F",
+     "0B56A7A9-3438-41CF-B2A3-723FA85F1BB4",
+     "7AFC0B14-0285-457C-8C5B-30C1174E500E",
+     "BC5AF895-7162-4395-8D42-75C6481B0E60",
+     "A8C5EA6D-BE89-4FE4-86F2-7C73EA6EFCC4"
+    ],
+    "option_type": "artist",
+    "signals": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal_location": "Kuala Lumpur"
+   },
+   "status": "ok",
+   "summary": "8 results",
+   "result_count": 8,
+   "cached": true,
+   "mock": false,
+   "ms": 1,
+   "request": {
+    "filter.type": "urn:entity:artist",
+    "filter.results.entities": [
+     "345B890E-38F8-4E89-9CE6-A21201BA8893",
+     "FF2E980F-4BA0-4E2B-8BA8-20BC30DE4F9A",
+     "0D85212C-DEA2-40A7-B2B4-19DBD210B650",
+     "F74972E5-F3BF-47C6-84B5-913D5558E15F",
+     "0B56A7A9-3438-41CF-B2A3-723FA85F1BB4",
+     "7AFC0B14-0285-457C-8C5B-30C1174E500E",
+     "BC5AF895-7162-4395-8D42-75C6481B0E60",
+     "A8C5EA6D-BE89-4FE4-86F2-7C73EA6EFCC4"
+    ],
+    "take": 8,
+    "signal.interests.entities": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal.location.query": "Kuala Lumpur"
+   }
+  },
+  {
+   "id": "s37",
+   "phase": "openers",
+   "label": "Jakarta: rank the opener shortlist for this crowd",
+   "tool": "qloo_rank",
+   "args": {
+    "options": [
+     "345B890E-38F8-4E89-9CE6-A21201BA8893",
+     "FF2E980F-4BA0-4E2B-8BA8-20BC30DE4F9A",
+     "0D85212C-DEA2-40A7-B2B4-19DBD210B650",
+     "F74972E5-F3BF-47C6-84B5-913D5558E15F",
+     "0B56A7A9-3438-41CF-B2A3-723FA85F1BB4",
+     "7AFC0B14-0285-457C-8C5B-30C1174E500E",
+     "BC5AF895-7162-4395-8D42-75C6481B0E60",
+     "A8C5EA6D-BE89-4FE4-86F2-7C73EA6EFCC4"
+    ],
+    "option_type": "artist",
+    "signals": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal_location": "Jakarta"
+   },
+   "status": "ok",
+   "summary": "5 results",
+   "result_count": 5,
+   "cached": true,
+   "mock": false,
+   "ms": 2,
+   "request": {
+    "filter.type": "urn:entity:artist",
+    "filter.results.entities": [
+     "345B890E-38F8-4E89-9CE6-A21201BA8893",
+     "FF2E980F-4BA0-4E2B-8BA8-20BC30DE4F9A",
+     "0D85212C-DEA2-40A7-B2B4-19DBD210B650",
+     "F74972E5-F3BF-47C6-84B5-913D5558E15F",
+     "0B56A7A9-3438-41CF-B2A3-723FA85F1BB4",
+     "7AFC0B14-0285-457C-8C5B-30C1174E500E",
+     "BC5AF895-7162-4395-8D42-75C6481B0E60",
+     "A8C5EA6D-BE89-4FE4-86F2-7C73EA6EFCC4"
+    ],
+    "take": 8,
+    "signal.interests.entities": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal.location.query": "Jakarta"
+   }
+  },
+  {
+   "id": "s36",
+   "phase": "openers",
+   "label": "Singapore: rank the opener shortlist for this crowd",
+   "tool": "qloo_rank",
+   "args": {
+    "options": [
+     "345B890E-38F8-4E89-9CE6-A21201BA8893",
+     "FF2E980F-4BA0-4E2B-8BA8-20BC30DE4F9A",
+     "0D85212C-DEA2-40A7-B2B4-19DBD210B650",
+     "F74972E5-F3BF-47C6-84B5-913D5558E15F",
+     "0B56A7A9-3438-41CF-B2A3-723FA85F1BB4",
+     "7AFC0B14-0285-457C-8C5B-30C1174E500E",
+     "BC5AF895-7162-4395-8D42-75C6481B0E60",
+     "A8C5EA6D-BE89-4FE4-86F2-7C73EA6EFCC4"
+    ],
+    "option_type": "artist",
+    "signals": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal_location": "Singapore"
+   },
+   "status": "ok",
+   "summary": "8 results",
+   "result_count": 8,
+   "cached": true,
+   "mock": false,
+   "ms": 2,
+   "request": {
+    "filter.type": "urn:entity:artist",
+    "filter.results.entities": [
+     "345B890E-38F8-4E89-9CE6-A21201BA8893",
+     "FF2E980F-4BA0-4E2B-8BA8-20BC30DE4F9A",
+     "0D85212C-DEA2-40A7-B2B4-19DBD210B650",
+     "F74972E5-F3BF-47C6-84B5-913D5558E15F",
+     "0B56A7A9-3438-41CF-B2A3-723FA85F1BB4",
+     "7AFC0B14-0285-457C-8C5B-30C1174E500E",
+     "BC5AF895-7162-4395-8D42-75C6481B0E60",
+     "A8C5EA6D-BE89-4FE4-86F2-7C73EA6EFCC4"
+    ],
+    "take": 8,
+    "signal.interests.entities": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal.location.query": "Singapore"
+   }
+  },
+  {
+   "id": "s38",
+   "phase": "openers",
+   "label": "Bangkok: rank the opener shortlist for this crowd",
+   "tool": "qloo_rank",
+   "args": {
+    "options": [
+     "345B890E-38F8-4E89-9CE6-A21201BA8893",
+     "FF2E980F-4BA0-4E2B-8BA8-20BC30DE4F9A",
+     "0D85212C-DEA2-40A7-B2B4-19DBD210B650",
+     "F74972E5-F3BF-47C6-84B5-913D5558E15F",
+     "0B56A7A9-3438-41CF-B2A3-723FA85F1BB4",
+     "7AFC0B14-0285-457C-8C5B-30C1174E500E",
+     "BC5AF895-7162-4395-8D42-75C6481B0E60",
+     "A8C5EA6D-BE89-4FE4-86F2-7C73EA6EFCC4"
+    ],
+    "option_type": "artist",
+    "signals": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal_location": "Bangkok"
+   },
+   "status": "ok",
+   "summary": "6 results",
+   "result_count": 6,
+   "cached": true,
+   "mock": false,
+   "ms": 2,
+   "request": {
+    "filter.type": "urn:entity:artist",
+    "filter.results.entities": [
+     "345B890E-38F8-4E89-9CE6-A21201BA8893",
+     "FF2E980F-4BA0-4E2B-8BA8-20BC30DE4F9A",
+     "0D85212C-DEA2-40A7-B2B4-19DBD210B650",
+     "F74972E5-F3BF-47C6-84B5-913D5558E15F",
+     "0B56A7A9-3438-41CF-B2A3-723FA85F1BB4",
+     "7AFC0B14-0285-457C-8C5B-30C1174E500E",
+     "BC5AF895-7162-4395-8D42-75C6481B0E60",
+     "A8C5EA6D-BE89-4FE4-86F2-7C73EA6EFCC4"
+    ],
+    "take": 8,
+    "signal.interests.entities": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "signal.location.query": "Bangkok"
+   }
+  },
+  {
+   "id": "s39",
+   "phase": "openers",
+   "label": "Shared taste: Yuna fans vs Daniela Andrade fans",
+   "tool": "qloo_compare_audiences",
+   "args": {
+    "group_a": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "group_b": [
+     "345B890E-38F8-4E89-9CE6-A21201BA8893"
+    ],
+    "limit": 20
+   },
+   "status": "ok",
+   "summary": "0 results",
+   "cached": true,
+   "mock": false,
+   "ms": 0,
+   "request": {
+    "a.signal.interests.entities": [
+     "4BBECA32-1999-4EA9-8BFA-275AF5E8F177"
+    ],
+    "b.signal.interests.entities": [
+     "345B890E-38F8-4E89-9CE6-A21201BA8893"
+    ],
+    "take": 20
+   }
+  }
+ ],
+ "calls": 36,
+ "act": {
+  "id": "4BBECA32-1999-4EA9-8BFA-275AF5E8F177",
+  "name": "Yuna",
+  "kind": "artist",
+  "popularity": 0.9858642223129371,
+  "description": "Malaysian singer-songwriter known for her soulful voice and blend of pop, R&B, and folk music.",
+  "image": "https://images.qloo.com/i/4BBECA32-1999-4EA9-8BFA-275AF5E8F177-420x-auto.jpg"
+ },
+ "heat": [
+  {
+   "lat": 1.3184,
+   "lng": 103.8867,
+   "affinity": 1,
+   "popularity": 1
+  },
+  {
+   "lat": 11.5137,
+   "lng": 104.9414,
+   "affinity": 0.9998,
+   "popularity": 0.991
+  },
+  {
+   "lat": 16.7871,
+   "lng": 96.1523,
+   "affinity": 0.9997,
+   "popularity": 0.987
+  },
+  {
+   "lat": 13.4473,
+   "lng": 103.8867,
+   "affinity": 0.9995,
+   "popularity": 0.984
+  },
+  {
+   "lat": 6.416,
+   "lng": 99.3164,
+   "affinity": 0.9994,
+   "popularity": 0.947
+  },
+  {
+   "lat": 1.3184,
+   "lng": 103.5352,
+   "affinity": 0.9992,
+   "popularity": 0.981
+  },
+  {
+   "lat": 13.2715,
+   "lng": 103.8867,
+   "affinity": 0.9991,
+   "popularity": 0.969
+  },
+  {
+   "lat": 13.7988,
+   "lng": 100.3711,
+   "affinity": 0.9989,
+   "popularity": 1
+  },
+  {
+   "lat": 3.0762,
+   "lng": 101.7773,
+   "affinity": 0.9988,
+   "popularity": 1
+  },
+  {
+   "lat": 6.416,
+   "lng": 99.668,
+   "affinity": 0.9986,
+   "popularity": 0.985
+  },
+  {
+   "lat": 6.2402,
+   "lng": 99.668,
+   "affinity": 0.9985,
+   "popularity": 0.987
+  },
+  {
+   "lat": 5.3613,
+   "lng": 100.3711,
+   "affinity": 0.9983,
+   "popularity": 0.998
+  },
+  {
+   "lat": 6.9434,
+   "lng": 100.3711,
+   "affinity": 0.9981,
+   "popularity": 0.988
+  },
+  {
+   "lat": 21.8848,
+   "lng": 96.1523,
+   "affinity": 0.998,
+   "popularity": 0.933
+  },
+  {
+   "lat": 13.7988,
+   "lng": 100.7227,
+   "affinity": 0.9978,
+   "popularity": 0.999
+  },
+  {
+   "lat": 16.9629,
+   "lng": 96.1523,
+   "affinity": 0.9977,
+   "popularity": 0.936
+  },
+  {
+   "lat": 18.7207,
+   "lng": 98.9648,
+   "affinity": 0.9975,
+   "popularity": 0.996
+  },
+  {
+   "lat": 7.998,
+   "lng": 98.9648,
+   "affinity": 0.9974,
+   "popularity": 0.99
+  },
+  {
+   "lat": 20.8301,
+   "lng": 97.207,
+   "affinity": 0.9972,
+   "popularity": 0.873
+  },
+  {
+   "lat": 3.252,
+   "lng": 101.7773,
+   "affinity": 0.9971,
+   "popularity": 0.999
+  },
+  {
+   "lat": 21.0059,
+   "lng": 105.9961,
+   "affinity": 0.9969,
+   "popularity": 0.996
+  },
+  {
+   "lat": 1.4941,
+   "lng": 103.8867,
+   "affinity": 0.9967,
+   "popularity": 0.997
+  },
+  {
+   "lat": 12.7441,
+   "lng": 105.6445,
+   "affinity": 0.9966,
+   "popularity": 0.914
+  },
+  {
+   "lat": 10.8105,
+   "lng": 106.6992,
+   "affinity": 0.9964,
+   "popularity": 0.998
+  },
+  {
+   "lat": 10.6348,
+   "lng": 103.5352,
+   "affinity": 0.9963,
+   "popularity": 0.937
+  },
+  {
+   "lat": 15.0293,
+   "lng": 101.0742,
+   "affinity": 0.9961,
+   "popularity": 0.982
+  },
+  {
+   "lat": 2.7246,
+   "lng": 101.7773,
+   "affinity": 0.996,
+   "popularity": 0.997
+  },
+  {
+   "lat": 3.0762,
+   "lng": 101.4258,
+   "affinity": 0.9958,
+   "popularity": 0.999
+  },
+  {
+   "lat": 10.6348,
+   "lng": 104.2383,
+   "affinity": 0.9957,
+   "popularity": 0.911
+  },
+  {
+   "lat": 13.623,
+   "lng": 100.7227,
+   "affinity": 0.9955,
+   "popularity": 0.997
+  },
+  {
+   "lat": 4.6582,
+   "lng": 101.0742,
+   "affinity": 0.9954,
+   "popularity": 0.996
+  },
+  {
+   "lat": 6.7676,
+   "lng": 116.1914,
+   "affinity": 0.9952,
+   "popularity": 0.799
+  },
+  {
+   "lat": 2.1973,
+   "lng": 102.1289,
+   "affinity": 0.995,
+   "popularity": 0.997
+  },
+  {
+   "lat": 15.9082,
+   "lng": 108.457,
+   "affinity": 0.9947,
+   "popularity": 0.99
+  },
+  {
+   "lat": 11.3379,
+   "lng": 104.9414,
+   "affinity": 0.9947,
+   "popularity": 0.851
+  },
+  {
+   "lat": 12.9199,
+   "lng": 100.7227,
+   "affinity": 0.9946,
+   "popularity": 0.996
+  },
+  {
+   "lat": 12.041,
+   "lng": 105.293,
+   "affinity": 0.9944,
+   "popularity": 0.869
+  },
+  {
+   "lat": 6.2402,
+   "lng": 100.0195,
+   "affinity": 0.9943,
+   "popularity": 0.985
+  },
+  {
+   "lat": 5.8887,
+   "lng": 116.1914,
+   "affinity": 0.9941,
+   "popularity": 0.991
+  },
+  {
+   "lat": 7.1191,
+   "lng": 116.8945,
+   "affinity": 0.994,
+   "popularity": 0.808
+  },
+  {
+   "lat": 7.8223,
+   "lng": 98.2617,
+   "affinity": 0.9938,
+   "popularity": 0.994
+  },
+  {
+   "lat": 6.0645,
+   "lng": 116.1914,
+   "affinity": 0.9936,
+   "popularity": 0.989
+  },
+  {
+   "lat": 16.084,
+   "lng": 108.1055,
+   "affinity": 0.9935,
+   "popularity": 0.995
+  },
+  {
+   "lat": 2.373,
+   "lng": 111.6211,
+   "affinity": 0.9933,
+   "popularity": 0.985
+  },
+  {
+   "lat": 13.9746,
+   "lng": 100.7227,
+   "affinity": 0.9932,
+   "popularity": 0.997
+  },
+  {
+   "lat": 13.0957,
+   "lng": 103.1836,
+   "affinity": 0.993,
+   "popularity": 0.897
+  },
+  {
+   "lat": 13.9746,
+   "lng": 107.7539,
+   "affinity": 0.9929,
+   "popularity": 0.95
+  },
+  {
+   "lat": 10.459,
+   "lng": 104.2383,
+   "affinity": 0.9927,
+   "popularity": 0.889
+  },
+  {
+   "lat": -8.7012,
+   "lng": 115.1367,
+   "affinity": 0.9926,
+   "popularity": 0.999
+  },
+  {
+   "lat": 21.0059,
+   "lng": 105.6445,
+   "affinity": 0.9924,
+   "popularity": 0.991
+  },
+  {
+   "lat": 1.4941,
+   "lng": 110.2148,
+   "affinity": 0.9923,
+   "popularity": 0.988
+  },
+  {
+   "lat": 11.6895,
+   "lng": 104.9414,
+   "affinity": 0.9921,
+   "popularity": 0.899
+  },
+  {
+   "lat": 2.9004,
+   "lng": 101.7773,
+   "affinity": 0.9919,
+   "popularity": 0.998
+  },
+  {
+   "lat": 21.0059,
+   "lng": 107.0508,
+   "affinity": 0.9918,
+   "popularity": 0.976
+  },
+  {
+   "lat": 18.0176,
+   "lng": 102.4805,
+   "affinity": 0.9916,
+   "popularity": 0.973
+  },
+  {
+   "lat": 7.8223,
+   "lng": 98.6133,
+   "affinity": 0.9915,
+   "popularity": 0.962
+  },
+  {
+   "lat": 18.8965,
+   "lng": 98.9648,
+   "affinity": 0.9913,
+   "popularity": 0.991
+  },
+  {
+   "lat": 7.998,
+   "lng": 98.2617,
+   "affinity": 0.9912,
+   "popularity": 0.989
+  },
+  {
+   "lat": 16.4355,
+   "lng": 97.5586,
+   "affinity": 0.991,
+   "popularity": 0.829
+  },
+  {
+   "lat": -8.5254,
+   "lng": 115.1367,
+   "affinity": 0.9909,
+   "popularity": 0.994
+  },
+  {
+   "lat": 13.623,
+   "lng": 100.3711,
+   "affinity": 0.9907,
+   "popularity": 0.993
+  },
+  {
+   "lat": 3.4277,
+   "lng": 101.7773,
+   "affinity": 0.9905,
+   "popularity": 0.996
+  },
+  {
+   "lat": 6.5918,
+   "lng": 99.3164,
+   "affinity": 0.9904,
+   "popularity": 0.792
+  },
+  {
+   "lat": 12.5684,
+   "lng": 100.0195,
+   "affinity": 0.9902,
+   "popularity": 0.992
+  },
+  {
+   "lat": 10.2832,
+   "lng": 103.8867,
+   "affinity": 0.9901,
+   "popularity": 0.959
+  },
+  {
+   "lat": 19.9512,
+   "lng": 99.668,
+   "affinity": 0.9899,
+   "popularity": 0.98
+  },
+  {
+   "lat": 14.3262,
+   "lng": 100.7227,
+   "affinity": 0.9898,
+   "popularity": 0.99
+  },
+  {
+   "lat": 3.252,
+   "lng": 101.4258,
+   "affinity": 0.9896,
+   "popularity": 0.994
+  },
+  {
+   "lat": 5.5371,
+   "lng": 100.3711,
+   "affinity": 0.9893,
+   "popularity": 0.992
+  },
+  {
+   "lat": 1.1426,
+   "lng": 103.8867,
+   "affinity": 0.9893,
+   "popularity": 0.983
+  },
+  {
+   "lat": -8.877,
+   "lng": 115.1367,
+   "affinity": 0.9892,
+   "popularity": 0.995
+  },
+  {
+   "lat": 19.9512,
+   "lng": 102.1289,
+   "affinity": 0.989,
+   "popularity": 0.923
+  },
+  {
+   "lat": 13.4473,
+   "lng": 100.0195,
+   "affinity": 0.9888,
+   "popularity": 0.985
+  },
+  {
+   "lat": 1.4941,
+   "lng": 103.5352,
+   "affinity": 0.9887,
+   "popularity": 0.993
+  },
+  {
+   "lat": 20.3027,
+   "lng": 105.9961,
+   "affinity": 0.9885,
+   "popularity": 0.958
+  },
+  {
+   "lat": 16.4355,
+   "lng": 107.7539,
+   "affinity": 0.9882,
+   "popularity": 0.971
+  },
+  {
+   "lat": 12.041,
+   "lng": 104.9414,
+   "affinity": 0.9882,
+   "popularity": 0.808
+  },
+  {
+   "lat": -8.7012,
+   "lng": 115.4883,
+   "affinity": 0.9881,
+   "popularity": 0.977
+  },
+  {
+   "lat": 6.7676,
+   "lng": 99.668,
+   "affinity": 0.9879,
+   "popularity": 0.839
+  },
+  {
+   "lat": 12.9199,
+   "lng": 101.0742,
+   "affinity": 0.9878,
+   "popularity": 0.988
+  },
+  {
+   "lat": 19.4238,
+   "lng": 98.6133,
+   "affinity": 0.9876,
+   "popularity": 0.93
+  },
+  {
+   "lat": 9.5801,
+   "lng": 100.0195,
+   "affinity": 0.9874,
+   "popularity": 0.972
+  },
+  {
+   "lat": 8.1738,
+   "lng": 98.2617,
+   "affinity": 0.9873,
+   "popularity": 0.971
+  },
+  {
+   "lat": 20.6543,
+   "lng": 96.5039,
+   "affinity": 0.9871,
+   "popularity": 0.869
+  },
+  {
+   "lat": 4.4824,
+   "lng": 101.4258,
+   "affinity": 0.987,
+   "popularity": 0.993
+  },
+  {
+   "lat": 20.4785,
+   "lng": 96.8555,
+   "affinity": 0.9868,
+   "popularity": 0.817
+  },
+  {
+   "lat": 14.502,
+   "lng": 121.1133,
+   "affinity": 0.9867,
+   "popularity": 0.999
+  },
+  {
+   "lat": 8.1738,
+   "lng": 98.6133,
+   "affinity": 0.9865,
+   "popularity": 0.948
+  },
+  {
+   "lat": 13.623,
+   "lng": 103.8867,
+   "affinity": 0.9864,
+   "popularity": 0.794
+  },
+  {
+   "lat": 14.3262,
+   "lng": 100.3711,
+   "affinity": 0.9862,
+   "popularity": 0.977
+  },
+  {
+   "lat": 10.9863,
+   "lng": 104.9414,
+   "affinity": 0.9861,
+   "popularity": 0.813
+  },
+  {
+   "lat": 7.6465,
+   "lng": 98.6133,
+   "affinity": 0.9859,
+   "popularity": 0.917
+  },
+  {
+   "lat": 18.8965,
+   "lng": 102.4805,
+   "affinity": 0.9857,
+   "popularity": 0.941
+  },
+  {
+   "lat": -6.2402,
+   "lng": 106.6992,
+   "affinity": 0.9856,
+   "popularity": 1
+  },
+  {
+   "lat": 13.2715,
+   "lng": 100.0195,
+   "affinity": 0.9854,
+   "popularity": 0.915
+  },
+  {
+   "lat": 14.1504,
+   "lng": 100.7227,
+   "affinity": 0.9853,
+   "popularity": 0.984
+  },
+  {
+   "lat": 12.7441,
+   "lng": 104.9414,
+   "affinity": 0.9851,
+   "popularity": 0.821
+  },
+  {
+   "lat": 7.998,
+   "lng": 98.6133,
+   "affinity": 0.985,
+   "popularity": 0.931
+  },
+  {
+   "lat": 19.7754,
+   "lng": 99.668,
+   "affinity": 0.9848,
+   "popularity": 0.966
+  },
+  {
+   "lat": 12.2168,
+   "lng": 109.1602,
+   "affinity": 0.9847,
+   "popularity": 0.985
+  },
+  {
+   "lat": 19.7754,
+   "lng": 96.1523,
+   "affinity": 0.9845,
+   "popularity": 0.844
+  },
+  {
+   "lat": 4.834,
+   "lng": 114.7852,
+   "affinity": 0.9844,
+   "popularity": 0.948
+  },
+  {
+   "lat": 10.1074,
+   "lng": 99.668,
+   "affinity": 0.9842,
+   "popularity": 0.916
+  },
+  {
+   "lat": 20.8301,
+   "lng": 107.0508,
+   "affinity": 0.984,
+   "popularity": 0.897
+  },
+  {
+   "lat": 20.6543,
+   "lng": 96.8555,
+   "affinity": 0.9839,
+   "popularity": 0.809
+  },
+  {
+   "lat": 11.8652,
+   "lng": 108.457,
+   "affinity": 0.9837,
+   "popularity": 0.992
+  },
+  {
+   "lat": 12.5684,
+   "lng": 101.4258,
+   "affinity": 0.9834,
+   "popularity": 0.985
+  },
+  {
+   "lat": 10.1074,
+   "lng": 103.8867,
+   "affinity": 0.9834,
+   "popularity": 0.938
+  },
+  {
+   "lat": 12.7441,
+   "lng": 101.0742,
+   "affinity": 0.9833,
+   "popularity": 0.989
+  },
+  {
+   "lat": 2.9004,
+   "lng": 104.2383,
+   "affinity": 0.9831,
+   "popularity": 0.934
+  },
+  {
+   "lat": 14.6777,
+   "lng": 121.1133,
+   "affinity": 0.983,
+   "popularity": 0.999
+  },
+  {
+   "lat": -8.3496,
+   "lng": 115.1367,
+   "affinity": 0.9828,
+   "popularity": 0.982
+  },
+  {
+   "lat": -0.791,
+   "lng": 113.3789,
+   "affinity": 0.9826,
+   "popularity": 0.987
+  },
+  {
+   "lat": 10.6348,
+   "lng": 103.1836,
+   "affinity": 0.9825,
+   "popularity": 0.863
+  },
+  {
+   "lat": 4.4824,
+   "lng": 101.0742,
+   "affinity": 0.9823,
+   "popularity": 0.984
+  },
+  {
+   "lat": 10.2832,
+   "lng": 123.9258,
+   "affinity": 0.9822,
+   "popularity": 0.995
+  },
+  {
+   "lat": 8.3496,
+   "lng": 98.6133,
+   "affinity": 0.982,
+   "popularity": 0.905
+  },
+  {
+   "lat": 4.3066,
+   "lng": 101.0742,
+   "affinity": 0.9819,
+   "popularity": 0.975
+  },
+  {
+   "lat": -7.2949,
+   "lng": 112.6758,
+   "affinity": 0.9817,
+   "popularity": 0.997
+  },
+  {
+   "lat": 9.4043,
+   "lng": 100.0195,
+   "affinity": 0.9816,
+   "popularity": 0.949
+  },
+  {
+   "lat": 19.4238,
+   "lng": 102.4805,
+   "affinity": 0.9814,
+   "popularity": 0.85
+  },
+  {
+   "lat": -8.3496,
+   "lng": 115.4883,
+   "affinity": 0.9813,
+   "popularity": 0.979
+  },
+  {
+   "lat": 12.7441,
+   "lng": 100.0195,
+   "affinity": 0.9811,
+   "popularity": 0.988
+  },
+  {
+   "lat": 13.9746,
+   "lng": 100.3711,
+   "affinity": 0.9809,
+   "popularity": 0.989
+  },
+  {
+   "lat": 10.6348,
+   "lng": 103.8867,
+   "affinity": 0.9808,
+   "popularity": 0.855
+  },
+  {
+   "lat": 13.2715,
+   "lng": 101.0742,
+   "affinity": 0.9806,
+   "popularity": 0.991
+  },
+  {
+   "lat": 11.5137,
+   "lng": 104.5898,
+   "affinity": 0.9805,
+   "popularity": 0.822
+  },
+  {
+   "lat": 2.5488,
+   "lng": 101.7773,
+   "affinity": 0.9803,
+   "popularity": 0.991
+  },
+  {
+   "lat": 12.041,
+   "lng": 102.1289,
+   "affinity": 0.9802,
+   "popularity": 0.943
+  },
+  {
+   "lat": -8.5254,
+   "lng": 115.4883,
+   "affinity": 0.98,
+   "popularity": 0.975
+  },
+  {
+   "lat": 6.0645,
+   "lng": 116.543,
+   "affinity": 0.9799,
+   "popularity": 0.98
+  },
+  {
+   "lat": 13.9746,
+   "lng": 99.668,
+   "affinity": 0.9795,
+   "popularity": 0.983
+  },
+  {
+   "lat": 8.7012,
+   "lng": 98.2617,
+   "affinity": 0.9795,
+   "popularity": 0.926
+  },
+  {
+   "lat": 12.9199,
+   "lng": 104.2383,
+   "affinity": 0.9794,
+   "popularity": 0.699
+  },
+  {
+   "lat": 19.248,
+   "lng": 98.9648,
+   "affinity": 0.9792,
+   "popularity": 0.937
+  },
+  {
+   "lat": 17.3145,
+   "lng": 96.5039,
+   "affinity": 0.9791,
+   "popularity": 0.833
+  },
+  {
+   "lat": 21.1816,
+   "lng": 105.6445,
+   "affinity": 0.9789,
+   "popularity": 0.956
+  },
+  {
+   "lat": -8.3496,
+   "lng": 116.1914,
+   "affinity": 0.9788,
+   "popularity": 0.968
+  },
+  {
+   "lat": 7.6465,
+   "lng": 98.9648,
+   "affinity": 0.9786,
+   "popularity": 0.861
+  },
+  {
+   "lat": 8.1738,
+   "lng": 98.9648,
+   "affinity": 0.9785,
+   "popularity": 0.931
+  },
+  {
+   "lat": 19.9512,
+   "lng": 100.0195,
+   "affinity": 0.9783,
+   "popularity": 0.959
+  },
+  {
+   "lat": 18.5449,
+   "lng": 98.9648,
+   "affinity": 0.9782,
+   "popularity": 0.955
+  },
+  {
+   "lat": 10.9863,
+   "lng": 108.1055,
+   "affinity": 0.978,
+   "popularity": 0.963
+  },
+  {
+   "lat": 14.502,
+   "lng": 101.4258,
+   "affinity": 0.9778,
+   "popularity": 0.988
+  },
+  {
+   "lat": 2.373,
+   "lng": 102.1289,
+   "affinity": 0.9777,
+   "popularity": 0.987
+  },
+  {
+   "lat": 10.9863,
+   "lng": 108.457,
+   "affinity": 0.9775,
+   "popularity": 0.953
+  },
+  {
+   "lat": 6.0645,
+   "lng": 100.3711,
+   "affinity": 0.9774,
+   "popularity": 0.989
+  },
+  {
+   "lat": 1.6699,
+   "lng": 110.2148,
+   "affinity": 0.9772,
+   "popularity": 0.959
+  },
+  {
+   "lat": 12.5684,
+   "lng": 105.9961,
+   "affinity": 0.9771,
+   "popularity": 0.717
+  },
+  {
+   "lat": 7.4707,
+   "lng": 98.9648,
+   "affinity": 0.9769,
+   "popularity": 0.851
+  },
+  {
+   "lat": 6.9434,
+   "lng": 99.668,
+   "affinity": 0.9768,
+   "popularity": 0.822
+  },
+  {
+   "lat": 10.2832,
+   "lng": 106.3477,
+   "affinity": 0.9766,
+   "popularity": 0.933
+  },
+  {
+   "lat": 6.0645,
+   "lng": 102.1289,
+   "affinity": 0.9764,
+   "popularity": 0.99
+  },
+  {
+   "lat": 16.4355,
+   "lng": 102.832,
+   "affinity": 0.9763,
+   "popularity": 0.982
+  },
+  {
+   "lat": 18.5449,
+   "lng": 98.6133,
+   "affinity": 0.9761,
+   "popularity": 0.965
+  },
+  {
+   "lat": 3.7793,
+   "lng": 103.1836,
+   "affinity": 0.976,
+   "popularity": 0.989
+  },
+  {
+   "lat": -7.8223,
+   "lng": 110.2148,
+   "affinity": 0.9758,
+   "popularity": 0.998
+  },
+  {
+   "lat": 20.6543,
+   "lng": 107.0508,
+   "affinity": 0.9757,
+   "popularity": 0.88
+  },
+  {
+   "lat": 20.8301,
+   "lng": 106.6992,
+   "affinity": 0.9755,
+   "popularity": 0.95
+  },
+  {
+   "lat": 16.7871,
+   "lng": 97.5586,
+   "affinity": 0.9754,
+   "popularity": 0.776
+  },
+  {
+   "lat": 10.9863,
+   "lng": 106.6992,
+   "affinity": 0.9752,
+   "popularity": 0.964
+  },
+  {
+   "lat": 1.8457,
+   "lng": 102.832,
+   "affinity": 0.9751,
+   "popularity": 0.975
+  },
+  {
+   "lat": -8.5254,
+   "lng": 116.1914,
+   "affinity": 0.9749,
+   "popularity": 0.982
+  },
+  {
+   "lat": 5.8887,
+   "lng": 117.9492,
+   "affinity": 0.9747,
+   "popularity": 0.952
+  },
+  {
+   "lat": 14.3262,
+   "lng": 99.3164,
+   "affinity": 0.9746,
+   "popularity": 0.949
+  },
+  {
+   "lat": -8.1738,
+   "lng": 115.1367,
+   "affinity": 0.9743,
+   "popularity": 0.966
+  },
+  {
+   "lat": 5.8887,
+   "lng": 102.832,
+   "affinity": 0.9743,
+   "popularity": 0.958
+  },
+  {
+   "lat": -6.9434,
+   "lng": 107.7539,
+   "affinity": 0.9741,
+   "popularity": 0.998
+  },
+  {
+   "lat": -6.0645,
+   "lng": 106.6992,
+   "affinity": 0.974,
+   "popularity": 0.998
+  },
+  {
+   "lat": 5.8887,
+   "lng": 115.8398,
+   "affinity": 0.9738,
+   "popularity": 0.918
+  },
+  {
+   "lat": 4.3066,
+   "lng": 114.082,
+   "affinity": 0.9737,
+   "popularity": 0.958
+  },
+  {
+   "lat": 8.5254,
+   "lng": 98.6133,
+   "affinity": 0.9735,
+   "popularity": 0.906
+  },
+  {
+   "lat": -6.2402,
+   "lng": 107.0508,
+   "affinity": 0.9733,
+   "popularity": 0.998
+  },
+  {
+   "lat": 5.0098,
+   "lng": 114.7852,
+   "affinity": 0.9732,
+   "popularity": 0.927
+  },
+  {
+   "lat": 19.0723,
+   "lng": 98.9648,
+   "affinity": 0.973,
+   "popularity": 0.93
+  },
+  {
+   "lat": 19.248,
+   "lng": 98.6133,
+   "affinity": 0.9729,
+   "popularity": 0.899
+  },
+  {
+   "lat": 13.4473,
+   "lng": 104.2383,
+   "affinity": 0.9727,
+   "popularity": 0.751
+  },
+  {
+   "lat": 5.3613,
+   "lng": 103.1836,
+   "affinity": 0.9726,
+   "popularity": 0.989
+  },
+  {
+   "lat": 16.9629,
+   "lng": 97.5586,
+   "affinity": 0.9724,
+   "popularity": 0.804
+  },
+  {
+   "lat": 6.416,
+   "lng": 100.3711,
+   "affinity": 0.9723,
+   "popularity": 0.981
+  },
+  {
+   "lat": 6.2402,
+   "lng": 116.1914,
+   "affinity": 0.9721,
+   "popularity": 0.932
+  },
+  {
+   "lat": 13.0957,
+   "lng": 101.0742,
+   "affinity": 0.972,
+   "popularity": 0.976
+  },
+  {
+   "lat": 13.7988,
+   "lng": 100.0195,
+   "affinity": 0.9718,
+   "popularity": 0.981
+  },
+  {
+   "lat": 15.0293,
+   "lng": 102.1289,
+   "affinity": 0.9716,
+   "popularity": 0.981
+  },
+  {
+   "lat": 6.5918,
+   "lng": 100.3711,
+   "affinity": 0.9715,
+   "popularity": 0.968
+  },
+  {
+   "lat": 4.4824,
+   "lng": 114.082,
+   "affinity": 0.9713,
+   "popularity": 0.942
+  },
+  {
+   "lat": 11.3379,
+   "lng": 122.8711,
+   "affinity": 0.9712,
+   "popularity": 0.967
+  },
+  {
+   "lat": 14.6777,
+   "lng": 101.4258,
+   "affinity": 0.971,
+   "popularity": 0.982
+  },
+  {
+   "lat": 12.5684,
+   "lng": 101.0742,
+   "affinity": 0.9709,
+   "popularity": 0.971
+  },
+  {
+   "lat": 5.7129,
+   "lng": 100.3711,
+   "affinity": 0.9707,
+   "popularity": 0.985
+  },
+  {
+   "lat": 4.1309,
+   "lng": 100.7227,
+   "affinity": 0.9706,
+   "popularity": 0.974
+  },
+  {
+   "lat": 2.7246,
+   "lng": 102.1289,
+   "affinity": 0.9704,
+   "popularity": 0.986
+  },
+  {
+   "lat": 13.4473,
+   "lng": 144.668,
+   "affinity": 0.9703,
+   "popularity": 0.98
+  },
+  {
+   "lat": 9.5801,
+   "lng": 123.9258,
+   "affinity": 0.9701,
+   "popularity": 0.98
+  },
+  {
+   "lat": 4.834,
+   "lng": 100.7227,
+   "affinity": 0.9699,
+   "popularity": 0.983
+  },
+  {
+   "lat": 2.9004,
+   "lng": 101.4258,
+   "affinity": 0.9698,
+   "popularity": 0.983
+  },
+  {
+   "lat": 13.0957,
+   "lng": 102.832,
+   "affinity": 0.9696,
+   "popularity": 0.756
+  },
+  {
+   "lat": 12.041,
+   "lng": 102.4805,
+   "affinity": 0.9695,
+   "popularity": 0.887
+  },
+  {
+   "lat": 12.3926,
+   "lng": 100.0195,
+   "affinity": 0.9693,
+   "popularity": 0.972
+  },
+  {
+   "lat": 13.623,
+   "lng": 102.832,
+   "affinity": 0.9692,
+   "popularity": 0.782
+  },
+  {
+   "lat": 6.416,
+   "lng": 100.0195,
+   "affinity": 0.969,
+   "popularity": 0.97
+  },
+  {
+   "lat": 11.5137,
+   "lng": 105.293,
+   "affinity": 0.9689,
+   "popularity": 0.687
+  },
+  {
+   "lat": -6.0645,
+   "lng": 107.0508,
+   "affinity": 0.9685,
+   "popularity": 0.987
+  },
+  {
+   "lat": 18.7207,
+   "lng": 98.6133,
+   "affinity": 0.9685,
+   "popularity": 0.813
+  },
+  {
+   "lat": 7.8223,
+   "lng": 98.9648,
+   "affinity": 0.9684,
+   "popularity": 0.786
+  },
+  {
+   "lat": -8.1738,
+   "lng": 115.4883,
+   "affinity": 0.9682,
+   "popularity": 0.954
+  },
+  {
+   "lat": 9.0527,
+   "lng": 99.3164,
+   "affinity": 0.9681,
+   "popularity": 0.951
+  },
+  {
+   "lat": 20.3027,
+   "lng": 100.0195,
+   "affinity": 0.9679,
+   "popularity": 0.926
+  },
+  {
+   "lat": 3.6035,
+   "lng": 98.6133,
+   "affinity": 0.9678,
+   "popularity": 0.995
+  },
+  {
+   "lat": -7.6465,
+   "lng": 110.2148,
+   "affinity": 0.9676,
+   "popularity": 0.991
+  },
+  {
+   "lat": 1.4941,
+   "lng": 124.9805,
+   "affinity": 0.9675,
+   "popularity": 0.984
+  },
+  {
+   "lat": 3.4277,
+   "lng": 101.0742,
+   "affinity": 0.9673,
+   "popularity": 0.979
+  },
+  {
+   "lat": 14.3262,
+   "lng": 121.1133,
+   "affinity": 0.9672,
+   "popularity": 0.992
+  },
+  {
+   "lat": -7.998,
+   "lng": 112.6758,
+   "affinity": 0.967,
+   "popularity": 0.994
+  },
+  {
+   "lat": 1.3184,
+   "lng": 110.2148,
+   "affinity": 0.9668,
+   "popularity": 0.831
+  },
+  {
+   "lat": 12.3926,
+   "lng": 107.0508,
+   "affinity": 0.9667,
+   "popularity": 0.815
+  },
+  {
+   "lat": -8.5254,
+   "lng": 116.543,
+   "affinity": 0.9665,
+   "popularity": 0.956
+  },
+  {
+   "lat": -7.8223,
+   "lng": 110.5664,
+   "affinity": 0.9664,
+   "popularity": 0.995
+  },
+  {
+   "lat": 16.9629,
+   "lng": 99.668,
+   "affinity": 0.9661,
+   "popularity": 0.924
+  },
+  {
+   "lat": 21.709,
+   "lng": 104.9414,
+   "affinity": 0.9661,
+   "popularity": 0.77
+  },
+  {
+   "lat": 5.7129,
+   "lng": 102.4805,
+   "affinity": 0.9659,
+   "popularity": 0.951
+  },
+  {
+   "lat": 2.0215,
+   "lng": 102.4805,
+   "affinity": 0.9658,
+   "popularity": 0.978
+  },
+  {
+   "lat": 17.666,
+   "lng": 106.3477,
+   "affinity": 0.9656,
+   "popularity": 0.788
+  },
+  {
+   "lat": 16.2598,
+   "lng": 108.1055,
+   "affinity": 0.9654,
+   "popularity": 0.893
+  },
+  {
+   "lat": 14.1504,
+   "lng": 98.2617,
+   "affinity": 0.9653,
+   "popularity": 0.755
+  },
+  {
+   "lat": -8.877,
+   "lng": 116.1914,
+   "affinity": 0.9651,
+   "popularity": 0.952
+  },
+  {
+   "lat": 12.041,
+   "lng": 121.8164,
+   "affinity": 0.9648,
+   "popularity": 0.982
+  },
+  {
+   "lat": 1.6699,
+   "lng": 103.5352,
+   "affinity": 0.9648,
+   "popularity": 0.979
+  },
+  {
+   "lat": 7.1191,
+   "lng": 125.6836,
+   "affinity": 0.9647,
+   "popularity": 0.986
+  },
+  {
+   "lat": 20.6543,
+   "lng": 105.9961,
+   "affinity": 0.9645,
+   "popularity": 0.828
+  },
+  {
+   "lat": 12.7441,
+   "lng": 101.4258,
+   "affinity": 0.9644,
+   "popularity": 0.962
+  },
+  {
+   "lat": 1.6699,
+   "lng": 101.4258,
+   "affinity": 0.9642,
+   "popularity": 0.883
+  },
+  {
+   "lat": 11.6895,
+   "lng": 102.4805,
+   "affinity": 0.9641,
+   "popularity": 0.913
+  },
+  {
+   "lat": 10.2832,
+   "lng": 107.0508,
+   "affinity": 0.9639,
+   "popularity": 0.978
+  },
+  {
+   "lat": 14.1504,
+   "lng": 99.3164,
+   "affinity": 0.9637,
+   "popularity": 0.957
+  },
+  {
+   "lat": 3.6035,
+   "lng": 101.7773,
+   "affinity": 0.9636,
+   "popularity": 0.968
+  },
+  {
+   "lat": 6.2402,
+   "lng": 115.4883,
+   "affinity": 0.9634,
+   "popularity": 0.577
+  },
+  {
+   "lat": 15.7324,
+   "lng": 108.1055,
+   "affinity": 0.9633,
+   "popularity": 0.749
+  },
+  {
+   "lat": 21.0059,
+   "lng": 106.6992,
+   "affinity": 0.9631,
+   "popularity": 0.872
+  },
+  {
+   "lat": 6.9434,
+   "lng": 101.4258,
+   "affinity": 0.963,
+   "popularity": 0.888
+  },
+  {
+   "lat": 4.3066,
+   "lng": 100.7227,
+   "affinity": 0.9628,
+   "popularity": 0.97
+  },
+  {
+   "lat": 10.1074,
+   "lng": 105.6445,
+   "affinity": 0.9627,
+   "popularity": 0.941
+  },
+  {
+   "lat": 15.2051,
+   "lng": 104.9414,
+   "affinity": 0.9625,
+   "popularity": 0.962
+  },
+  {
+   "lat": 13.4473,
+   "lng": 101.0742,
+   "affinity": 0.9623,
+   "popularity": 0.966
+  },
+  {
+   "lat": 12.5684,
+   "lng": 102.1289,
+   "affinity": 0.9622,
+   "popularity": 0.968
+  },
+  {
+   "lat": 16.7871,
+   "lng": 100.3711,
+   "affinity": 0.9619,
+   "popularity": 0.967
+  },
+  {
+   "lat": 2.373,
+   "lng": 111.9727,
+   "affinity": 0.9619,
+   "popularity": 0.945
+  },
+  {
+   "lat": 16.4355,
+   "lng": 107.4023,
+   "affinity": 0.9617,
+   "popularity": 0.899
+  },
+  {
+   "lat": 8.877,
+   "lng": 98.6133,
+   "affinity": 0.9616,
+   "popularity": 0.801
+  },
+  {
+   "lat": 6.2402,
+   "lng": 100.3711,
+   "affinity": 0.9614,
+   "popularity": 0.972
+  },
+  {
+   "lat": 13.7988,
+   "lng": 107.0508,
+   "affinity": 0.9613,
+   "popularity": 0.761
+  },
+  {
+   "lat": -7.8223,
+   "lng": 111.9727,
+   "affinity": 0.9611,
+   "popularity": 0.977
+  },
+  {
+   "lat": 13.9746,
+   "lng": 105.9961,
+   "affinity": 0.961,
+   "popularity": 0.707
+  },
+  {
+   "lat": -5.1855,
+   "lng": 119.3555,
+   "affinity": 0.9608,
+   "popularity": 0.993
+  },
+  {
+   "lat": 5.1855,
+   "lng": 100.3711,
+   "affinity": 0.9606,
+   "popularity": 0.974
+  },
+  {
+   "lat": 17.4902,
+   "lng": 102.832,
+   "affinity": 0.9605,
+   "popularity": 0.967
+  },
+  {
+   "lat": -6.416,
+   "lng": 106.6992,
+   "affinity": 0.9603,
+   "popularity": 0.995
+  },
+  {
+   "lat": 11.8652,
+   "lng": 104.9414,
+   "affinity": 0.9602,
+   "popularity": 0.787
+  },
+  {
+   "lat": -6.5918,
+   "lng": 106.6992,
+   "affinity": 0.96,
+   "popularity": 0.996
+  },
+  {
+   "lat": 13.623,
+   "lng": 104.2383,
+   "affinity": 0.9599,
+   "popularity": 0.692
+  },
+  {
+   "lat": 4.834,
+   "lng": 101.0742,
+   "affinity": 0.9597,
+   "popularity": 0.98
+  },
+  {
+   "lat": 1.6699,
+   "lng": 103.8867,
+   "affinity": 0.9596,
+   "popularity": 0.963
+  },
+  {
+   "lat": 13.623,
+   "lng": 101.0742,
+   "affinity": 0.9594,
+   "popularity": 0.976
+  },
+  {
+   "lat": 21.0059,
+   "lng": 96.5039,
+   "affinity": 0.9593,
+   "popularity": 0.75
+  },
+  {
+   "lat": 6.5918,
+   "lng": 101.4258,
+   "affinity": 0.9591,
+   "popularity": 0.881
+  },
+  {
+   "lat": 2.1973,
+   "lng": 102.4805,
+   "affinity": 0.9589,
+   "popularity": 0.979
+  },
+  {
+   "lat": 5.7129,
+   "lng": 103.1836,
+   "affinity": 0.9586,
+   "popularity": 0.951
+  },
+  {
+   "lat": 21.1816,
+   "lng": 105.9961,
+   "affinity": 0.9586,
+   "popularity": 0.925
+  },
+  {
+   "lat": 3.252,
+   "lng": 113.0273,
+   "affinity": 0.9585,
+   "popularity": 0.935
+  },
+  {
+   "lat": 21.3574,
+   "lng": 95.4492,
+   "affinity": 0.9583,
+   "popularity": 0.763
+  },
+  {
+   "lat": 12.2168,
+   "lng": 105.6445,
+   "affinity": 0.9582,
+   "popularity": 0.562
+  },
+  {
+   "lat": -7.998,
+   "lng": 113.0273,
+   "affinity": 0.958,
+   "popularity": 0.986
+  },
+  {
+   "lat": 2.0215,
+   "lng": 103.1836,
+   "affinity": 0.9579,
+   "popularity": 0.973
+  },
+  {
+   "lat": 14.8535,
+   "lng": 100.7227,
+   "affinity": 0.9577,
+   "popularity": 0.947
+  },
+  {
+   "lat": 19.4238,
+   "lng": 98.2617,
+   "affinity": 0.9575,
+   "popularity": 0.896
+  },
+  {
+   "lat": 15.3809,
+   "lng": 101.0742,
+   "affinity": 0.9574,
+   "popularity": 0.774
+  },
+  {
+   "lat": 17.8418,
+   "lng": 102.832,
+   "affinity": 0.9572,
+   "popularity": 0.947
+  },
+  {
+   "lat": 2.373,
+   "lng": 101.7773,
+   "affinity": 0.9571,
+   "popularity": 0.971
+  },
+  {
+   "lat": 14.1504,
+   "lng": 100.0195,
+   "affinity": 0.9569,
+   "popularity": 0.865
+  },
+  {
+   "lat": 6.2402,
+   "lng": 102.1289,
+   "affinity": 0.9568,
+   "popularity": 0.972
+  },
+  {
+   "lat": 5.8887,
+   "lng": 116.543,
+   "affinity": 0.9566,
+   "popularity": 0.936
+  },
+  {
+   "lat": 14.1504,
+   "lng": 121.1133,
+   "affinity": 0.9565,
+   "popularity": 0.994
+  },
+  {
+   "lat": 5.8887,
+   "lng": 102.4805,
+   "affinity": 0.9563,
+   "popularity": 0.967
+  },
+  {
+   "lat": 5.3613,
+   "lng": 115.1367,
+   "affinity": 0.9562,
+   "popularity": 0.933
+  },
+  {
+   "lat": 1.4941,
+   "lng": 110.5664,
+   "affinity": 0.956,
+   "popularity": 0.946
+  },
+  {
+   "lat": 4.3066,
+   "lng": 118.6523,
+   "affinity": 0.9558,
+   "popularity": 0.881
+  },
+  {
+   "lat": 4.4824,
+   "lng": 118.6523,
+   "affinity": 0.9557,
+   "popularity": 0.939
+  },
+  {
+   "lat": 15.9082,
+   "lng": 108.1055,
+   "affinity": 0.9555,
+   "popularity": 0.921
+  },
+  {
+   "lat": 7.1191,
+   "lng": 100.3711,
+   "affinity": 0.9554,
+   "popularity": 0.95
+  },
+  {
+   "lat": 7.998,
+   "lng": 99.3164,
+   "affinity": 0.9552,
+   "popularity": 0.907
+  },
+  {
+   "lat": -8.5254,
+   "lng": 119.3555,
+   "affinity": 0.9551,
+   "popularity": 0.862
+  },
+  {
+   "lat": 6.5918,
+   "lng": 100.0195,
+   "affinity": 0.9549,
+   "popularity": 0.857
+  },
+  {
+   "lat": 15.5566,
+   "lng": 108.457,
+   "affinity": 0.9548,
+   "popularity": 0.888
+  },
+  {
+   "lat": 13.0957,
+   "lng": 100.0195,
+   "affinity": 0.9546,
+   "popularity": 0.958
+  },
+  {
+   "lat": 20.127,
+   "lng": 100.0195,
+   "affinity": 0.9544,
+   "popularity": 0.927
+  },
+  {
+   "lat": 12.2168,
+   "lng": 104.5898,
+   "affinity": 0.9543,
+   "popularity": 0.707
+  },
+  {
+   "lat": 15.2051,
+   "lng": 145.7227,
+   "affinity": 0.9541,
+   "popularity": 0.942
+  },
+  {
+   "lat": 11.8652,
+   "lng": 102.4805,
+   "affinity": 0.954,
+   "popularity": 0.875
+  },
+  {
+   "lat": -6.9434,
+   "lng": 110.5664,
+   "affinity": 0.9538,
+   "popularity": 0.993
+  },
+  {
+   "lat": 12.2168,
+   "lng": 102.4805,
+   "affinity": 0.9537,
+   "popularity": 0.925
+  },
+  {
+   "lat": 7.2949,
+   "lng": 99.3164,
+   "affinity": 0.9535,
+   "popularity": 0.838
+  },
+  {
+   "lat": 10.6348,
+   "lng": 106.6992,
+   "affinity": 0.9534,
+   "popularity": 0.903
+  },
+  {
+   "lat": 7.2949,
+   "lng": 100.7227,
+   "affinity": 0.9532,
+   "popularity": 0.943
+  },
+  {
+   "lat": 18.8965,
+   "lng": 99.3164,
+   "affinity": 0.9531,
+   "popularity": 0.957
+  },
+  {
+   "lat": 11.1621,
+   "lng": 104.9414,
+   "affinity": 0.9529,
+   "popularity": 0.67
+  },
+  {
+   "lat": 20.4785,
+   "lng": 100.0195,
+   "affinity": 0.9527,
+   "popularity": 0.92
+  },
+  {
+   "lat": 14.3262,
+   "lng": 98.9648,
+   "affinity": 0.9526,
+   "popularity": 0.933
+  },
+  {
+   "lat": 12.5684,
+   "lng": 101.7773,
+   "affinity": 0.9524,
+   "popularity": 0.971
+  },
+  {
+   "lat": 6.9434,
+   "lng": 101.0742,
+   "affinity": 0.9523,
+   "popularity": 0.852
+  },
+  {
+   "lat": -6.7676,
+   "lng": 107.7539,
+   "affinity": 0.9521,
+   "popularity": 0.996
+  },
+  {
+   "lat": 4.3066,
+   "lng": 117.9492,
+   "affinity": 0.952,
+   "popularity": 0.952
+  },
+  {
+   "lat": 13.623,
+   "lng": 102.4805,
+   "affinity": 0.9518,
+   "popularity": 0.887
+  },
+  {
+   "lat": 5.1855,
+   "lng": 103.1836,
+   "affinity": 0.9517,
+   "popularity": 0.961
+  },
+  {
+   "lat": 18.7207,
+   "lng": 100.7227,
+   "affinity": 0.9515,
+   "popularity": 0.958
+  },
+  {
+   "lat": 3.7793,
+   "lng": 103.5352,
+   "affinity": 0.9513,
+   "popularity": 0.964
+  },
+  {
+   "lat": 11.8652,
+   "lng": 121.8164,
+   "affinity": 0.9512,
+   "popularity": 0.964
+  },
+  {
+   "lat": 2.5488,
+   "lng": 102.1289,
+   "affinity": 0.951,
+   "popularity": 0.967
+  },
+  {
+   "lat": -7.8223,
+   "lng": 112.6758,
+   "affinity": 0.9509,
+   "popularity": 0.992
+  },
+  {
+   "lat": -8.1738,
+   "lng": 114.4336,
+   "affinity": 0.9507,
+   "popularity": 0.972
+  },
+  {
+   "lat": 18.3691,
+   "lng": 99.3164,
+   "affinity": 0.9506,
+   "popularity": 0.94
+  },
+  {
+   "lat": 13.623,
+   "lng": 99.668,
+   "affinity": 0.9504,
+   "popularity": 0.954
+  },
+  {
+   "lat": -8.5254,
+   "lng": 119.707,
+   "affinity": 0.9503,
+   "popularity": 0.923
+  },
+  {
+   "lat": 19.4238,
+   "lng": 98.9648,
+   "affinity": 0.9501,
+   "popularity": 0.93
+  },
+  {
+   "lat": 21.709,
+   "lng": 96.1523,
+   "affinity": 0.95,
+   "popularity": 0.71
+  },
+  {
+   "lat": 20.127,
+   "lng": 99.668,
+   "affinity": 0.9498,
+   "popularity": 0.952
+  },
+  {
+   "lat": 17.4902,
+   "lng": 97.207,
+   "affinity": 0.9496,
+   "popularity": 0.863
+  },
+  {
+   "lat": 14.8535,
+   "lng": 103.5352,
+   "affinity": 0.9495,
+   "popularity": 0.922
+  },
+  {
+   "lat": 5.7129,
+   "lng": 101.0742,
+   "affinity": 0.9493,
+   "popularity": 0.934
+  },
+  {
+   "lat": 13.2715,
+   "lng": 101.4258,
+   "affinity": 0.9492,
+   "popularity": 0.9
+  },
+  {
+   "lat": 1.1426,
+   "lng": 104.2383,
+   "affinity": 0.949,
+   "popularity": 0.96
+  },
+  {
+   "lat": 2.373,
+   "lng": 102.4805,
+   "affinity": 0.9489,
+   "popularity": 0.956
+  },
+  {
+   "lat": 20.127,
+   "lng": 102.4805,
+   "affinity": 0.9487,
+   "popularity": 0.709
+  },
+  {
+   "lat": 14.1504,
+   "lng": 101.0742,
+   "affinity": 0.9486,
+   "popularity": 0.958
+  },
+  {
+   "lat": 7.1191,
+   "lng": 100.7227,
+   "affinity": 0.9484,
+   "popularity": 0.95
+  },
+  {
+   "lat": 1.3184,
+   "lng": 124.9805,
+   "affinity": 0.9482,
+   "popularity": 0.969
+  },
+  {
+   "lat": 2.7246,
+   "lng": 101.4258,
+   "affinity": 0.9481,
+   "popularity": 0.959
+  },
+  {
+   "lat": -6.416,
+   "lng": 107.0508,
+   "affinity": 0.9479,
+   "popularity": 0.992
+  },
+  {
+   "lat": 4.1309,
+   "lng": 103.5352,
+   "affinity": 0.9478,
+   "popularity": 0.954
+  },
+  {
+   "lat": 12.2168,
+   "lng": 100.0195,
+   "affinity": 0.9476,
+   "popularity": 0.903
+  },
+  {
+   "lat": 16.4355,
+   "lng": 120.7617,
+   "affinity": 0.9475,
+   "popularity": 0.99
+  },
+  {
+   "lat": 19.7754,
+   "lng": 97.207,
+   "affinity": 0.9473,
+   "popularity": 0.578
+  },
+  {
+   "lat": 9.7559,
+   "lng": 118.6523,
+   "affinity": 0.9472,
+   "popularity": 0.948
+  },
+  {
+   "lat": 0.9668,
+   "lng": 103.8867,
+   "affinity": 0.947,
+   "popularity": 0.931
+  },
+  {
+   "lat": 4.3066,
+   "lng": 103.5352,
+   "affinity": 0.9469,
+   "popularity": 0.953
+  },
+  {
+   "lat": 15.9082,
+   "lng": 97.5586,
+   "affinity": 0.9467,
+   "popularity": 0.624
+  },
+  {
+   "lat": 1.8457,
+   "lng": 103.1836,
+   "affinity": 0.9465,
+   "popularity": 0.957
+  },
+  {
+   "lat": 13.9746,
+   "lng": 101.4258,
+   "affinity": 0.9464,
+   "popularity": 0.898
+  },
+  {
+   "lat": 2.5488,
+   "lng": 102.832,
+   "affinity": 0.9462,
+   "popularity": 0.948
+  },
+  {
+   "lat": 9.4043,
+   "lng": 123.2227,
+   "affinity": 0.9461,
+   "popularity": 0.96
+  },
+  {
+   "lat": 11.8652,
+   "lng": 99.668,
+   "affinity": 0.9459,
+   "popularity": 0.925
+  },
+  {
+   "lat": 4.4824,
+   "lng": 114.4336,
+   "affinity": 0.9458,
+   "popularity": 0.823
+  },
+  {
+   "lat": 14.502,
+   "lng": 101.0742,
+   "affinity": 0.9456,
+   "popularity": 0.955
+  },
+  {
+   "lat": 6.9434,
+   "lng": 100.0195,
+   "affinity": 0.9455,
+   "popularity": 0.795
+  },
+  {
+   "lat": 16.7871,
+   "lng": 101.0742,
+   "affinity": 0.9453,
+   "popularity": 0.974
+  },
+  {
+   "lat": -7.6465,
+   "lng": 109.8633,
+   "affinity": 0.9452,
+   "popularity": 0.932
+  },
+  {
+   "lat": 12.7441,
+   "lng": 100.7227,
+   "affinity": 0.945,
+   "popularity": 0.951
+  },
+  {
+   "lat": 12.9199,
+   "lng": 103.1836,
+   "affinity": 0.9448,
+   "popularity": 0.731
+  },
+  {
+   "lat": 1.4941,
+   "lng": 104.2383,
+   "affinity": 0.9447,
+   "popularity": 0.955
+  },
+  {
+   "lat": 17.3145,
+   "lng": 105.6445,
+   "affinity": 0.9445,
+   "popularity": 0.785
+  },
+  {
+   "lat": 12.7441,
+   "lng": 108.1055,
+   "affinity": 0.9444,
+   "popularity": 0.922
+  },
+  {
+   "lat": 3.4277,
+   "lng": 102.4805,
+   "affinity": 0.9442,
+   "popularity": 0.96
+  },
+  {
+   "lat": 4.1309,
+   "lng": 100.3711,
+   "affinity": 0.9441,
+   "popularity": 0.674
+  },
+  {
+   "lat": 16.2598,
+   "lng": 103.1836,
+   "affinity": 0.9439,
+   "popularity": 0.94
+  },
+  {
+   "lat": 12.041,
+   "lng": 104.5898,
+   "affinity": 0.9438,
+   "popularity": 0.656
+  },
+  {
+   "lat": 15.0293,
+   "lng": 103.1836,
+   "affinity": 0.9436,
+   "popularity": 0.944
+  },
+  {
+   "lat": 15.7324,
+   "lng": 100.0195,
+   "affinity": 0.9434,
+   "popularity": 0.944
+  },
+  {
+   "lat": 2.7246,
+   "lng": 104.2383,
+   "affinity": 0.9431,
+   "popularity": 0.89
+  },
+  {
+   "lat": 11.3379,
+   "lng": 104.5898,
+   "affinity": 0.9431,
+   "popularity": 0.566
+  },
+  {
+   "lat": 1.3184,
+   "lng": 104.2383,
+   "affinity": 0.943,
+   "popularity": 0.906
+  },
+  {
+   "lat": 6.7676,
+   "lng": 100.0195,
+   "affinity": 0.9428,
+   "popularity": 0.787
+  },
+  {
+   "lat": 3.9551,
+   "lng": 101.0742,
+   "affinity": 0.9427,
+   "popularity": 0.957
+  },
+  {
+   "lat": 1.1426,
+   "lng": 110.2148,
+   "affinity": 0.9425,
+   "popularity": 0.732
+  },
+  {
+   "lat": 6.0645,
+   "lng": 115.8398,
+   "affinity": 0.9424,
+   "popularity": 0.764
+  },
+  {
+   "lat": 10.9863,
+   "lng": 107.0508,
+   "affinity": 0.9422,
+   "popularity": 0.817
+  },
+  {
+   "lat": 6.7676,
+   "lng": 100.3711,
+   "affinity": 0.9421,
+   "popularity": 0.706
+  },
+  {
+   "lat": 3.7793,
+   "lng": 101.7773,
+   "affinity": 0.9419,
+   "popularity": 0.947
+  },
+  {
+   "lat": 13.9746,
+   "lng": 100.0195,
+   "affinity": 0.9417,
+   "popularity": 0.93
+  },
+  {
+   "lat": 8.3496,
+   "lng": 100.0195,
+   "affinity": 0.9416,
+   "popularity": 0.949
+  },
+  {
+   "lat": 12.9199,
+   "lng": 100.0195,
+   "affinity": 0.9414,
+   "popularity": 0.952
+  },
+  {
+   "lat": -8.7012,
+   "lng": 116.1914,
+   "affinity": 0.9413,
+   "popularity": 0.95
+  },
+  {
+   "lat": 8.5254,
+   "lng": 98.2617,
+   "affinity": 0.9411,
+   "popularity": 0.859
+  },
+  {
+   "lat": 14.3262,
+   "lng": 101.4258,
+   "affinity": 0.941,
+   "popularity": 0.965
+  },
+  {
+   "lat": 17.3145,
+   "lng": 102.832,
+   "affinity": 0.9408,
+   "popularity": 0.944
+  },
+  {
+   "lat": 3.4277,
+   "lng": 101.4258,
+   "affinity": 0.9407,
+   "popularity": 0.951
+  },
+  {
+   "lat": 11.3379,
+   "lng": 104.2383,
+   "affinity": 0.9405,
+   "popularity": 0.783
+  },
+  {
+   "lat": 11.1621,
+   "lng": 119.3555,
+   "affinity": 0.9403,
+   "popularity": 0.94
+  },
+  {
+   "lat": 7.4707,
+   "lng": 99.3164,
+   "affinity": 0.9402,
+   "popularity": 0.869
+  },
+  {
+   "lat": 6.416,
+   "lng": 116.543,
+   "affinity": 0.94,
+   "popularity": 0.895
+  },
+  {
+   "lat": -0.9668,
+   "lng": 100.3711,
+   "affinity": 0.9399,
+   "popularity": 0.983
+  },
+  {
+   "lat": 4.6582,
+   "lng": 114.082,
+   "affinity": 0.9397,
+   "popularity": 0.836
+  },
+  {
+   "lat": -6.7676,
+   "lng": 107.0508,
+   "affinity": 0.9396,
+   "popularity": 0.993
+  },
+  {
+   "lat": 14.502,
+   "lng": 98.9648,
+   "affinity": 0.9394,
+   "popularity": 0.949
+  },
+  {
+   "lat": 10.459,
+   "lng": 99.3164,
+   "affinity": 0.9393,
+   "popularity": 0.913
+  },
+  {
+   "lat": 16.2598,
+   "lng": 97.5586,
+   "affinity": 0.9391,
+   "popularity": 0.587
+  },
+  {
+   "lat": 14.502,
+   "lng": 100.0195,
+   "affinity": 0.939,
+   "popularity": 0.947
+  },
+  {
+   "lat": 21.8848,
+   "lng": 120.7617,
+   "affinity": 0.9388,
+   "popularity": 0.986
+  },
+  {
+   "lat": -7.6465,
+   "lng": 110.918,
+   "affinity": 0.9386,
+   "popularity": 0.987
+  },
+  {
+   "lat": 13.7988,
+   "lng": 109.1602,
+   "affinity": 0.9385,
+   "popularity": 0.946
+  },
+  {
+   "lat": 7.4707,
+   "lng": 99.668,
+   "affinity": 0.9383,
+   "popularity": 0.927
+  },
+  {
+   "lat": 10.8105,
+   "lng": 104.5898,
+   "affinity": 0.9382,
+   "popularity": 0.606
+  },
+  {
+   "lat": 21.0059,
+   "lng": 105.293,
+   "affinity": 0.938,
+   "popularity": 0.86
+  },
+  {
+   "lat": 3.7793,
+   "lng": 102.4805,
+   "affinity": 0.9379,
+   "popularity": 0.955
+  },
+  {
+   "lat": 17.8418,
+   "lng": 101.7773,
+   "affinity": 0.9377,
+   "popularity": 0.957
+  },
+  {
+   "lat": 16.6113,
+   "lng": 101.0742,
+   "affinity": 0.9374,
+   "popularity": 0.963
+  },
+  {
+   "lat": 18.1934,
+   "lng": 109.5117,
+   "affinity": 0.9374,
+   "popularity": 0.96
+  },
+  {
+   "lat": -8.3496,
+   "lng": 116.543,
+   "affinity": 0.9372,
+   "popularity": 0.923
+  },
+  {
+   "lat": 4.1309,
+   "lng": 101.4258,
+   "affinity": 0.9371,
+   "popularity": 0.949
+  },
+  {
+   "lat": 5.3613,
+   "lng": 100.7227,
+   "affinity": 0.9369,
+   "popularity": 0.944
+  },
+  {
+   "lat": -6.9434,
+   "lng": 107.4023,
+   "affinity": 0.9368,
+   "popularity": 0.988
+  },
+  {
+   "lat": 15.2051,
+   "lng": 105.6445,
+   "affinity": 0.9366,
+   "popularity": 0.811
+  },
+  {
+   "lat": 2.373,
+   "lng": 103.8867,
+   "affinity": 0.9365,
+   "popularity": 0.937
+  },
+  {
+   "lat": -6.7676,
+   "lng": 107.4023,
+   "affinity": 0.9363,
+   "popularity": 0.99
+  },
+  {
+   "lat": -0.9668,
+   "lng": 119.707,
+   "affinity": 0.9362,
+   "popularity": 0.951
+  },
+  {
+   "lat": 13.4473,
+   "lng": 100.7227,
+   "affinity": 0.936,
+   "popularity": 0.943
+  },
+  {
+   "lat": 11.1621,
+   "lng": 104.2383,
+   "affinity": 0.9359,
+   "popularity": 0.722
+  },
+  {
+   "lat": 6.9434,
+   "lng": 100.7227,
+   "affinity": 0.9357,
+   "popularity": 0.816
+  },
+  {
+   "lat": -10.1074,
+   "lng": 123.5742,
+   "affinity": 0.9355,
+   "popularity": 0.966
+  },
+  {
+   "lat": 13.0957,
+   "lng": 100.7227,
+   "affinity": 0.9354,
+   "popularity": 0.919
+  },
+  {
+   "lat": 14.1504,
+   "lng": 98.9648,
+   "affinity": 0.9352,
+   "popularity": 0.896
+  },
+  {
+   "lat": 7.6465,
+   "lng": 98.2617,
+   "affinity": 0.9351,
+   "popularity": 0.873
+  },
+  {
+   "lat": 10.6348,
+   "lng": 122.5195,
+   "affinity": 0.9349,
+   "popularity": 0.969
+  },
+  {
+   "lat": 18.1934,
+   "lng": 99.3164,
+   "affinity": 0.9348,
+   "popularity": 0.932
+  },
+  {
+   "lat": 5.3613,
+   "lng": 100.0195,
+   "affinity": 0.9346,
+   "popularity": 0.695
+  },
+  {
+   "lat": 6.0645,
+   "lng": 102.4805,
+   "affinity": 0.9345,
+   "popularity": 0.945
+  },
+  {
+   "lat": 3.9551,
+   "lng": 114.7852,
+   "affinity": 0.9343,
+   "popularity": 0.58
+  },
+  {
+   "lat": 13.623,
+   "lng": 99.3164,
+   "affinity": 0.9341,
+   "popularity": 0.941
+  },
+  {
+   "lat": 1.3184,
+   "lng": 110.5664,
+   "affinity": 0.934,
+   "popularity": 0.783
+  },
+  {
+   "lat": 18.7207,
+   "lng": 105.6445,
+   "affinity": 0.9338,
+   "popularity": 0.91
+  },
+  {
+   "lat": 17.4902,
+   "lng": 106.6992,
+   "affinity": 0.9337,
+   "popularity": 0.862
+  },
+  {
+   "lat": 11.1621,
+   "lng": 105.6445,
+   "affinity": 0.9335,
+   "popularity": 0.579
+  },
+  {
+   "lat": 4.6582,
+   "lng": 114.4336,
+   "affinity": 0.9334,
+   "popularity": 0.806
+  },
+  {
+   "lat": 3.9551,
+   "lng": 103.5352,
+   "affinity": 0.9332,
+   "popularity": 0.946
+  },
+  {
+   "lat": 3.6035,
+   "lng": 101.0742,
+   "affinity": 0.9331,
+   "popularity": 0.946
+  },
+  {
+   "lat": -7.6465,
+   "lng": 110.5664,
+   "affinity": 0.9329,
+   "popularity": 0.986
+  },
+  {
+   "lat": 14.1504,
+   "lng": 120.7617,
+   "affinity": 0.9328,
+   "popularity": 0.986
+  },
+  {
+   "lat": 5.7129,
+   "lng": 117.2461,
+   "affinity": 0.9326,
+   "popularity": 0.893
+  },
+  {
+   "lat": 5.0098,
+   "lng": 100.7227,
+   "affinity": 0.9324,
+   "popularity": 0.941
+  },
+  {
+   "lat": 12.041,
+   "lng": 108.457,
+   "affinity": 0.9323,
+   "popularity": 0.943
+  },
+  {
+   "lat": 3.7793,
+   "lng": 101.0742,
+   "affinity": 0.9321,
+   "popularity": 0.918
+  },
+  {
+   "lat": -7.4707,
+   "lng": 110.2148,
+   "affinity": 0.932,
+   "popularity": 0.98
+  },
+  {
+   "lat": 12.5684,
+   "lng": 104.9414,
+   "affinity": 0.9318,
+   "popularity": 0.549
+  },
+  {
+   "lat": 9.7559,
+   "lng": 124.2773,
+   "affinity": 0.9317,
+   "popularity": 0.928
+  },
+  {
+   "lat": 13.7988,
+   "lng": 104.5898,
+   "affinity": 0.9315,
+   "popularity": 0.634
+  },
+  {
+   "lat": 4.834,
+   "lng": 103.5352,
+   "affinity": 0.9314,
+   "popularity": 0.945
+  },
+  {
+   "lat": 14.6777,
+   "lng": 101.0742,
+   "affinity": 0.9312,
+   "popularity": 0.948
+  },
+  {
+   "lat": 17.1387,
+   "lng": 96.1523,
+   "affinity": 0.9311,
+   "popularity": 0.709
+  },
+  {
+   "lat": 9.9316,
+   "lng": 123.2227,
+   "affinity": 0.9309,
+   "popularity": 0.939
+  },
+  {
+   "lat": 20.3027,
+   "lng": 100.3711,
+   "affinity": 0.9307,
+   "popularity": 0.808
+  },
+  {
+   "lat": 8.877,
+   "lng": 98.2617,
+   "affinity": 0.9306,
+   "popularity": 0.818
+  },
+  {
+   "lat": 3.4277,
+   "lng": 98.9648,
+   "affinity": 0.9304,
+   "popularity": 0.853
+  },
+  {
+   "lat": -7.4707,
+   "lng": 112.6758,
+   "affinity": 0.9303,
+   "popularity": 0.984
+  },
+  {
+   "lat": -7.2949,
+   "lng": 110.5664,
+   "affinity": 0.9301,
+   "popularity": 0.981
+  },
+  {
+   "lat": 4.3066,
+   "lng": 102.4805,
+   "affinity": 0.93,
+   "popularity": 0.788
+  },
+  {
+   "lat": 11.1621,
+   "lng": 104.5898,
+   "affinity": 0.9298,
+   "popularity": 0.547
+  },
+  {
+   "lat": 10.2832,
+   "lng": 105.9961,
+   "affinity": 0.9297,
+   "popularity": 0.839
+  },
+  {
+   "lat": 10.459,
+   "lng": 103.5352,
+   "affinity": 0.9295,
+   "popularity": 0.603
+  },
+  {
+   "lat": 18.3691,
+   "lng": 99.668,
+   "affinity": 0.9293,
+   "popularity": 0.932
+  },
+  {
+   "lat": 5.3613,
+   "lng": 116.1914,
+   "affinity": 0.9292,
+   "popularity": 0.894
+  },
+  {
+   "lat": 20.4785,
+   "lng": 97.207,
+   "affinity": 0.929,
+   "popularity": 0.617
+  },
+  {
+   "lat": 6.5918,
+   "lng": 99.668,
+   "affinity": 0.9289,
+   "popularity": 0.499
+  },
+  {
+   "lat": 6.9434,
+   "lng": 116.8945,
+   "affinity": 0.9286,
+   "popularity": 0.867
+  },
+  {
+   "lat": 11.8652,
+   "lng": 104.5898,
+   "affinity": 0.9286,
+   "popularity": 0.535
+  },
+  {
+   "lat": 8.5254,
+   "lng": 124.6289,
+   "affinity": 0.9284,
+   "popularity": 0.968
+  },
+  {
+   "lat": 13.9746,
+   "lng": 99.3164,
+   "affinity": 0.9283,
+   "popularity": 0.924
+  },
+  {
+   "lat": 9.7559,
+   "lng": 126.0352,
+   "affinity": 0.9281,
+   "popularity": 0.919
+  },
+  {
+   "lat": 13.623,
+   "lng": 100.0195,
+   "affinity": 0.928,
+   "popularity": 0.919
+  },
+  {
+   "lat": 17.3145,
+   "lng": 104.9414,
+   "affinity": 0.9278,
+   "popularity": 0.906
+  },
+  {
+   "lat": 6.0645,
+   "lng": 100.0195,
+   "affinity": 0.9276,
+   "popularity": 0.607
+  },
+  {
+   "lat": 14.1504,
+   "lng": 100.3711,
+   "affinity": 0.9275,
+   "popularity": 0.932
+  },
+  {
+   "lat": 14.8535,
+   "lng": 121.1133,
+   "affinity": 0.9273,
+   "popularity": 0.976
+  },
+  {
+   "lat": 5.8887,
+   "lng": 100.3711,
+   "affinity": 0.9272,
+   "popularity": 0.941
+  },
+  {
+   "lat": 5.7129,
+   "lng": 115.8398,
+   "affinity": 0.927,
+   "popularity": 0.882
+  },
+  {
+   "lat": -7.1191,
+   "lng": 107.4023,
+   "affinity": 0.9269,
+   "popularity": 0.984
+  },
+  {
+   "lat": 17.4902,
+   "lng": 101.7773,
+   "affinity": 0.9267,
+   "popularity": 0.913
+  },
+  {
+   "lat": -7.4707,
+   "lng": 109.1602,
+   "affinity": 0.9266,
+   "popularity": 0.977
+  },
+  {
+   "lat": 3.6035,
+   "lng": 101.4258,
+   "affinity": 0.9264,
+   "popularity": 0.946
+  },
+  {
+   "lat": 4.3066,
+   "lng": 100.3711,
+   "affinity": 0.9262,
+   "popularity": 0.912
+  },
+  {
+   "lat": 3.7793,
+   "lng": 101.4258,
+   "affinity": 0.9261,
+   "popularity": 0.946
+  },
+  {
+   "lat": -7.4707,
+   "lng": 110.918,
+   "affinity": 0.9259,
+   "popularity": 0.982
+  },
+  {
+   "lat": 9.4043,
+   "lng": 99.668,
+   "affinity": 0.9258,
+   "popularity": 0.839
+  },
+  {
+   "lat": 11.8652,
+   "lng": 105.6445,
+   "affinity": 0.9256,
+   "popularity": 0.643
+  },
+  {
+   "lat": 20.6543,
+   "lng": 104.9414,
+   "affinity": 0.9255,
+   "popularity": 0.829
+  },
+  {
+   "lat": 3.9551,
+   "lng": 102.1289,
+   "affinity": 0.9253,
+   "popularity": 0.915
+  },
+  {
+   "lat": 19.7754,
+   "lng": 102.1289,
+   "affinity": 0.9252,
+   "popularity": 0.725
+  },
+  {
+   "lat": 19.9512,
+   "lng": 110.2148,
+   "affinity": 0.925,
+   "popularity": 0.911
+  },
+  {
+   "lat": 7.1191,
+   "lng": 117.2461,
+   "affinity": 0.9249,
+   "popularity": 0.407
+  },
+  {
+   "lat": -7.998,
+   "lng": 114.082,
+   "affinity": 0.9247,
+   "popularity": 0.9
+  },
+  {
+   "lat": 12.7441,
+   "lng": 101.7773,
+   "affinity": 0.9245,
+   "popularity": 0.935
+  },
+  {
+   "lat": 6.5918,
+   "lng": 101.7773,
+   "affinity": 0.9244,
+   "popularity": 0.699
+  },
+  {
+   "lat": 20.3027,
+   "lng": 99.668,
+   "affinity": 0.9241,
+   "popularity": 0.925
+  },
+  {
+   "lat": 14.8535,
+   "lng": 101.4258,
+   "affinity": 0.9241,
+   "popularity": 0.916
+  },
+  {
+   "lat": 5.5371,
+   "lng": 100.7227,
+   "affinity": 0.9239,
+   "popularity": 0.916
+  },
+  {
+   "lat": 9.0527,
+   "lng": 98.9648,
+   "affinity": 0.9238,
+   "popularity": 0.919
+  },
+  {
+   "lat": 3.0762,
+   "lng": 113.7305,
+   "affinity": 0.9236,
+   "popularity": 0.882
+  },
+  {
+   "lat": 14.3262,
+   "lng": 120.7617,
+   "affinity": 0.9233,
+   "popularity": 0.974
+  },
+  {
+   "lat": 3.9551,
+   "lng": 103.1836,
+   "affinity": 0.9233,
+   "popularity": 0.933
+  },
+  {
+   "lat": 9.7559,
+   "lng": 98.2617,
+   "affinity": 0.9231,
+   "popularity": 0.785
+  },
+  {
+   "lat": 17.1387,
+   "lng": 104.2383,
+   "affinity": 0.923,
+   "popularity": 0.91
+  },
+  {
+   "lat": 5.1855,
+   "lng": 102.1289,
+   "affinity": 0.9228,
+   "popularity": 0.944
+  },
+  {
+   "lat": 16.4355,
+   "lng": 102.4805,
+   "affinity": 0.9225,
+   "popularity": 0.918
+  },
+  {
+   "lat": 3.6035,
+   "lng": 103.5352,
+   "affinity": 0.9225,
+   "popularity": 0.905
+  },
+  {
+   "lat": -6.5918,
+   "lng": 107.0508,
+   "affinity": 0.9224,
+   "popularity": 0.987
+  },
+  {
+   "lat": 13.4473,
+   "lng": 100.3711,
+   "affinity": 0.9222,
+   "popularity": 0.923
+  },
+  {
+   "lat": -6.7676,
+   "lng": 108.457,
+   "affinity": 0.9221,
+   "popularity": 0.983
+  },
+  {
+   "lat": 18.3691,
+   "lng": 98.6133,
+   "affinity": 0.9219,
+   "popularity": 0.891
+  },
+  {
+   "lat": 4.834,
+   "lng": 102.832,
+   "affinity": 0.9218,
+   "popularity": 0.942
+  },
+  {
+   "lat": 8.3496,
+   "lng": 98.2617,
+   "affinity": 0.9216,
+   "popularity": 0.835
+  },
+  {
+   "lat": 12.041,
+   "lng": 109.1602,
+   "affinity": 0.9214,
+   "popularity": 0.89
+  },
+  {
+   "lat": 19.248,
+   "lng": 97.9102,
+   "affinity": 0.9213,
+   "popularity": 0.857
+  },
+  {
+   "lat": 5.0098,
+   "lng": 115.1367,
+   "affinity": 0.9211,
+   "popularity": 0.814
+  },
+  {
+   "lat": 18.3691,
+   "lng": 109.8633,
+   "affinity": 0.921,
+   "popularity": 0.928
+  },
+  {
+   "lat": 6.9434,
+   "lng": 116.543,
+   "affinity": 0.9208,
+   "popularity": 0.591
+  },
+  {
+   "lat": 10.8105,
+   "lng": 103.1836,
+   "affinity": 0.9207,
+   "popularity": 0.625
+  },
+  {
+   "lat": 19.248,
+   "lng": 100.0195,
+   "affinity": 0.9205,
+   "popularity": 0.915
+  },
+  {
+   "lat": -0.0879,
+   "lng": 109.5117,
+   "affinity": 0.9204,
+   "popularity": 0.971
+  },
+  {
+   "lat": 9.9316,
+   "lng": 103.8867,
+   "affinity": 0.9202,
+   "popularity": 0.76
+  },
+  {
+   "lat": 16.084,
+   "lng": 97.5586,
+   "affinity": 0.92,
+   "popularity": 0.541
+  },
+  {
+   "lat": 17.4902,
+   "lng": 106.3477,
+   "affinity": 0.9199,
+   "popularity": 0.778
+  },
+  {
+   "lat": 7.2949,
+   "lng": 134.4727,
+   "affinity": 0.9197,
+   "popularity": 0.754
+  },
+  {
+   "lat": 1.1426,
+   "lng": 110.5664,
+   "affinity": 0.9196,
+   "popularity": 0.835
+  },
+  {
+   "lat": 16.6113,
+   "lng": 104.5898,
+   "affinity": 0.9194,
+   "popularity": 0.912
+  },
+  {
+   "lat": 9.2285,
+   "lng": 99.3164,
+   "affinity": 0.9193,
+   "popularity": 0.907
+  },
+  {
+   "lat": 10.6348,
+   "lng": 122.8711,
+   "affinity": 0.9191,
+   "popularity": 0.961
+  },
+  {
+   "lat": 14.8535,
+   "lng": 120.7617,
+   "affinity": 0.919,
+   "popularity": 0.97
+  },
+  {
+   "lat": 5.5371,
+   "lng": 100.0195,
+   "affinity": 0.9188,
+   "popularity": 0.725
+  },
+  {
+   "lat": 5.8887,
+   "lng": 101.0742,
+   "affinity": 0.9187,
+   "popularity": 0.836
+  },
+  {
+   "lat": 16.2598,
+   "lng": 107.7539,
+   "affinity": 0.9185,
+   "popularity": 0.841
+  },
+  {
+   "lat": 10.6348,
+   "lng": 104.5898,
+   "affinity": 0.9183,
+   "popularity": 0.684
+  },
+  {
+   "lat": -6.9434,
+   "lng": 109.1602,
+   "affinity": 0.9182,
+   "popularity": 0.963
+  },
+  {
+   "lat": 14.8535,
+   "lng": 100.3711,
+   "affinity": 0.918,
+   "popularity": 0.911
+  },
+  {
+   "lat": 9.9316,
+   "lng": 98.6133,
+   "affinity": 0.9179,
+   "popularity": 0.901
+  },
+  {
+   "lat": 12.3926,
+   "lng": 109.1602,
+   "affinity": 0.9177,
+   "popularity": 0.83
+  },
+  {
+   "lat": -7.8223,
+   "lng": 112.3242,
+   "affinity": 0.9176,
+   "popularity": 0.974
+  },
+  {
+   "lat": 5.0098,
+   "lng": 100.3711,
+   "affinity": 0.9174,
+   "popularity": 0.93
+  },
+  {
+   "lat": 15.3809,
+   "lng": 100.0195,
+   "affinity": 0.9173,
+   "popularity": 0.923
+  },
+  {
+   "lat": 5.8887,
+   "lng": 102.1289,
+   "affinity": 0.9171,
+   "popularity": 0.935
+  },
+  {
+   "lat": -1.3184,
+   "lng": 116.8945,
+   "affinity": 0.917,
+   "popularity": 0.97
+  },
+  {
+   "lat": 9.7559,
+   "lng": 100.0195,
+   "affinity": 0.9168,
+   "popularity": 0.904
+  },
+  {
+   "lat": -7.1191,
+   "lng": 108.1055,
+   "affinity": 0.9166,
+   "popularity": 0.945
+  },
+  {
+   "lat": 16.9629,
+   "lng": 101.0742,
+   "affinity": 0.9165,
+   "popularity": 0.943
+  },
+  {
+   "lat": 18.1934,
+   "lng": 100.0195,
+   "affinity": 0.9163,
+   "popularity": 0.916
+  },
+  {
+   "lat": 9.5801,
+   "lng": 123.5742,
+   "affinity": 0.9162,
+   "popularity": 0.926
+  },
+  {
+   "lat": -5.3613,
+   "lng": 105.293,
+   "affinity": 0.916,
+   "popularity": 0.978
+  },
+  {
+   "lat": 14.6777,
+   "lng": 100.3711,
+   "affinity": 0.9159,
+   "popularity": 0.916
+  },
+  {
+   "lat": -0.4395,
+   "lng": 117.2461,
+   "affinity": 0.9157,
+   "popularity": 0.976
+  },
+  {
+   "lat": 14.3262,
+   "lng": 101.7773,
+   "affinity": 0.9156,
+   "popularity": 0.939
+  },
+  {
+   "lat": 10.459,
+   "lng": 103.8867,
+   "affinity": 0.9154,
+   "popularity": 0.617
+  },
+  {
+   "lat": 2.5488,
+   "lng": 103.8867,
+   "affinity": 0.9152,
+   "popularity": 0.877
+  },
+  {
+   "lat": 13.9746,
+   "lng": 121.1133,
+   "affinity": 0.9151,
+   "popularity": 0.969
+  },
+  {
+   "lat": 10.9863,
+   "lng": 105.9961,
+   "affinity": 0.9149,
+   "popularity": 0.574
+  },
+  {
+   "lat": -6.9434,
+   "lng": 107.0508,
+   "affinity": 0.9148,
+   "popularity": 0.974
+  },
+  {
+   "lat": 5.7129,
+   "lng": 102.1289,
+   "affinity": 0.9146,
+   "popularity": 0.933
+  },
+  {
+   "lat": 17.1387,
+   "lng": 99.668,
+   "affinity": 0.9145,
+   "popularity": 0.773
+  },
+  {
+   "lat": -7.4707,
+   "lng": 109.8633,
+   "affinity": 0.9143,
+   "popularity": 0.977
+  },
+  {
+   "lat": 12.2168,
+   "lng": 102.1289,
+   "affinity": 0.9142,
+   "popularity": 0.862
+  },
+  {
+   "lat": 5.5371,
+   "lng": 95.4492,
+   "affinity": 0.914,
+   "popularity": 0.969
+  },
+  {
+   "lat": 11.3379,
+   "lng": 105.6445,
+   "affinity": 0.9139,
+   "popularity": 0.25
+  },
+  {
+   "lat": -6.2402,
+   "lng": 106.3477,
+   "affinity": 0.9137,
+   "popularity": 0.978
+  },
+  {
+   "lat": 2.7246,
+   "lng": 98.9648,
+   "affinity": 0.9135,
+   "popularity": 0.953
+  },
+  {
+   "lat": 16.4355,
+   "lng": 101.0742,
+   "affinity": 0.9134,
+   "popularity": 0.912
+  },
+  {
+   "lat": -3.4277,
+   "lng": 114.7852,
+   "affinity": 0.9132,
+   "popularity": 0.956
+  },
+  {
+   "lat": 14.3262,
+   "lng": 101.0742,
+   "affinity": 0.9131,
+   "popularity": 0.92
+  },
+  {
+   "lat": 16.084,
+   "lng": 108.457,
+   "affinity": 0.9129,
+   "popularity": 0.849
+  },
+  {
+   "lat": 2.1973,
+   "lng": 111.9727,
+   "affinity": 0.9128,
+   "popularity": 0.859
+  },
+  {
+   "lat": 19.248,
+   "lng": 101.0742,
+   "affinity": 0.9126,
+   "popularity": 0.928
+  },
+  {
+   "lat": 14.8535,
+   "lng": 102.1289,
+   "affinity": 0.9125,
+   "popularity": 0.932
+  },
+  {
+   "lat": 13.7988,
+   "lng": 121.1133,
+   "affinity": 0.9123,
+   "popularity": 0.964
+  },
+  {
+   "lat": -7.6465,
+   "lng": 112.6758,
+   "affinity": 0.9121,
+   "popularity": 0.979
+  },
+  {
+   "lat": 1.1426,
+   "lng": 104.5898,
+   "affinity": 0.912,
+   "popularity": 0.898
+  },
+  {
+   "lat": 10.9863,
+   "lng": 104.5898,
+   "affinity": 0.9118,
+   "popularity": 0.608
+  },
+  {
+   "lat": 12.041,
+   "lng": 120.0586,
+   "affinity": 0.9117,
+   "popularity": 0.918
+  },
+  {
+   "lat": 20.8301,
+   "lng": 96.8555,
+   "affinity": 0.9115,
+   "popularity": 0.652
+  },
+  {
+   "lat": 20.6543,
+   "lng": 102.4805,
+   "affinity": 0.9114,
+   "popularity": 0.493
+  },
+  {
+   "lat": -7.998,
+   "lng": 110.5664,
+   "affinity": 0.9112,
+   "popularity": 0.975
+  },
+  {
+   "lat": -9.9316,
+   "lng": 123.9258,
+   "affinity": 0.9111,
+   "popularity": 0.677
+  },
+  {
+   "lat": 15.2051,
+   "lng": 109.1602,
+   "affinity": 0.9109,
+   "popularity": 0.411
+  },
+  {
+   "lat": -6.0645,
+   "lng": 105.9961,
+   "affinity": 0.9106,
+   "popularity": 0.981
+  },
+  {
+   "lat": 14.8535,
+   "lng": 101.7773,
+   "affinity": 0.9106,
+   "popularity": 0.917
+  },
+  {
+   "lat": 6.2402,
+   "lng": 116.543,
+   "affinity": 0.9104,
+   "popularity": 0.861
+  },
+  {
+   "lat": 16.4355,
+   "lng": 100.7227,
+   "affinity": 0.9103,
+   "popularity": 0.635
+  },
+  {
+   "lat": 12.2168,
+   "lng": 105.293,
+   "affinity": 0.9101,
+   "popularity": 0.498
+  },
+  {
+   "lat": 5.7129,
+   "lng": 116.1914,
+   "affinity": 0.91,
+   "popularity": 0.822
+  },
+  {
+   "lat": 10.459,
+   "lng": 123.9258,
+   "affinity": 0.9098,
+   "popularity": 0.962
+  },
+  {
+   "lat": 0.4395,
+   "lng": 101.4258,
+   "affinity": 0.9097,
+   "popularity": 0.978
+  },
+  {
+   "lat": 19.7754,
+   "lng": 105.6445,
+   "affinity": 0.9095,
+   "popularity": 0.84
+  },
+  {
+   "lat": 15.0293,
+   "lng": 120.7617,
+   "affinity": 0.9094,
+   "popularity": 0.972
+  },
+  {
+   "lat": 9.5801,
+   "lng": 99.668,
+   "affinity": 0.9092,
+   "popularity": 0.655
+  },
+  {
+   "lat": 9.9316,
+   "lng": 104.9414,
+   "affinity": 0.909,
+   "popularity": 0.814
+  },
+  {
+   "lat": 8.1738,
+   "lng": 99.668,
+   "affinity": 0.9089,
+   "popularity": 0.853
+  },
+  {
+   "lat": 5.0098,
+   "lng": 118.3008,
+   "affinity": 0.9087,
+   "popularity": 0.892
+  },
+  {
+   "lat": 10.459,
+   "lng": 107.0508,
+   "affinity": 0.9086,
+   "popularity": 0.917
+  },
+  {
+   "lat": 20.127,
+   "lng": 95.0977,
+   "affinity": 0.9084,
+   "popularity": 0.635
+  },
+  {
+   "lat": 0.9668,
+   "lng": 103.5352,
+   "affinity": 0.9083,
+   "popularity": 0.823
+  },
+  {
+   "lat": 19.5996,
+   "lng": 98.2617,
+   "affinity": 0.9081,
+   "popularity": 0.802
+  },
+  {
+   "lat": 4.6582,
+   "lng": 103.5352,
+   "affinity": 0.908,
+   "popularity": 0.927
+  },
+  {
+   "lat": 21.5332,
+   "lng": 108.1055,
+   "affinity": 0.9078,
+   "popularity": 0.791
+  },
+  {
+   "lat": 16.084,
+   "lng": 103.5352,
+   "affinity": 0.9077,
+   "popularity": 0.915
+  },
+  {
+   "lat": 10.9863,
+   "lng": 106.3477,
+   "affinity": 0.9075,
+   "popularity": 0.796
+  },
+  {
+   "lat": 3.9551,
+   "lng": 101.4258,
+   "affinity": 0.9073,
+   "popularity": 0.938
+  },
+  {
+   "lat": 5.5371,
+   "lng": 102.832,
+   "affinity": 0.907,
+   "popularity": 0.934
+  }
+ ],
+ "cities": [
+  {
+   "name": "Kuala Lumpur",
+   "query": "Kuala Lumpur",
+   "lat": 3.139,
+   "lng": 101.6869,
+   "score": 100,
+   "affinity": 0.997,
+   "popularity": 0.971,
+   "cells": 10
+  },
+  {
+   "name": "Singapore",
+   "query": "Singapore",
+   "lat": 1.3521,
+   "lng": 103.8198,
+   "score": 100,
+   "affinity": 0.999,
+   "popularity": 0.923,
+   "cells": 11
+  },
+  {
+   "name": "Bangkok",
+   "query": "Bangkok",
+   "lat": 13.7563,
+   "lng": 100.5018,
+   "score": 100,
+   "affinity": 0.997,
+   "popularity": 0.976,
+   "cells": 10
+  },
+  {
+   "name": "Penang",
+   "query": "George Town, Penang",
+   "lat": 5.4141,
+   "lng": 100.3288,
+   "score": 99,
+   "affinity": 0.986,
+   "popularity": 0.906,
+   "cells": 9
+  },
+  {
+   "name": "Jakarta",
+   "query": "Jakarta",
+   "lat": -6.2088,
+   "lng": 106.8456,
+   "score": 98,
+   "affinity": 0.978,
+   "popularity": 0.933,
+   "cells": 10
+  },
+  {
+   "name": "Manila",
+   "query": "Manila",
+   "lat": 14.5995,
+   "lng": 120.9842,
+   "score": 98,
+   "affinity": 0.979,
+   "popularity": 0.939,
+   "cells": 9
+  },
+  {
+   "name": "Ho Chi Minh City",
+   "query": "Ho Chi Minh City",
+   "lat": 10.8231,
+   "lng": 106.6297,
+   "score": 98,
+   "affinity": 0.975,
+   "popularity": 0.78,
+   "cells": 11
+  },
+  {
+   "name": "Sydney",
+   "query": "Sydney",
+   "lat": -33.8688,
+   "lng": 151.2093,
+   "score": 83,
+   "affinity": 0.833,
+   "popularity": 0.866,
+   "cells": 9
+  },
+  {
+   "name": "Melbourne",
+   "query": "Melbourne",
+   "lat": -37.8136,
+   "lng": 144.9631,
+   "score": 83,
+   "affinity": 0.831,
+   "popularity": 0.769,
+   "cells": 13
+  },
+  {
+   "name": "Perth",
+   "query": "Perth, Australia",
+   "lat": -31.9505,
+   "lng": 115.8605,
+   "score": 80,
+   "affinity": 0.796,
+   "popularity": 0.707,
+   "cells": 11
+  },
+  {
+   "name": "Auckland",
+   "query": "Auckland",
+   "lat": -36.8485,
+   "lng": 174.7633,
+   "score": 79,
+   "affinity": 0.793,
+   "popularity": 0.665,
+   "cells": 12
+  },
+  {
+   "name": "Brisbane",
+   "query": "Brisbane",
+   "lat": -27.4698,
+   "lng": 153.0251,
+   "score": 65,
+   "affinity": 0.65,
+   "popularity": 0.622,
+   "cells": 12
+  }
+ ],
+ "profile": {
+  "tags": [
+   {
+    "id": "urn:tag:keyword:media:kdrama",
+    "name": "Kdrama",
+    "affinity": 0.9999460101500918
+   },
+   {
+    "id": "urn:tag:keyword:media:korean",
+    "name": "Korean",
+    "affinity": 0.9996364401332045
+   },
+   {
+    "id": "urn:tag:keyword:media:korean_drama",
+    "name": "Korean drama",
+    "affinity": 0.9995326690475188
+   },
+   {
+    "id": "urn:tag:keyword:media:live_action_adaptation",
+    "name": "Live action adaptation",
+    "affinity": 0.9992273076447622
+   },
+   {
+    "id": "urn:tag:genre:media:indonesian_literature",
+    "name": "Indonesian Literature",
+    "affinity": 0.9989561586638831
+   },
+   {
+    "id": "urn:tag:keyword:media:south_korea",
+    "name": "South korea",
+    "affinity": 0.9988072925540978
+   },
+   {
+    "id": "urn:tag:keyword:media:love",
+    "name": "Love",
+    "affinity": 0.9988055493139278
+   },
+   {
+    "id": "urn:tag:keyword:media:korea",
+    "name": "Korea",
+    "affinity": 0.9986099108511577
+   },
+   {
+    "id": "urn:tag:keyword:media:murder",
+    "name": "Murder",
+    "affinity": 0.998533134690426
+   },
+   {
+    "id": "urn:tag:keyword:media:friendship",
+    "name": "Friendship",
+    "affinity": 0.9976626231038032
+   }
+  ],
+  "demographics": {
+   "age": {
+    "24_and_younger": 0.19,
+    "25_to_29": 0.43,
+    "30_to_34": 0.59,
+    "35_to_44": 0.12,
+    "45_to_54": -0.52,
+    "55_and_older": -0.36
+   },
+   "gender": {
+    "male": -0.44,
+    "female": 0.44
+   }
+  },
+  "trend": [],
+  "momentum": null
+ },
+ "route": [
+  {
+   "name": "Jakarta",
+   "query": "Jakarta",
+   "lat": -6.2088,
+   "lng": 106.8456,
+   "score": 98,
+   "affinity": 0.978,
+   "popularity": 0.933,
+   "cells": 10,
+   "why": "Strong fit matching Indonesian literature fanbase affinity, scoring 98 with popularity 0.933."
+  },
+  {
+   "name": "Singapore",
+   "query": "Singapore",
+   "lat": 1.3521,
+   "lng": 103.8198,
+   "score": 100,
+   "affinity": 0.999,
+   "popularity": 0.923,
+   "cells": 11,
+   "why": "Peak affinity at 0.999 with score 100 and strong popularity 0.923."
+  },
+  {
+   "name": "Kuala Lumpur",
+   "query": "Kuala Lumpur",
+   "lat": 3.139,
+   "lng": 101.6869,
+   "score": 100,
+   "affinity": 0.997,
+   "popularity": 0.971,
+   "cells": 10,
+   "why": "Top-tier market with max score 100, affinity 0.997, and high popularity 0.971."
+  },
+  {
+   "name": "Penang",
+   "query": "George Town, Penang",
+   "lat": 5.4141,
+   "lng": 100.3288,
+   "score": 99,
+   "affinity": 0.986,
+   "popularity": 0.906,
+   "cells": 9,
+   "why": "Intimate room potential with score 99 and high affinity 0.986."
+  },
+  {
+   "name": "Bangkok",
+   "query": "Bangkok",
+   "lat": 13.7563,
+   "lng": 100.5018,
+   "score": 100,
+   "affinity": 0.997,
+   "popularity": 0.976,
+   "cells": 10,
+   "why": "Maximum score 100, affinity 0.997, and robust scene density popularity 0.976."
+  }
+ ],
+ "dropped": [
+  {
+   "city": "Manila",
+   "score": 98,
+   "reason": "Swapped out despite a score of 98 to prioritize core Southeast Asian touring hubs matching her specific fanbase."
+  },
+  {
+   "city": "Ho Chi Minh City",
+   "score": 98,
+   "reason": "Lower fan affinity than the kept markets"
+  },
+  {
+   "city": "Sydney",
+   "score": 83,
+   "reason": "Lower fan affinity than the kept markets"
+  },
+  {
+   "city": "Melbourne",
+   "score": 83,
+   "reason": "Lower fan affinity than the kept markets"
+  },
+  {
+   "city": "Perth",
+   "score": 80,
+   "reason": "Lower fan affinity than the kept markets"
+  },
+  {
+   "city": "Auckland",
+   "score": 79,
+   "reason": "Lower fan affinity than the kept markets"
+  },
+  {
+   "city": "Brisbane",
+   "score": 65,
+   "reason": "Lower fan affinity than the kept markets"
+  }
+ ],
+ "rationale": "We focus entirely on top-scoring Southeast Asian markets where Yuna's cultural fan-base concepts yield maximum affinity and intimate room viability. Major Australian cities like Sydney and Melbourne score lower (83), proving that her audience concentration heavily favors the ASEAN region.",
+ "stops": [
+  {
+   "name": "Jakarta",
+   "query": "Jakarta",
+   "lat": -6.2088,
+   "lng": 106.8456,
+   "score": 98,
+   "affinity": 0.978,
+   "popularity": 0.933,
+   "cells": 10,
+   "why": "Strong fit matching Indonesian literature fanbase affinity, scoring 98 with popularity 0.933.",
+   "peers": [
+    {
+     "id": "134329CB-BB11-4F69-A55F-ADA4B9F10A1D",
+     "name": "Banks",
+     "affinity": 0.954,
+     "popularity": 0.997,
+     "image": "https://images.qloo.com/i/134329CB-BB11-4F69-A55F-ADA4B9F10A1D-420x-auto.jpg"
+    },
+    {
+     "id": "3FCAEB4B-43CB-4D2C-A5D6-8ACAE6C78997",
+     "name": "Rinni Wulandari",
+     "affinity": 0.954,
+     "popularity": 0.349,
+     "image": "https://images.qloo.com/i/3FCAEB4B-43CB-4D2C-A5D6-8ACAE6C78997-420x-auto.jpg"
+    },
+    {
+     "id": "335EF7E1-1376-4A84-907C-31CB52A4BDC3",
+     "name": "Teza Sumendra",
+     "affinity": 0.952,
+     "popularity": 0.689,
+     "image": "https://images.qloo.com/i/335EF7E1-1376-4A84-907C-31CB52A4BDC3-420x-auto.jpg"
+    },
+    {
+     "id": "D1A1A06F-2E69-4C8C-B307-4E05A3A090FE",
+     "name": "Birdy",
+     "affinity": 0.952,
+     "popularity": 0.998,
+     "image": "https://images.qloo.com/i/D1A1A06F-2E69-4C8C-B307-4E05A3A090FE-420x-auto.jpg"
+    },
+    {
+     "id": "345B890E-38F8-4E89-9CE6-A21201BA8893",
+     "name": "Daniela Andrade",
+     "affinity": 0.951,
+     "popularity": 0.977,
+     "image": "https://images.qloo.com/i/345B890E-38F8-4E89-9CE6-A21201BA8893-420x-auto.jpg"
+    },
+    {
+     "id": "0B56A7A9-3438-41CF-B2A3-723FA85F1BB4",
+     "name": "HONNE",
+     "affinity": 0.949,
+     "popularity": 0.985,
+     "image": "https://images.qloo.com/i/0B56A7A9-3438-41CF-B2A3-723FA85F1BB4-420x-auto.jpg"
+    },
+    {
+     "id": "E349258A-FF66-4D4D-BFC3-DA86F4C4D916",
+     "name": "Rendy Pandugo",
+     "affinity": 0.949,
+     "popularity": 0.784,
+     "image": "https://images.qloo.com/i/E349258A-FF66-4D4D-BFC3-DA86F4C4D916-420x-auto.jpg"
+    },
+    {
+     "id": "E57BFECF-236C-4B52-8B60-005709E3EE8F",
+     "name": "Johnny Stimson",
+     "affinity": 0.948,
+     "popularity": 0.897,
+     "image": "https://images.qloo.com/i/E57BFECF-236C-4B52-8B60-005709E3EE8F-420x-auto.jpg"
+    },
+    {
+     "id": "D0FB2FA3-01FF-4F46-A501-F53EE746CD66",
+     "name": "Ellie Goulding",
+     "affinity": 0.947,
+     "popularity": 1,
+     "image": "https://images.qloo.com/i/D0FB2FA3-01FF-4F46-A501-F53EE746CD66-420x-auto.jpg"
+    },
+    {
+     "id": "4570127D-912F-4699-8D62-76DBB60B7724",
+     "name": "Eva Celia",
+     "affinity": 0.947,
+     "popularity": 0.602,
+     "image": "https://images.qloo.com/i/4570127D-912F-4699-8D62-76DBB60B7724-420x-auto.jpg"
+    },
+    {
+     "id": "793CC054-AAD0-4613-A6BF-C88E56C0A609",
+     "name": "Banda Neira",
+     "affinity": 0.947,
+     "popularity": 0.925,
+     "image": "https://images.qloo.com/i/793CC054-AAD0-4613-A6BF-C88E56C0A609-420x-auto.jpg"
+    },
+    {
+     "id": "8CA00373-B2B3-4ADA-9F63-93AB90C29E3F",
+     "name": "Jeremy Passion",
+     "affinity": 0.947,
+     "popularity": 0.852,
+     "image": "https://images.qloo.com/i/8CA00373-B2B3-4ADA-9F63-93AB90C29E3F-420x-auto.jpg"
+    },
+    {
+     "id": "E280029E-4031-4895-81C8-FFBD62FFE868",
+     "name": "Kimbra",
+     "affinity": 0.947,
+     "popularity": 0.993,
+     "image": "https://images.qloo.com/i/E280029E-4031-4895-81C8-FFBD62FFE868-420x-auto.jpg"
+    },
+    {
+     "id": "A6F25AF9-90AF-4130-941E-CAEFDB7ED6E1",
+     "name": "Raisa",
+     "affinity": 0.947,
+     "popularity": 0.95,
+     "image": "https://images.qloo.com/i/A6F25AF9-90AF-4130-941E-CAEFDB7ED6E1-420x-auto.jpg"
+    },
+    {
+     "id": "7AFC0B14-0285-457C-8C5B-30C1174E500E",
+     "name": "Jeff Bernat",
+     "affinity": 0.947,
+     "popularity": 0.911,
+     "image": "https://images.qloo.com/i/7AFC0B14-0285-457C-8C5B-30C1174E500E-420x-auto.jpg"
+    }
+   ],
+   "rooms": [
+    {
+     "id": "EC61810E-0B5B-454D-A383-AB3BD385D3E6",
+     "name": "The Brotherhood of Gunawarman",
+     "affinity": 0.59,
+     "popularity": 0.898,
+     "address": "Jl. Gunawarman No.40 5 RT.5/RW.2, Selong Kec. Kby. Baru Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12110, Indonesia",
+     "image": "https://images.qloo.com/i/EC61810E-0B5B-454D-A383-AB3BD385D3E6-420x-auto.jpg",
+     "description": "Brooklyn-style steakhouse and bar in Gunawarman offering steaks, cocktails, live DJs, arcade games, and private VIP rooms."
+    },
+    {
+     "id": "F15DF9F3-7063-4C06-96C6-BD7F01941F5F",
+     "name": "M Bloc Space",
+     "affinity": 0.588,
+     "popularity": 0.999,
+     "address": "Jl. Panglima Polim No.37 RT.1/RW.1, Melawai Kebayoran Baru South Jakarta City, Jakarta 12160, Indonesia",
+     "image": "https://images.qloo.com/i/F15DF9F3-7063-4C06-96C6-BD7F01941F5F-420x-auto.jpg",
+     "description": "Repurposed former money-printing factory turned cultural hub with cafés, markets, live music, and events, blending vintage 80s charm and modern hangout vibes."
+    },
+    {
+     "id": "E53E7CB1-CBFA-4B30-AB18-8D1F70EEDC54",
+     "name": "Gen's Bar & BBQ Resto",
+     "affinity": 0.571,
+     "popularity": 0.681,
+     "address": "3 Jl. Melawai 6 No.3 RT.3/RW.1 Daerah Khusus Ibukota Jakarta 12160, Indonesia",
+     "image": "https://images.qloo.com/i/E53E7CB1-CBFA-4B30-AB18-8D1F70EEDC54-420x-auto.jpg",
+     "description": "Casual bar and BBQ restaurant in Melawai offering live music, cocktails, and varied comfort food including burgers, steaks, and Japanese curry."
+    },
+    {
+     "id": "89125761-BB83-40A6-9850-B4C39EE8EC2E",
+     "name": "De Hooi",
+     "affinity": 0.571,
+     "popularity": 0.975,
+     "address": "Jl. Metro Pondok Indah Blok B4 No.31 RT.3/RW.14, Pondok Pinang Kebayoran Lama South Jakarta City, Jakarta 12310, Indonesia",
+     "image": "https://images.qloo.com/i/89125761-BB83-40A6-9850-B4C39EE8EC2E-420x-auto.jpg",
+     "description": "Two-level neighborhood pub in Pondok Indah offering live nightly music, full bar, international food, and multiple outdoor seating areas."
+    },
+    {
+     "id": "A56F67D6-2F06-41AA-BF24-EB2C1ADF35E3",
+     "name": "Hutan Kota by Plataran",
+     "affinity": 0.549,
+     "popularity": 0.93,
+     "address": "Jl. Pintu Gelora V No.54-55 RT.1/RW.3, Gelora Tanah Abang Central Jakarta City, Jakarta 10270, Indonesia",
+     "image": "https://images.qloo.com/i/A56F67D6-2F06-41AA-BF24-EB2C1ADF35E3-420x-auto.jpg",
+     "description": "Urban oasis in Gelora Bung Karno offering refined Indonesian and Western dining, lounges, and event spaces amid lush greenery and rooftop views."
+    }
+   ],
+   "places": [
+    {
+     "id": "A4C4F019-761F-44AB-9D76-3602AE89F477",
+     "name": "OBAMA FANS CLUB",
+     "affinity": 0.64,
+     "popularity": 0.469,
+     "address": "Jl. Falatehan I No.16 2 1 2 RT.2/RW.1, Melawai Kec. Kby. Baru Kota Jakarta Selatan, Daerah Khusus Ibukota Jakarta 12160, Indonesia",
+     "image": "https://images.qloo.com/i/A4C4F019-761F-44AB-9D76-3602AE89F477-420x-auto.jpg",
+     "description": "Lively bar-restaurant in Kebayoran Baru offering cocktails, beer, wine, dancing and outdoor seating."
+    },
+    {
+     "id": "2BC7DFB3-0BFC-4B86-A903-44C118241660",
+     "name": "Double Chin Restaurant & Bar",
+     "affinity": 0.63,
+     "popularity": 0.317,
+     "address": "Jl. Sunda No.3 RT.8/RW.4, Gondangdia Menteng Central Jakarta City, Jakarta 10350, Indonesia",
+     "image": "https://images.qloo.com/i/2BC7DFB3-0BFC-4B86-A903-44C118241660-420x-auto.jpg",
+     "description": "Casual Menteng restaurant and bar serving spicy Asian-inspired dishes, halal options, coffee, cocktails, beer, wine, and all-you-can-eat menus."
+    },
+    {
+     "id": "4FC97948-4F0B-451D-BD32-3F3AE5CFE3B5",
+     "name": "Shu Cuisine and Bar",
+     "affinity": 0.626,
+     "popularity": 0.091,
+     "address": "Plaza Indonesia Jl. M.H. Thamrin No.Kav. 28-30 Level 4 RT.9/RW.5, Gondangdia Kec. Menteng, Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta 10350, Indonesia",
+     "image": "https://images.qloo.com/i/4FC97948-4F0B-451D-BD32-3F3AE5CFE3B5-420x-auto.jpg",
+     "description": "Upscale Chinese lounge and cocktail bar in Plaza Indonesia, offering halal-friendly dishes, coffee, and all-you-can-eat dining in a modern mall setting."
+    },
+    {
+     "id": "B2FFB299-6F9A-48E2-8041-5C41B5F3AB93",
+     "name": "La Vue Rooftop Bar",
+     "affinity": 0.625,
+     "popularity": 0.885,
+     "address": "The Hermitage, a Tribute Portfolio Hotel, Jakarta Jl. Cilacap No.1 RT.11/RW.5, Menteng Kec. Menteng, Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta 10310, Indonesia",
+     "image": "https://images.qloo.com/i/B2FFB299-6F9A-48E2-8041-5C41B5F3AB93-420x-auto.jpg",
+     "description": "Rooftop bar atop a historic Menteng hotel offering panoramic Jakarta views and cocktails, wine, beer and bar-style dining."
+    },
+    {
+     "id": "6B3438DE-4AE2-41B9-BED1-66909A9FF18C",
+     "name": "bleu8",
+     "affinity": 0.623,
+     "popularity": 0.728,
+     "address": "Jl. Asia Afrika, Senayan RT.1/RW.3, Gelora Tanah Abang Central Jakarta City, Jakarta 10270, Indonesia",
+     "image": "https://images.qloo.com/i/6B3438DE-4AE2-41B9-BED1-66909A9FF18C-420x-auto.jpg",
+     "description": "Speakeasy-inspired poolside bar and lounge at a luxury hotel, serving elevated cocktails, spirits, and light bites with indoor and outdoor seating."
+    }
+   ],
+   "brands": [
+    {
+     "id": "46C9F889-EC89-4715-A767-DEABACF52C41",
+     "name": "Uniqlo",
+     "affinity": 0.98,
+     "popularity": 0.995,
+     "image": "https://images.qloo.com/i/46C9F889-EC89-4715-A767-DEABACF52C41-420x-auto.jpg",
+     "description": "Uniqlo is a Japanese casual wear designer and retailer offering high-quality, comfortable clothing and accessories for women, men, and children."
+    },
+    {
+     "id": "C306B282-6425-46DF-98F0-D976C6A65B1E",
+     "name": "Coach",
+     "affinity": 0.953,
+     "popularity": 0.998,
+     "image": "https://images.qloo.com/i/C306B282-6425-46DF-98F0-D976C6A65B1E-420x-auto.jpg",
+     "description": "COACH is a luxury fashion brand known for handbags, wallets, clothing, menswear, shoes, and accessories."
+    },
+    {
+     "id": "6C386104-464E-4FB5-8570-37B88B132875",
+     "name": "Kate Spade New York",
+     "affinity": 0.947,
+     "popularity": 0.995,
+     "image": "https://images.qloo.com/i/6C386104-464E-4FB5-8570-37B88B132875-420x-auto.jpg",
+     "description": "Kate Spade New York is a fashion brand known for designer handbags, clothing, jewelry, and accessories."
+    },
+    {
+     "id": "76AD9E43-C469-4929-AB61-BC4DC28B9A27",
+     "name": "Fossil",
+     "affinity": 0.946,
+     "popularity": 0.982,
+     "image": "https://images.qloo.com/i/76AD9E43-C469-4929-AB61-BC4DC28B9A27-420x-auto.jpg",
+     "description": "Fossil is a global design and marketing company known for its distinctive watches, handbags, and jewelry."
+    },
+    {
+     "id": "08C1CD26-59F0-4DDB-AA45-0E8044534B15",
+     "name": "Keds",
+     "affinity": 0.944,
+     "popularity": 0.95,
+     "image": "https://images.qloo.com/i/08C1CD26-59F0-4DDB-AA45-0E8044534B15-420x-auto.jpg",
+     "description": "Keds is an American brand known for its canvas shoes with rubber soles, offering stylish and comfortable sneakers for women, men, and kids."
+    }
+   ],
+   "podcasts": [
+    {
+     "id": "51194948-94F0-46A0-B8A2-874FF66A0A57",
+     "name": "This Might Get Weird",
+     "affinity": 0.966,
+     "popularity": 0.972,
+     "image": "https://images.qloo.com/i/51194948-94F0-46A0-B8A2-874FF66A0A57-420x-auto.jpg",
+     "description": "Grace and Mamrie share humorous conversations and anecdotes, aiming to entertain listeners for over 30 minutes."
+    },
+    {
+     "id": "0792967A-4289-42E9-961A-61E260B3AD65",
+     "name": "Psychobabble with Tyler Oakley & Korey Kuhl",
+     "affinity": 0.954,
+     "popularity": 0.983,
+     "image": "https://images.qloo.com/i/0792967A-4289-42E9-961A-61E260B3AD65-420x-auto.jpg",
+     "description": "Tyler Oakley and Korey Kuhl share unfiltered gossip, pop culture insights, and untold stories in their weekly podcast."
+    },
+    {
+     "id": "085EA15C-B7FE-4C6E-98D6-727A967ACC0E",
+     "name": "Dear Hank & John",
+     "affinity": 0.95,
+     "popularity": 0.982,
+     "image": "https://images.qloo.com/i/085EA15C-B7FE-4C6E-98D6-727A967ACC0E-420x-auto.jpg",
+     "description": "John and Hank Green provide humorous and heartfelt advice on life's questions, sharing news from Mars and AFC Wimbledon."
+    },
+    {
+     "id": "7A8D49C3-3540-459E-8093-1AA706BDFB00",
+     "name": "Not Too Deep with Grace Helbig",
+     "affinity": 0.947,
+     "popularity": 0.985,
+     "image": "https://images.qloo.com/i/7A8D49C3-3540-459E-8093-1AA706BDFB00-420x-auto.jpg",
+     "description": "A humorous interview podcast where Grace Helbig hosts famous guests for lighthearted and silly conversations."
+    }
+   ],
+   "opener": {
+    "id": "345B890E-38F8-4E89-9CE6-A21201BA8893",
+    "name": "Daniela Andrade",
+    "affinity": 0.951,
+    "popularity": 0.977,
+    "image": "https://images.qloo.com/i/345B890E-38F8-4E89-9CE6-A21201BA8893-420x-auto.jpg"
+   }
+  },
+  {
+   "name": "Singapore",
+   "query": "Singapore",
+   "lat": 1.3521,
+   "lng": 103.8198,
+   "score": 100,
+   "affinity": 0.999,
+   "popularity": 0.923,
+   "cells": 11,
+   "why": "Peak affinity at 0.999 with score 100 and strong popularity 0.923.",
+   "peers": [
+    {
+     "id": "134329CB-BB11-4F69-A55F-ADA4B9F10A1D",
+     "name": "Banks",
+     "affinity": 0.955,
+     "popularity": 0.997,
+     "image": "https://images.qloo.com/i/134329CB-BB11-4F69-A55F-ADA4B9F10A1D-420x-auto.jpg"
+    },
+    {
+     "id": "D1A1A06F-2E69-4C8C-B307-4E05A3A090FE",
+     "name": "Birdy",
+     "affinity": 0.954,
+     "popularity": 0.998,
+     "image": "https://images.qloo.com/i/D1A1A06F-2E69-4C8C-B307-4E05A3A090FE-420x-auto.jpg"
+    },
+    {
+     "id": "345B890E-38F8-4E89-9CE6-A21201BA8893",
+     "name": "Daniela Andrade",
+     "affinity": 0.953,
+     "popularity": 0.977,
+     "image": "https://images.qloo.com/i/345B890E-38F8-4E89-9CE6-A21201BA8893-420x-auto.jpg"
+    },
+    {
+     "id": "FF2E980F-4BA0-4E2B-8BA8-20BC30DE4F9A",
+     "name": "The Sam Willows",
+     "affinity": 0.951,
+     "popularity": 0.769,
+     "image": "https://images.qloo.com/i/FF2E980F-4BA0-4E2B-8BA8-20BC30DE4F9A-420x-auto.jpg"
+    },
+    {
+     "id": "F74972E5-F3BF-47C6-84B5-913D5558E15F",
+     "name": "Alextbh",
+     "affinity": 0.951,
+     "popularity": 0.808,
+     "image": "https://images.qloo.com/i/F74972E5-F3BF-47C6-84B5-913D5558E15F-420x-auto.jpg"
+    },
+    {
+     "id": "E280029E-4031-4895-81C8-FFBD62FFE868",
+     "name": "Kimbra",
+     "affinity": 0.949,
+     "popularity": 0.993,
+     "image": "https://images.qloo.com/i/E280029E-4031-4895-81C8-FFBD62FFE868-420x-auto.jpg"
+    },
+    {
+     "id": "B11A1B37-3E53-4EAE-96A0-728F2FAE50AE",
+     "name": "Gabrielle Aplin",
+     "affinity": 0.948,
+     "popularity": 0.991,
+     "image": "https://images.qloo.com/i/B11A1B37-3E53-4EAE-96A0-728F2FAE50AE-420x-auto.jpg"
+    },
+    {
+     "id": "D0FB2FA3-01FF-4F46-A501-F53EE746CD66",
+     "name": "Ellie Goulding",
+     "affinity": 0.948,
+     "popularity": 1,
+     "image": "https://images.qloo.com/i/D0FB2FA3-01FF-4F46-A501-F53EE746CD66-420x-auto.jpg"
+    },
+    {
+     "id": "6062A977-79F7-48F9-917E-0B57D77474AD",
+     "name": "Sam Smith",
+     "affinity": 0.947,
+     "popularity": 0.999,
+     "image": "https://images.qloo.com/i/6062A977-79F7-48F9-917E-0B57D77474AD-420x-auto.jpg"
+    },
+    {
+     "id": "0B56A7A9-3438-41CF-B2A3-723FA85F1BB4",
+     "name": "HONNE",
+     "affinity": 0.947,
+     "popularity": 0.985,
+     "image": "https://images.qloo.com/i/0B56A7A9-3438-41CF-B2A3-723FA85F1BB4-420x-auto.jpg"
+    },
+    {
+     "id": "A37B17AE-15C7-48A3-AADD-6CE50BE3FF74",
+     "name": "Lorde",
+     "affinity": 0.946,
+     "popularity": 0.999,
+     "image": "https://images.qloo.com/i/A37B17AE-15C7-48A3-AADD-6CE50BE3FF74-420x-auto.jpg"
+    },
+    {
+     "id": "0D85212C-DEA2-40A7-B2B4-19DBD210B650",
+     "name": "Jayesslee",
+     "affinity": 0.946,
+     "popularity": 0.901,
+     "image": "https://images.qloo.com/i/0D85212C-DEA2-40A7-B2B4-19DBD210B650-420x-auto.jpg"
+    },
+    {
+     "id": "A81BB5D9-A0A1-4DD1-91B6-8A02486BE105",
+     "name": "Daughter",
+     "affinity": 0.945,
+     "popularity": 0.998,
+     "image": "https://images.qloo.com/i/A81BB5D9-A0A1-4DD1-91B6-8A02486BE105-420x-auto.jpg"
+    },
+    {
+     "id": "296A9BFF-AE21-4FC0-9F9D-81EBCFB5BBE6",
+     "name": "HAIM",
+     "affinity": 0.945,
+     "popularity": 0.998,
+     "image": "https://images.qloo.com/i/296A9BFF-AE21-4FC0-9F9D-81EBCFB5BBE6-420x-auto.jpg"
+    },
+    {
+     "id": "8EB34920-D86D-42E1-B4C0-106AD85FF5E9",
+     "name": "Charlie Lim",
+     "affinity": 0.945,
+     "popularity": 0.716,
+     "image": "https://images.qloo.com/i/8EB34920-D86D-42E1-B4C0-106AD85FF5E9-420x-auto.jpg"
+    }
+   ],
+   "rooms": [
+    {
+     "id": "B4994A75-3414-43D8-98D8-C0CF5119B6D6",
+     "name": "Level Up - Bar & Arcade @ Clarke Quay",
+     "affinity": 0.683,
+     "popularity": 0.98,
+     "address": "3A River Valley Rd #02-04 Blk A Clarke Quay Singapore 179020",
+     "image": "https://images.qloo.com/i/B4994A75-3414-43D8-98D8-C0CF5119B6D6-420x-auto.jpg",
+     "description": "Retro arcade and live music bar in Clarke Quay offering games, DJs, drinks, and event packages for parties and corporate buyouts."
+    },
+    {
+     "id": "BDB0F61C-79C0-4604-96C1-6E509ACC44E5",
+     "name": "Cool Cats",
+     "affinity": 0.682,
+     "popularity": 0.779,
+     "address": "32 Beach Rd Singapore 189764",
+     "image": "https://images.qloo.com/i/BDB0F61C-79C0-4604-96C1-6E509ACC44E5-420x-auto.jpg",
+     "description": "Swanky live-music cocktail lounge offering inventive cocktails and refined jazz performances with weekly rotating headline artists for an upscale, energetic entertainment experience."
+    },
+    {
+     "id": "0490F06C-81AD-45BF-83CA-FC30AAD9EE50",
+     "name": "Wheeler's Estate",
+     "affinity": 0.672,
+     "popularity": 0.996,
+     "address": "2 Park Ln Singapore 798386",
+     "image": "https://images.qloo.com/i/0490F06C-81AD-45BF-83CA-FC30AAD9EE50-420x-auto.jpg",
+     "description": "Sprawling 2-acre casual venue with international fare, a cocktail bar, terrace seating, live music, and outdoor space for events and weddings."
+    },
+    {
+     "id": "C9AFD74C-0961-4915-97DE-6A14473C3EE9",
+     "name": "7 Tavern",
+     "affinity": 0.648,
+     "popularity": 0.197,
+     "address": "1 Goldhill Plaza #01-15 Singapore 308899",
+     "image": "https://images.qloo.com/i/C9AFD74C-0961-4915-97DE-6A14473C3EE9-420x-auto.jpg",
+     "description": "Lively Goldhill Plaza bar and bistro offering live music, arcade games, cocktails, beer, and happy-hour bites in an LGBTQ+-friendly setting."
+    },
+    {
+     "id": "DDEF8219-9BE1-42CA-8841-35807AA0AA96",
+     "name": "Hero's",
+     "affinity": 0.645,
+     "popularity": 0.954,
+     "address": "69 Circular Rd #01-01 Singapore 049423",
+     "image": "https://images.qloo.com/i/DDEF8219-9BE1-42CA-8841-35807AA0AA96-420x-auto.jpg",
+     "description": "Live-music bar and restaurant offering cocktails, dining, dancing and outdoor seating; LGBTQ+ friendly and moderately upscale."
+    }
+   ],
+   "places": [
+    {
+     "id": "21CB260E-4B72-4796-A78B-0B64D9F0D4F0",
+     "name": "Smh",
+     "affinity": 0.711,
+     "popularity": 0.864,
+     "address": "3017 Bedok North Street 5 Singapore 486132",
+     "image": "https://images.qloo.com/i/21CB260E-4B72-4796-A78B-0B64D9F0D4F0-420x-auto.jpg",
+     "description": "Neighborhood restaurant in Bedok North, Singapore, offering casual dining."
+    },
+    {
+     "id": "E904066A-8A80-4E10-8285-AD7A924F944B",
+     "name": "JUMBO Seafood - The Riverwalk",
+     "affinity": 0.686,
+     "popularity": 0.982,
+     "address": "20 Upper Circular Rd #B1-48 The Riverwalk Singapore 058416",
+     "image": "https://images.qloo.com/i/E904066A-8A80-4E10-8285-AD7A924F944B-420x-auto.jpg",
+     "description": "Riverfront seafood restaurant famed for award-winning chilli crab, black pepper crab, and shared seafood platters; offers private dining, cocktails, and takeaway."
+    },
+    {
+     "id": "33BC7D76-4A61-42F6-A0A6-7B2326CAC5C6",
+     "name": "Mr. Stork",
+     "affinity": 0.683,
+     "popularity": 0.981,
+     "address": "5 Fraser St Level 39 Andaz 189354",
+     "image": "https://images.qloo.com/i/33BC7D76-4A61-42F6-A0A6-7B2326CAC5C6-420x-auto.jpg",
+     "description": "High-floor bar-restaurant on Level 39 offering craft cocktails, dancing, upscale bar food like sliders and truffle fries in an LGBTQ+-friendly setting."
+    },
+    {
+     "id": "51C04758-B7E1-4767-9266-D2C33C3B8A72",
+     "name": "2am: dessertbar",
+     "affinity": 0.683,
+     "popularity": 0.984,
+     "address": "21A Lor Liput Singapore 277733",
+     "image": "https://images.qloo.com/i/51C04758-B7E1-4767-9266-D2C33C3B8A72-420x-auto.jpg",
+     "description": "Innovative dessert bar in Holland Village offering progressive, artful sweet-and-savory plated desserts with cocktails and small plates."
+    },
+    {
+     "id": "B4994A75-3414-43D8-98D8-C0CF5119B6D6",
+     "name": "Level Up - Bar & Arcade @ Clarke Quay",
+     "affinity": 0.683,
+     "popularity": 0.98,
+     "address": "3A River Valley Rd #02-04 Blk A Clarke Quay Singapore 179020",
+     "image": "https://images.qloo.com/i/B4994A75-3414-43D8-98D8-C0CF5119B6D6-420x-auto.jpg",
+     "description": "Retro arcade and live music bar in Clarke Quay offering games, DJs, drinks, and event packages for parties and corporate buyouts."
+    }
+   ],
+   "brands": [
+    {
+     "id": "46C9F889-EC89-4715-A767-DEABACF52C41",
+     "name": "Uniqlo",
+     "affinity": 0.98,
+     "popularity": 0.995,
+     "image": "https://images.qloo.com/i/46C9F889-EC89-4715-A767-DEABACF52C41-420x-auto.jpg",
+     "description": "Uniqlo is a Japanese casual wear designer and retailer offering high-quality, comfortable clothing and accessories for women, men, and children."
+    },
+    {
+     "id": "B13C02E3-BA3C-4B39-85B4-ACF12FEBC892",
+     "name": "Starbucks",
+     "affinity": 0.969,
+     "popularity": 1,
+     "image": "https://images.qloo.com/i/B13C02E3-BA3C-4B39-85B4-ACF12FEBC892-420x-auto.jpg",
+     "description": "Starbucks is a global coffee company known for its handcrafted beverages, coffee products, and café experience."
+    },
+    {
+     "id": "CF7D11E7-DA78-47D9-9AE1-030366F4507B",
+     "name": "Gap",
+     "affinity": 0.966,
+     "popularity": 0.994,
+     "image": "https://images.qloo.com/i/CF7D11E7-DA78-47D9-9AE1-030366F4507B-420x-auto.jpg",
+     "description": "Gap Inc. is a leading American specialty apparel company known for its iconic brands including Gap, Old Navy, Banana Republic, and Athleta, offering casual and stylish clothing for the whole family."
+    },
+    {
+     "id": "5760BF0A-EBDF-4B9A-88CD-69F4BF08C362",
+     "name": "Louis Vuitton",
+     "affinity": 0.957,
+     "popularity": 1,
+     "image": "https://images.qloo.com/i/5760BF0A-EBDF-4B9A-88CD-69F4BF08C362-420x-auto.jpg",
+     "description": "Louis Vuitton is a luxury fashion brand known for its designer handbags, trunks, and high-end accessories."
+    },
+    {
+     "id": "74A44B01-5C99-4754-9585-F487D21C543D",
+     "name": "Zara",
+     "affinity": 0.955,
+     "popularity": 0.999,
+     "image": "https://images.qloo.com/i/74A44B01-5C99-4754-9585-F487D21C543D-420x-auto.jpg",
+     "description": "Zara is a global fast fashion retailer offering trendy clothing, shoes, and accessories for women, men, and kids, along with home decor through Zara Home."
+    }
+   ],
+   "podcasts": [
+    {
+     "id": "51194948-94F0-46A0-B8A2-874FF66A0A57",
+     "name": "This Might Get Weird",
+     "affinity": 0.978,
+     "popularity": 0.972,
+     "image": "https://images.qloo.com/i/51194948-94F0-46A0-B8A2-874FF66A0A57-420x-auto.jpg",
+     "description": "Grace and Mamrie share humorous conversations and anecdotes, aiming to entertain listeners for over 30 minutes."
+    },
+    {
+     "id": "7A8D49C3-3540-459E-8093-1AA706BDFB00",
+     "name": "Not Too Deep with Grace Helbig",
+     "affinity": 0.962,
+     "popularity": 0.985,
+     "image": "https://images.qloo.com/i/7A8D49C3-3540-459E-8093-1AA706BDFB00-420x-auto.jpg",
+     "description": "A humorous interview podcast where Grace Helbig hosts famous guests for lighthearted and silly conversations."
+    },
+    {
+     "id": "0792967A-4289-42E9-961A-61E260B3AD65",
+     "name": "Psychobabble with Tyler Oakley & Korey Kuhl",
+     "affinity": 0.96,
+     "popularity": 0.983,
+     "image": "https://images.qloo.com/i/0792967A-4289-42E9-961A-61E260B3AD65-420x-auto.jpg",
+     "description": "Tyler Oakley and Korey Kuhl share unfiltered gossip, pop culture insights, and untold stories in their weekly podcast."
+    },
+    {
+     "id": "085EA15C-B7FE-4C6E-98D6-727A967ACC0E",
+     "name": "Dear Hank & John",
+     "affinity": 0.951,
+     "popularity": 0.982,
+     "image": "https://images.qloo.com/i/085EA15C-B7FE-4C6E-98D6-727A967ACC0E-420x-auto.jpg",
+     "description": "John and Hank Green provide humorous and heartfelt advice on life's questions, sharing news from Mars and AFC Wimbledon."
+    }
+   ],
+   "opener": {
+    "id": "345B890E-38F8-4E89-9CE6-A21201BA8893",
+    "name": "Daniela Andrade",
+    "affinity": 0.953,
+    "popularity": 0.977,
+    "image": "https://images.qloo.com/i/345B890E-38F8-4E89-9CE6-A21201BA8893-420x-auto.jpg"
+   }
+  },
+  {
+   "name": "Kuala Lumpur",
+   "query": "Kuala Lumpur",
+   "lat": 3.139,
+   "lng": 101.6869,
+   "score": 100,
+   "affinity": 0.997,
+   "popularity": 0.971,
+   "cells": 10,
+   "why": "Top-tier market with max score 100, affinity 0.997, and high popularity 0.971.",
+   "peers": [
+    {
+     "id": "BC5AF895-7162-4395-8D42-75C6481B0E60",
+     "name": "Zee Avi",
+     "affinity": 0.958,
+     "popularity": 0.981,
+     "image": "https://images.qloo.com/i/BC5AF895-7162-4395-8D42-75C6481B0E60-420x-auto.jpg"
+    },
+    {
+     "id": "F74972E5-F3BF-47C6-84B5-913D5558E15F",
+     "name": "Alextbh",
+     "affinity": 0.955,
+     "popularity": 0.808,
+     "image": "https://images.qloo.com/i/F74972E5-F3BF-47C6-84B5-913D5558E15F-420x-auto.jpg"
+    },
+    {
+     "id": "D1A1A06F-2E69-4C8C-B307-4E05A3A090FE",
+     "name": "Birdy",
+     "affinity": 0.954,
+     "popularity": 0.998,
+     "image": "https://images.qloo.com/i/D1A1A06F-2E69-4C8C-B307-4E05A3A090FE-420x-auto.jpg"
+    },
+    {
+     "id": "345B890E-38F8-4E89-9CE6-A21201BA8893",
+     "name": "Daniela Andrade",
+     "affinity": 0.953,
+     "popularity": 0.977,
+     "image": "https://images.qloo.com/i/345B890E-38F8-4E89-9CE6-A21201BA8893-420x-auto.jpg"
+    },
+    {
+     "id": "134329CB-BB11-4F69-A55F-ADA4B9F10A1D",
+     "name": "Banks",
+     "affinity": 0.952,
+     "popularity": 0.997,
+     "image": "https://images.qloo.com/i/134329CB-BB11-4F69-A55F-ADA4B9F10A1D-420x-auto.jpg"
+    },
+    {
+     "id": "FF2E980F-4BA0-4E2B-8BA8-20BC30DE4F9A",
+     "name": "The Sam Willows",
+     "affinity": 0.949,
+     "popularity": 0.769,
+     "image": "https://images.qloo.com/i/FF2E980F-4BA0-4E2B-8BA8-20BC30DE4F9A-420x-auto.jpg"
+    },
+    {
+     "id": "E280029E-4031-4895-81C8-FFBD62FFE868",
+     "name": "Kimbra",
+     "affinity": 0.949,
+     "popularity": 0.993,
+     "image": "https://images.qloo.com/i/E280029E-4031-4895-81C8-FFBD62FFE868-420x-auto.jpg"
+    },
+    {
+     "id": "6062A977-79F7-48F9-917E-0B57D77474AD",
+     "name": "Sam Smith",
+     "affinity": 0.947,
+     "popularity": 0.999,
+     "image": "https://images.qloo.com/i/6062A977-79F7-48F9-917E-0B57D77474AD-420x-auto.jpg"
+    },
+    {
+     "id": "D0FB2FA3-01FF-4F46-A501-F53EE746CD66",
+     "name": "Ellie Goulding",
+     "affinity": 0.947,
+     "popularity": 1,
+     "image": "https://images.qloo.com/i/D0FB2FA3-01FF-4F46-A501-F53EE746CD66-420x-auto.jpg"
+    },
+    {
+     "id": "0D85212C-DEA2-40A7-B2B4-19DBD210B650",
+     "name": "Jayesslee",
+     "affinity": 0.945,
+     "popularity": 0.901,
+     "image": "https://images.qloo.com/i/0D85212C-DEA2-40A7-B2B4-19DBD210B650-420x-auto.jpg"
+    },
+    {
+     "id": "24012F7D-C125-4EB7-A661-6AF65523E43C",
+     "name": "Adele",
+     "affinity": 0.944,
+     "popularity": 1,
+     "image": "https://images.qloo.com/i/24012F7D-C125-4EB7-A661-6AF65523E43C-420x-auto.jpg"
+    },
+    {
+     "id": "F8F16C71-9BC2-4FAD-AD9C-02AAA00857A5",
+     "name": "Kina Grannis",
+     "affinity": 0.943,
+     "popularity": 0.987,
+     "image": "https://images.qloo.com/i/F8F16C71-9BC2-4FAD-AD9C-02AAA00857A5-420x-auto.jpg"
+    },
+    {
+     "id": "A8C5EA6D-BE89-4FE4-86F2-7C73EA6EFCC4",
+     "name": "Giselle",
+     "affinity": 0.943,
+     "popularity": 0.906,
+     "image": "https://images.qloo.com/i/A8C5EA6D-BE89-4FE4-86F2-7C73EA6EFCC4-420x-auto.jpg"
+    },
+    {
+     "id": "7AFC0B14-0285-457C-8C5B-30C1174E500E",
+     "name": "Jeff Bernat",
+     "affinity": 0.942,
+     "popularity": 0.911,
+     "image": "https://images.qloo.com/i/7AFC0B14-0285-457C-8C5B-30C1174E500E-420x-auto.jpg"
+    },
+    {
+     "id": "70B27684-A137-4B87-98AE-A012712D4411",
+     "name": "Ta-ku",
+     "affinity": 0.942,
+     "popularity": 0.983,
+     "image": "https://images.qloo.com/i/70B27684-A137-4B87-98AE-A012712D4411-420x-auto.jpg"
+    }
+   ],
+   "rooms": [
+    {
+     "id": "71DEA7CC-E103-4FE8-A0D5-93F08637A4E2",
+     "name": "bartolo",
+     "affinity": 0.641,
+     "popularity": 0.338,
+     "address": "Mezannine floor lot 204-206, Central Market Jalan Hang Kasturi Annexe 50050 Kuala Lumpur, Wilayah Persekutuan Kuala Lumpur, Malaysia",
+     "image": "https://images.qloo.com/i/71DEA7CC-E103-4FE8-A0D5-93F08637A4E2-420x-auto.jpg",
+     "description": "Portuguese-inspired cafe and bakery in Central Market offering small plates, coffee, and pastel de nata with partially open-air seating."
+    },
+    {
+     "id": "7AA8B0AF-4CF8-451A-A2B2-B5D4C542098F",
+     "name": "Merdekarya",
+     "affinity": 0.636,
+     "popularity": 0.969,
+     "address": "352 First Floor Jalan 5/57 Bukit Gasing 46000 Petaling Jaya, Selangor, Malaysia",
+     "image": "https://images.qloo.com/i/7AA8B0AF-4CF8-451A-A2B2-B5D4C542098F-420x-auto.jpg",
+     "description": "Intimate, no-frills live-music bar serving pub-grub and hosting gigs and open-mic nights."
+    },
+    {
+     "id": "0273B259-3A8F-4731-B9E9-43FDA1A2A424",
+     "name": "BoboKL",
+     "affinity": 0.634,
+     "popularity": 0.915,
+     "address": "65-2, Jalan Bangkung Bangsar 59100 Kuala Lumpur Federal Territory of Kuala Lumpur, Malaysia",
+     "image": "https://images.qloo.com/i/0273B259-3A8F-4731-B9E9-43FDA1A2A424-420x-auto.jpg",
+     "description": "Intimate 68-seat live music and comedy club in Bangsar offering close-up jazz, diverse performances, tapas and premium cocktails."
+    },
+    {
+     "id": "4DD675EE-AB64-4BCE-AA3D-5A6889CB1DC3",
+     "name": "The Bee @ Publika",
+     "affinity": 0.631,
+     "popularity": 0.99,
+     "address": "Lot 36B, Level G2, Block C, Publika Jln Dutamas 1 Solaris Dutamas 50480 Kuala Lumpur, Malaysia",
+     "image": "https://images.qloo.com/i/4DD675EE-AB64-4BCE-AA3D-5A6889CB1DC3-420x-auto.jpg",
+     "description": "Relaxed bar and live-music restaurant in a mall offering an international menu, cocktails, small plates and late-night dining."
+    },
+    {
+     "id": "330DD4A8-4DE4-44D4-8A46-5E39DC23D4A8",
+     "name": "Panggung Anniversari",
+     "affinity": 0.628,
+     "popularity": 0.799,
+     "address": "Tasik Perdana 50480 Kuala Lumpur Wilayah Persekutuan Kuala Lumpur Malaysia",
+     "image": "https://images.qloo.com/i/330DD4A8-4DE4-44D4-8A46-5E39DC23D4A8-420x-auto.jpg",
+     "description": "Outdoor performance stage in Tasik Perdana hosting live music and cultural events amid Kuala Lumpur’s Lake Gardens."
+    }
+   ],
+   "places": [
+    {
+     "id": "84311D22-A739-48ED-9596-BD79CC6DD8A3",
+     "name": "Mamacina",
+     "affinity": 0.662,
+     "popularity": 0.409,
+     "address": "Level 3 , L3-01B DC Mall 6, Jalan Damanlela Bukit Damansara 50490 Kuala Lumpur, Malaysia",
+     "image": "https://images.qloo.com/i/84311D22-A739-48ED-9596-BD79CC6DD8A3-420x-auto.jpg",
+     "description": "Restaurant and bar in DC Mall, Bukit Damansara, serving cocktails, wine, beer and bar food with happy hour and dine-in or takeout."
+    },
+    {
+     "id": "2443785D-8616-4810-9B27-68559D05BBC2",
+     "name": "Stratosphere @ The Roof",
+     "affinity": 0.657,
+     "popularity": 0.802,
+     "address": "Sky Level First Ave Bandar Utama 47800 Petaling Jaya, Selangor, Malaysia",
+     "image": "https://images.qloo.com/i/2443785D-8616-4810-9B27-68559D05BBC2-420x-auto.jpg",
+     "description": "Rooftop restaurant-bar atop First Avenue Bandar Utama offering cocktails, beer and casual dining with dine-in service."
+    },
+    {
+     "id": "3426ABB9-1267-4755-97A0-48B07B2F0606",
+     "name": "The Pantheon & 拾叁唐 Livehouse",
+     "affinity": 0.657,
+     "popularity": 0.153,
+     "address": "26, Jalan Liku Bangsar 59100 Kuala Lumpur Federal Territory of Kuala Lumpur, Malaysia",
+     "image": "https://images.qloo.com/i/3426ABB9-1267-4755-97A0-48B07B2F0606-420x-auto.jpg",
+     "description": "Vibrant Bangsar live-music bar serving cocktails, beer, wine and bar food with indoor/outdoor seating and multiple pickup and delivery options."
+    },
+    {
+     "id": "4323165E-B902-4D83-868D-AE4D450DD244",
+     "name": "Upper House",
+     "affinity": 0.655,
+     "popularity": 0.394,
+     "address": "Rooftop, B Hotel 82 84, Jalan Petaling City Centre 50000 Kuala Lumpur, Wilayah Persekutuan Kuala Lumpur, Malaysia",
+     "image": "https://images.qloo.com/i/4323165E-B902-4D83-868D-AE4D450DD244-420x-auto.jpg",
+     "description": "Rooftop restaurant and bar atop B Hotel in Kuala Lumpur offering cocktails, small plates, and panoramic city views."
+    },
+    {
+     "id": "C954B144-0629-4695-99F1-FC2A82C5E405",
+     "name": "Triptyk",
+     "affinity": 0.648,
+     "popularity": 0.505,
+     "address": "88, Jalan Tuba Kampung Attap 50460 Kuala Lumpur Federal Territory of Kuala Lumpur, Malaysia",
+     "image": "https://images.qloo.com/i/C954B144-0629-4695-99F1-FC2A82C5E405-420x-auto.jpg",
+     "description": "Multi-concept Kuala Lumpur venue blending restaurant, bar, cafe and event space offering cocktails, late-night small plates, vegan options, coffee and private dining."
+    }
+   ],
+   "brands": [
+    {
+     "id": "46C9F889-EC89-4715-A767-DEABACF52C41",
+     "name": "Uniqlo",
+     "affinity": 0.981,
+     "popularity": 0.995,
+     "image": "https://images.qloo.com/i/46C9F889-EC89-4715-A767-DEABACF52C41-420x-auto.jpg",
+     "description": "Uniqlo is a Japanese casual wear designer and retailer offering high-quality, comfortable clothing and accessories for women, men, and children."
+    },
+    {
+     "id": "B13C02E3-BA3C-4B39-85B4-ACF12FEBC892",
+     "name": "Starbucks",
+     "affinity": 0.97,
+     "popularity": 1,
+     "image": "https://images.qloo.com/i/B13C02E3-BA3C-4B39-85B4-ACF12FEBC892-420x-auto.jpg",
+     "description": "Starbucks is a global coffee company known for its handcrafted beverages, coffee products, and café experience."
+    },
+    {
+     "id": "CF7D11E7-DA78-47D9-9AE1-030366F4507B",
+     "name": "Gap",
+     "affinity": 0.967,
+     "popularity": 0.994,
+     "image": "https://images.qloo.com/i/CF7D11E7-DA78-47D9-9AE1-030366F4507B-420x-auto.jpg",
+     "description": "Gap Inc. is a leading American specialty apparel company known for its iconic brands including Gap, Old Navy, Banana Republic, and Athleta, offering casual and stylish clothing for the whole family."
+    },
+    {
+     "id": "5760BF0A-EBDF-4B9A-88CD-69F4BF08C362",
+     "name": "Louis Vuitton",
+     "affinity": 0.958,
+     "popularity": 1,
+     "image": "https://images.qloo.com/i/5760BF0A-EBDF-4B9A-88CD-69F4BF08C362-420x-auto.jpg",
+     "description": "Louis Vuitton is a luxury fashion brand known for its designer handbags, trunks, and high-end accessories."
+    },
+    {
+     "id": "74A44B01-5C99-4754-9585-F487D21C543D",
+     "name": "Zara",
+     "affinity": 0.956,
+     "popularity": 0.999,
+     "image": "https://images.qloo.com/i/74A44B01-5C99-4754-9585-F487D21C543D-420x-auto.jpg",
+     "description": "Zara is a global fast fashion retailer offering trendy clothing, shoes, and accessories for women, men, and kids, along with home decor through Zara Home."
+    }
+   ],
+   "podcasts": [
+    {
+     "id": "51194948-94F0-46A0-B8A2-874FF66A0A57",
+     "name": "This Might Get Weird",
+     "affinity": 0.976,
+     "popularity": 0.972,
+     "image": "https://images.qloo.com/i/51194948-94F0-46A0-B8A2-874FF66A0A57-420x-auto.jpg",
+     "description": "Grace and Mamrie share humorous conversations and anecdotes, aiming to entertain listeners for over 30 minutes."
+    },
+    {
+     "id": "7A8D49C3-3540-459E-8093-1AA706BDFB00",
+     "name": "Not Too Deep with Grace Helbig",
+     "affinity": 0.96,
+     "popularity": 0.985,
+     "image": "https://images.qloo.com/i/7A8D49C3-3540-459E-8093-1AA706BDFB00-420x-auto.jpg",
+     "description": "A humorous interview podcast where Grace Helbig hosts famous guests for lighthearted and silly conversations."
+    },
+    {
+     "id": "0792967A-4289-42E9-961A-61E260B3AD65",
+     "name": "Psychobabble with Tyler Oakley & Korey Kuhl",
+     "affinity": 0.96,
+     "popularity": 0.983,
+     "image": "https://images.qloo.com/i/0792967A-4289-42E9-961A-61E260B3AD65-420x-auto.jpg",
+     "description": "Tyler Oakley and Korey Kuhl share unfiltered gossip, pop culture insights, and untold stories in their weekly podcast."
+    },
+    {
+     "id": "085EA15C-B7FE-4C6E-98D6-727A967ACC0E",
+     "name": "Dear Hank & John",
+     "affinity": 0.952,
+     "popularity": 0.982,
+     "image": "https://images.qloo.com/i/085EA15C-B7FE-4C6E-98D6-727A967ACC0E-420x-auto.jpg",
+     "description": "John and Hank Green provide humorous and heartfelt advice on life's questions, sharing news from Mars and AFC Wimbledon."
+    }
+   ],
+   "opener": {
+    "id": "BC5AF895-7162-4395-8D42-75C6481B0E60",
+    "name": "Zee Avi",
+    "affinity": 0.958,
+    "popularity": 0.981,
+    "image": "https://images.qloo.com/i/BC5AF895-7162-4395-8D42-75C6481B0E60-420x-auto.jpg"
+   }
+  },
+  {
+   "name": "Penang",
+   "query": "George Town, Penang",
+   "lat": 5.4141,
+   "lng": 100.3288,
+   "score": 99,
+   "affinity": 0.986,
+   "popularity": 0.906,
+   "cells": 9,
+   "why": "Intimate room potential with score 99 and high affinity 0.986.",
+   "peers": [
+    {
+     "id": "BC5AF895-7162-4395-8D42-75C6481B0E60",
+     "name": "Zee Avi",
+     "affinity": 0.954,
+     "popularity": 0.981,
+     "image": "https://images.qloo.com/i/BC5AF895-7162-4395-8D42-75C6481B0E60-420x-auto.jpg"
+    },
+    {
+     "id": "F74972E5-F3BF-47C6-84B5-913D5558E15F",
+     "name": "Alextbh",
+     "affinity": 0.953,
+     "popularity": 0.808,
+     "image": "https://images.qloo.com/i/F74972E5-F3BF-47C6-84B5-913D5558E15F-420x-auto.jpg"
+    },
+    {
+     "id": "D1A1A06F-2E69-4C8C-B307-4E05A3A090FE",
+     "name": "Birdy",
+     "affinity": 0.953,
+     "popularity": 0.998,
+     "image": "https://images.qloo.com/i/D1A1A06F-2E69-4C8C-B307-4E05A3A090FE-420x-auto.jpg"
+    },
+    {
+     "id": "345B890E-38F8-4E89-9CE6-A21201BA8893",
+     "name": "Daniela Andrade",
+     "affinity": 0.952,
+     "popularity": 0.977,
+     "image": "https://images.qloo.com/i/345B890E-38F8-4E89-9CE6-A21201BA8893-420x-auto.jpg"
+    },
+    {
+     "id": "FF2E980F-4BA0-4E2B-8BA8-20BC30DE4F9A",
+     "name": "The Sam Willows",
+     "affinity": 0.949,
+     "popularity": 0.769,
+     "image": "https://images.qloo.com/i/FF2E980F-4BA0-4E2B-8BA8-20BC30DE4F9A-420x-auto.jpg"
+    },
+    {
+     "id": "6062A977-79F7-48F9-917E-0B57D77474AD",
+     "name": "Sam Smith",
+     "affinity": 0.946,
+     "popularity": 0.999,
+     "image": "https://images.qloo.com/i/6062A977-79F7-48F9-917E-0B57D77474AD-420x-auto.jpg"
+    },
+    {
+     "id": "E280029E-4031-4895-81C8-FFBD62FFE868",
+     "name": "Kimbra",
+     "affinity": 0.945,
+     "popularity": 0.993,
+     "image": "https://images.qloo.com/i/E280029E-4031-4895-81C8-FFBD62FFE868-420x-auto.jpg"
+    },
+    {
+     "id": "A37B17AE-15C7-48A3-AADD-6CE50BE3FF74",
+     "name": "Lorde",
+     "affinity": 0.945,
+     "popularity": 0.999,
+     "image": "https://images.qloo.com/i/A37B17AE-15C7-48A3-AADD-6CE50BE3FF74-420x-auto.jpg"
+    },
+    {
+     "id": "9C181619-0D04-49AB-BAB6-5A4D4150A432",
+     "name": "Marian Hill",
+     "affinity": 0.945,
+     "popularity": 0.981,
+     "image": "https://images.qloo.com/i/9C181619-0D04-49AB-BAB6-5A4D4150A432-420x-auto.jpg"
+    },
+    {
+     "id": "D0FB2FA3-01FF-4F46-A501-F53EE746CD66",
+     "name": "Ellie Goulding",
+     "affinity": 0.945,
+     "popularity": 1,
+     "image": "https://images.qloo.com/i/D0FB2FA3-01FF-4F46-A501-F53EE746CD66-420x-auto.jpg"
+    },
+    {
+     "id": "0D85212C-DEA2-40A7-B2B4-19DBD210B650",
+     "name": "Jayesslee",
+     "affinity": 0.944,
+     "popularity": 0.901,
+     "image": "https://images.qloo.com/i/0D85212C-DEA2-40A7-B2B4-19DBD210B650-420x-auto.jpg"
+    },
+    {
+     "id": "24012F7D-C125-4EB7-A661-6AF65523E43C",
+     "name": "Adele",
+     "affinity": 0.944,
+     "popularity": 1,
+     "image": "https://images.qloo.com/i/24012F7D-C125-4EB7-A661-6AF65523E43C-420x-auto.jpg"
+    },
+    {
+     "id": "67214C5E-264F-4329-8EA3-582B5AEE513D",
+     "name": "Foxes",
+     "affinity": 0.943,
+     "popularity": 0.992,
+     "image": "https://images.qloo.com/i/67214C5E-264F-4329-8EA3-582B5AEE513D-420x-auto.jpg"
+    },
+    {
+     "id": "F8F16C71-9BC2-4FAD-AD9C-02AAA00857A5",
+     "name": "Kina Grannis",
+     "affinity": 0.943,
+     "popularity": 0.987,
+     "image": "https://images.qloo.com/i/F8F16C71-9BC2-4FAD-AD9C-02AAA00857A5-420x-auto.jpg"
+    },
+    {
+     "id": "1746700A-2FDF-4238-81DF-3C4161790D53",
+     "name": "Arden Cho",
+     "affinity": 0.942,
+     "popularity": 0.609,
+     "image": "https://images.qloo.com/i/1746700A-2FDF-4238-81DF-3C4161790D53-420x-auto.jpg"
+    }
+   ],
+   "rooms": [
+    {
+     "id": "8BE69269-85DA-4DA1-841E-FC6B1657453E",
+     "name": "Soundmaker Studio",
+     "affinity": 0.653,
+     "popularity": 0.843,
+     "address": "360, Jln Penang Georgetown 10000 George Town Penang, Malaysia",
+     "image": "https://images.qloo.com/i/8BE69269-85DA-4DA1-841E-FC6B1657453E-420x-auto.jpg",
+     "description": "Hybrid live-music bar and creative studio in George Town offering performances, audio/video production, and equipment rental."
+    }
+   ],
+   "places": [
+    {
+     "id": "8BE69269-85DA-4DA1-841E-FC6B1657453E",
+     "name": "Soundmaker Studio",
+     "affinity": 0.653,
+     "popularity": 0.843,
+     "address": "360, Jln Penang Georgetown 10000 George Town Penang, Malaysia",
+     "image": "https://images.qloo.com/i/8BE69269-85DA-4DA1-841E-FC6B1657453E-420x-auto.jpg",
+     "description": "Hybrid live-music bar and creative studio in George Town offering performances, audio/video production, and equipment rental."
+    },
+    {
+     "id": "52FC2D41-87B1-40AA-AE84-56BD3F2A2B8D",
+     "name": "BuffRoom",
+     "affinity": 0.653,
+     "popularity": 0.113,
+     "address": "145, Lebuh Acheh Georgetown 10200 George Town Penang, Malaysia",
+     "image": "https://images.qloo.com/i/52FC2D41-87B1-40AA-AE84-56BD3F2A2B8D-420x-auto.jpg",
+     "description": "Casual bar-cafe in George Town offering small plates, beer, wine and coffee for dine-in or takeout."
+    },
+    {
+     "id": "FA9EED38-710F-4B1B-B242-B24D61E14AFC",
+     "name": "Hin Bus Depot",
+     "affinity": 0.651,
+     "popularity": 0.998,
+     "address": "31A, Jalan Gurdwara 10300 George Town Penang Malaysia",
+     "image": "https://images.qloo.com/i/FA9EED38-710F-4B1B-B242-B24D61E14AFC-420x-auto.jpg",
+     "description": "Converted bus depot hosting indoor and outdoor art exhibitions, a cafe, and regular weekend markets."
+    },
+    {
+     "id": "2273AC69-A7E2-4C93-8D3F-5866E2C701E2",
+     "name": "G Spot, G Hotel Gurney",
+     "affinity": 0.649,
+     "popularity": 0.108,
+     "address": "G Hotel 168A, Persiaran Gurney 10250 George Town Pulau Pinang, Malaysia",
+     "image": "https://images.qloo.com/i/2273AC69-A7E2-4C93-8D3F-5866E2C701E2-420x-auto.jpg",
+     "description": "Seafront hotel lounge offering afternoon tea and expertly crafted cocktails in a relaxed, sophisticated setting."
+    },
+    {
+     "id": "E5F67EC0-27AC-4ED5-9AAF-0319050478CF",
+     "name": "Manchu Bar",
+     "affinity": 0.648,
+     "popularity": 0.762,
+     "address": "38 & 40, Jalan Pintal Tali Georgetown 10100 George Town Penang, Malaysia",
+     "image": "https://images.qloo.com/i/E5F67EC0-27AC-4ED5-9AAF-0319050478CF-420x-auto.jpg",
+     "description": "Upscale Georgetown bar-restaurant serving cocktails, wine and bar food, noted for breaded cauliflower and an extensive drinks selection."
+    }
+   ],
+   "brands": [
+    {
+     "id": "46C9F889-EC89-4715-A767-DEABACF52C41",
+     "name": "Uniqlo",
+     "affinity": 0.982,
+     "popularity": 0.995,
+     "image": "https://images.qloo.com/i/46C9F889-EC89-4715-A767-DEABACF52C41-420x-auto.jpg",
+     "description": "Uniqlo is a Japanese casual wear designer and retailer offering high-quality, comfortable clothing and accessories for women, men, and children."
+    },
+    {
+     "id": "B13C02E3-BA3C-4B39-85B4-ACF12FEBC892",
+     "name": "Starbucks",
+     "affinity": 0.97,
+     "popularity": 1,
+     "image": "https://images.qloo.com/i/B13C02E3-BA3C-4B39-85B4-ACF12FEBC892-420x-auto.jpg",
+     "description": "Starbucks is a global coffee company known for its handcrafted beverages, coffee products, and café experience."
+    },
+    {
+     "id": "CF7D11E7-DA78-47D9-9AE1-030366F4507B",
+     "name": "Gap",
+     "affinity": 0.967,
+     "popularity": 0.994,
+     "image": "https://images.qloo.com/i/CF7D11E7-DA78-47D9-9AE1-030366F4507B-420x-auto.jpg",
+     "description": "Gap Inc. is a leading American specialty apparel company known for its iconic brands including Gap, Old Navy, Banana Republic, and Athleta, offering casual and stylish clothing for the whole family."
+    },
+    {
+     "id": "5760BF0A-EBDF-4B9A-88CD-69F4BF08C362",
+     "name": "Louis Vuitton",
+     "affinity": 0.958,
+     "popularity": 1,
+     "image": "https://images.qloo.com/i/5760BF0A-EBDF-4B9A-88CD-69F4BF08C362-420x-auto.jpg",
+     "description": "Louis Vuitton is a luxury fashion brand known for its designer handbags, trunks, and high-end accessories."
+    },
+    {
+     "id": "74A44B01-5C99-4754-9585-F487D21C543D",
+     "name": "Zara",
+     "affinity": 0.956,
+     "popularity": 0.999,
+     "image": "https://images.qloo.com/i/74A44B01-5C99-4754-9585-F487D21C543D-420x-auto.jpg",
+     "description": "Zara is a global fast fashion retailer offering trendy clothing, shoes, and accessories for women, men, and kids, along with home decor through Zara Home."
+    }
+   ],
+   "podcasts": [
+    {
+     "id": "51194948-94F0-46A0-B8A2-874FF66A0A57",
+     "name": "This Might Get Weird",
+     "affinity": 0.976,
+     "popularity": 0.972,
+     "image": "https://images.qloo.com/i/51194948-94F0-46A0-B8A2-874FF66A0A57-420x-auto.jpg",
+     "description": "Grace and Mamrie share humorous conversations and anecdotes, aiming to entertain listeners for over 30 minutes."
+    },
+    {
+     "id": "7A8D49C3-3540-459E-8093-1AA706BDFB00",
+     "name": "Not Too Deep with Grace Helbig",
+     "affinity": 0.96,
+     "popularity": 0.985,
+     "image": "https://images.qloo.com/i/7A8D49C3-3540-459E-8093-1AA706BDFB00-420x-auto.jpg",
+     "description": "A humorous interview podcast where Grace Helbig hosts famous guests for lighthearted and silly conversations."
+    },
+    {
+     "id": "0792967A-4289-42E9-961A-61E260B3AD65",
+     "name": "Psychobabble with Tyler Oakley & Korey Kuhl",
+     "affinity": 0.959,
+     "popularity": 0.983,
+     "image": "https://images.qloo.com/i/0792967A-4289-42E9-961A-61E260B3AD65-420x-auto.jpg",
+     "description": "Tyler Oakley and Korey Kuhl share unfiltered gossip, pop culture insights, and untold stories in their weekly podcast."
+    },
+    {
+     "id": "085EA15C-B7FE-4C6E-98D6-727A967ACC0E",
+     "name": "Dear Hank & John",
+     "affinity": 0.952,
+     "popularity": 0.982,
+     "image": "https://images.qloo.com/i/085EA15C-B7FE-4C6E-98D6-727A967ACC0E-420x-auto.jpg",
+     "description": "John and Hank Green provide humorous and heartfelt advice on life's questions, sharing news from Mars and AFC Wimbledon."
+    }
+   ],
+   "opener": {
+    "id": "BC5AF895-7162-4395-8D42-75C6481B0E60",
+    "name": "Zee Avi",
+    "affinity": 0.954,
+    "popularity": 0.981,
+    "image": "https://images.qloo.com/i/BC5AF895-7162-4395-8D42-75C6481B0E60-420x-auto.jpg"
+   }
+  },
+  {
+   "name": "Bangkok",
+   "query": "Bangkok",
+   "lat": 13.7563,
+   "lng": 100.5018,
+   "score": 100,
+   "affinity": 0.997,
+   "popularity": 0.976,
+   "cells": 10,
+   "why": "Maximum score 100, affinity 0.997, and robust scene density popularity 0.976.",
+   "peers": [
+    {
+     "id": "345B890E-38F8-4E89-9CE6-A21201BA8893",
+     "name": "Daniela Andrade",
+     "affinity": 0.953,
+     "popularity": 0.977,
+     "image": "https://images.qloo.com/i/345B890E-38F8-4E89-9CE6-A21201BA8893-420x-auto.jpg"
+    },
+    {
+     "id": "D1A1A06F-2E69-4C8C-B307-4E05A3A090FE",
+     "name": "Birdy",
+     "affinity": 0.95,
+     "popularity": 0.998,
+     "image": "https://images.qloo.com/i/D1A1A06F-2E69-4C8C-B307-4E05A3A090FE-420x-auto.jpg"
+    },
+    {
+     "id": "0B56A7A9-3438-41CF-B2A3-723FA85F1BB4",
+     "name": "HONNE",
+     "affinity": 0.949,
+     "popularity": 0.985,
+     "image": "https://images.qloo.com/i/0B56A7A9-3438-41CF-B2A3-723FA85F1BB4-420x-auto.jpg"
+    },
+    {
+     "id": "7AFC0B14-0285-457C-8C5B-30C1174E500E",
+     "name": "Jeff Bernat",
+     "affinity": 0.949,
+     "popularity": 0.911,
+     "image": "https://images.qloo.com/i/7AFC0B14-0285-457C-8C5B-30C1174E500E-420x-auto.jpg"
+    },
+    {
+     "id": "296A9BFF-AE21-4FC0-9F9D-81EBCFB5BBE6",
+     "name": "HAIM",
+     "affinity": 0.948,
+     "popularity": 0.998,
+     "image": "https://images.qloo.com/i/296A9BFF-AE21-4FC0-9F9D-81EBCFB5BBE6-420x-auto.jpg"
+    },
+    {
+     "id": "6062A977-79F7-48F9-917E-0B57D77474AD",
+     "name": "Sam Smith",
+     "affinity": 0.948,
+     "popularity": 0.999,
+     "image": "https://images.qloo.com/i/6062A977-79F7-48F9-917E-0B57D77474AD-420x-auto.jpg"
+    },
+    {
+     "id": "A8C5EA6D-BE89-4FE4-86F2-7C73EA6EFCC4",
+     "name": "Giselle",
+     "affinity": 0.947,
+     "popularity": 0.906,
+     "image": "https://images.qloo.com/i/A8C5EA6D-BE89-4FE4-86F2-7C73EA6EFCC4-420x-auto.jpg"
+    },
+    {
+     "id": "2B6CAC62-8AFF-444C-BBA9-9DA9FBDC7A30",
+     "name": "Oh Wonder",
+     "affinity": 0.946,
+     "popularity": 0.992,
+     "image": "https://images.qloo.com/i/2B6CAC62-8AFF-444C-BBA9-9DA9FBDC7A30-420x-auto.jpg"
+    },
+    {
+     "id": "FF2E980F-4BA0-4E2B-8BA8-20BC30DE4F9A",
+     "name": "The Sam Willows",
+     "affinity": 0.945,
+     "popularity": 0.769,
+     "image": "https://images.qloo.com/i/FF2E980F-4BA0-4E2B-8BA8-20BC30DE4F9A-420x-auto.jpg"
+    },
+    {
+     "id": "24012F7D-C125-4EB7-A661-6AF65523E43C",
+     "name": "Adele",
+     "affinity": 0.945,
+     "popularity": 1,
+     "image": "https://images.qloo.com/i/24012F7D-C125-4EB7-A661-6AF65523E43C-420x-auto.jpg"
+    },
+    {
+     "id": "0D85212C-DEA2-40A7-B2B4-19DBD210B650",
+     "name": "Jayesslee",
+     "affinity": 0.944,
+     "popularity": 0.901,
+     "image": "https://images.qloo.com/i/0D85212C-DEA2-40A7-B2B4-19DBD210B650-420x-auto.jpg"
+    },
+    {
+     "id": "C977220F-11A7-4F93-8714-AEDC57674191",
+     "name": "The 1975",
+     "affinity": 0.943,
+     "popularity": 0.998,
+     "image": "https://images.qloo.com/i/C977220F-11A7-4F93-8714-AEDC57674191-420x-auto.jpg"
+    },
+    {
+     "id": "E57BFECF-236C-4B52-8B60-005709E3EE8F",
+     "name": "Johnny Stimson",
+     "affinity": 0.943,
+     "popularity": 0.897,
+     "image": "https://images.qloo.com/i/E57BFECF-236C-4B52-8B60-005709E3EE8F-420x-auto.jpg"
+    },
+    {
+     "id": "40CDB8B0-64B7-4099-B21C-2FC32DE178CF",
+     "name": "Kodaline",
+     "affinity": 0.942,
+     "popularity": 0.996,
+     "image": "https://images.qloo.com/i/40CDB8B0-64B7-4099-B21C-2FC32DE178CF-420x-auto.jpg"
+    },
+    {
+     "id": "518BF29E-309F-420E-AF52-2990A900CFD4",
+     "name": "Standing Egg",
+     "affinity": 0.942,
+     "popularity": 0.921,
+     "image": "https://images.qloo.com/i/518BF29E-309F-420E-AF52-2990A900CFD4-420x-auto.jpg"
+    }
+   ],
+   "rooms": [
+    {
+     "id": "DBA60F44-8931-4C65-8B48-6F7D4EEC0BAD",
+     "name": "Speakerbox",
+     "affinity": 0.679,
+     "popularity": 0.858,
+     "address": "1000 39 40 Thong Lo Khlong Tan Nuea, Watthana Bangkok 10110, Thailand",
+     "image": "https://images.qloo.com/i/DBA60F44-8931-4C65-8B48-6F7D4EEC0BAD-420x-auto.jpg",
+     "description": "Intimate Thong Lo live-music bar and event venue with drinks, happy hour, music promotion, LGBTQ+ friendly atmosphere and transcripts for hearing-impaired guests."
+    },
+    {
+     "id": "6AB1A78A-2C7C-4BD5-BAD3-5F820523E719",
+     "name": "Meehay Republic",
+     "affinity": 0.674,
+     "popularity": 0.413,
+     "address": "กลัวดัง 199/4 Rachadabhisak Rd., Buklalo, Thonburi Bukkhalo, Thon Buri Bangkok 10600, Thailand",
+     "image": "https://images.qloo.com/i/6AB1A78A-2C7C-4BD5-BAD3-5F820523E719-420x-auto.jpg",
+     "description": "Lively Thonburi Thai restaurant and karaoke bar offering live music, outdoor seating, and a selection of beer and spirits."
+    },
+    {
+     "id": "7543CDD5-919F-4496-A7E8-3ACF469C1030",
+     "name": "Brownstone",
+     "affinity": 0.674,
+     "popularity": 0.951,
+     "address": "1395 On Nut Rd Suan Luang Bangkok 10250 Thailand",
+     "image": "https://images.qloo.com/i/7543CDD5-919F-4496-A7E8-3ACF469C1030-420x-auto.jpg",
+     "description": "Intimate Bangkok beer garden and live-music restaurant with an on-site recording studio, offering craft beers, casual dining, and nightly performances."
+    },
+    {
+     "id": "33093012-50D6-495B-AB8E-727F39440B8B",
+     "name": "Prince Mahidol Hall",
+     "affinity": 0.673,
+     "popularity": 0.985,
+     "address": "Mahidol University 999 Phutthamonthon Sai 4 Rd Salaya, Phutthamonthon District Nakhon Pathom 73170, Thailand",
+     "image": "https://images.qloo.com/i/33093012-50D6-495B-AB8E-727F39440B8B-420x-auto.jpg",
+     "description": "A modern concert venue on a university campus, known for its large-scale performances and refined architectural setting."
+    },
+    {
+     "id": "28B13E90-C121-41A7-A93D-519FB5D31CA7",
+     "name": "The Rock Pub",
+     "affinity": 0.673,
+     "popularity": 0.966,
+     "address": "1011/3-4 Phahonyothin Rd Phaya Thai Bangkok 10400 Thailand",
+     "image": "https://images.qloo.com/i/28B13E90-C121-41A7-A93D-519FB5D31CA7-420x-auto.jpg",
+     "description": "Established nightspot with regular live rock music shows, cozy eclectic decor, and a full bar serving craft beers and cocktails."
+    }
+   ],
+   "places": [
+    {
+     "id": "AFB4BDB7-01F0-4148-A822-01C9CD27CA39",
+     "name": "CRU Champagne",
+     "affinity": 0.714,
+     "popularity": 0.987,
+     "address": "Centara Grand at CentralWorld, 999/99 Rama 1 road, Phatumwan, Pathum Wan Bangkok 10330 Thailand",
+     "image": "https://images.qloo.com/i/AFB4BDB7-01F0-4148-A822-01C9CD27CA39-420x-auto.jpg",
+     "description": "Rooftop champagne bar and restaurant atop CentralWorld with panoramic city views, curated champagnes and cocktails, live music, and an elegant atmosphere."
+    },
+    {
+     "id": "FE8570EB-924B-47D7-A4AB-0A09E258039F",
+     "name": "NOVEMBER BANGKOK",
+     "affinity": 0.705,
+     "popularity": 0.588,
+     "address": "44/4 Chuerplerng Road Khwaeng Thung Maha Mek, Yan Nawa Bangkok 10120 Thailand",
+     "image": "https://images.qloo.com/i/FE8570EB-924B-47D7-A4AB-0A09E258039F-420x-auto.jpg",
+     "description": "Casual Bangkok eatery offering small plates, all-you-can-eat options, coffee and a full bar, with dine-in, outdoor seating, drive‑through and takeout."
+    },
+    {
+     "id": "7925FEF4-B9DD-48FC-991F-2D8EDF771EC1",
+     "name": "Above Eleven Rooftop Bar & Restaurant",
+     "affinity": 0.704,
+     "popularity": 0.999,
+     "address": "Fraser Suites 38/8 Sukhumvit Rd Khlong Toei Nuea, Watthana Bangkok 10110, Thailand",
+     "image": "https://images.qloo.com/i/7925FEF4-B9DD-48FC-991F-2D8EDF771EC1-420x-auto.jpg",
+     "description": "Rooftop Peruvian-Japanese fusion bar serving cocktails, sushi and ceviche with Bangkok skyline views, private dining, happy hour and late-night dancing."
+    },
+    {
+     "id": "8EF2478D-74E6-4115-879B-CEC329E47E9E",
+     "name": "Sky on 20",
+     "affinity": 0.704,
+     "popularity": 0.948,
+     "address": "26th floor, Novotel Bangkok 19/9 Sukhumvit 20 Alley Khlong Toei, Khet Khlong Toei Krung Thep Maha Nakhon 10110, Thailand",
+     "image": "https://images.qloo.com/i/8EF2478D-74E6-4115-879B-CEC329E47E9E-420x-auto.jpg",
+     "description": "Rooftop bar and restaurant on the 26th floor offering panoramic Bangkok skyline views, cocktails, DJs, happy hour and private event packages."
+    },
+    {
+     "id": "4A436EB5-30D9-4559-B0E0-31073EE85B65",
+     "name": "Sirocco",
+     "affinity": 0.703,
+     "popularity": 0.999,
+     "address": "64th Floor, State Tower Bangkok 1055 Si Lom Rd Si Lom, Bang Rak Bangkok 10500, Thailand",
+     "image": "https://images.qloo.com/i/4A436EB5-30D9-4559-B0E0-31073EE85B65-420x-auto.jpg",
+     "description": "Upscale rooftop Mediterranean restaurant with panoramic river and city views, fine wines, live jazz, and an elegant dress code."
+    }
+   ],
+   "brands": [
+    {
+     "id": "46C9F889-EC89-4715-A767-DEABACF52C41",
+     "name": "Uniqlo",
+     "affinity": 0.982,
+     "popularity": 0.995,
+     "image": "https://images.qloo.com/i/46C9F889-EC89-4715-A767-DEABACF52C41-420x-auto.jpg",
+     "description": "Uniqlo is a Japanese casual wear designer and retailer offering high-quality, comfortable clothing and accessories for women, men, and children."
+    },
+    {
+     "id": "B13C02E3-BA3C-4B39-85B4-ACF12FEBC892",
+     "name": "Starbucks",
+     "affinity": 0.97,
+     "popularity": 1,
+     "image": "https://images.qloo.com/i/B13C02E3-BA3C-4B39-85B4-ACF12FEBC892-420x-auto.jpg",
+     "description": "Starbucks is a global coffee company known for its handcrafted beverages, coffee products, and café experience."
+    },
+    {
+     "id": "CF7D11E7-DA78-47D9-9AE1-030366F4507B",
+     "name": "Gap",
+     "affinity": 0.968,
+     "popularity": 0.994,
+     "image": "https://images.qloo.com/i/CF7D11E7-DA78-47D9-9AE1-030366F4507B-420x-auto.jpg",
+     "description": "Gap Inc. is a leading American specialty apparel company known for its iconic brands including Gap, Old Navy, Banana Republic, and Athleta, offering casual and stylish clothing for the whole family."
+    },
+    {
+     "id": "5760BF0A-EBDF-4B9A-88CD-69F4BF08C362",
+     "name": "Louis Vuitton",
+     "affinity": 0.958,
+     "popularity": 1,
+     "image": "https://images.qloo.com/i/5760BF0A-EBDF-4B9A-88CD-69F4BF08C362-420x-auto.jpg",
+     "description": "Louis Vuitton is a luxury fashion brand known for its designer handbags, trunks, and high-end accessories."
+    },
+    {
+     "id": "74A44B01-5C99-4754-9585-F487D21C543D",
+     "name": "Zara",
+     "affinity": 0.956,
+     "popularity": 0.999,
+     "image": "https://images.qloo.com/i/74A44B01-5C99-4754-9585-F487D21C543D-420x-auto.jpg",
+     "description": "Zara is a global fast fashion retailer offering trendy clothing, shoes, and accessories for women, men, and kids, along with home decor through Zara Home."
+    }
+   ],
+   "podcasts": [
+    {
+     "id": "51194948-94F0-46A0-B8A2-874FF66A0A57",
+     "name": "This Might Get Weird",
+     "affinity": 0.963,
+     "popularity": 0.972,
+     "image": "https://images.qloo.com/i/51194948-94F0-46A0-B8A2-874FF66A0A57-420x-auto.jpg",
+     "description": "Grace and Mamrie share humorous conversations and anecdotes, aiming to entertain listeners for over 30 minutes."
+    },
+    {
+     "id": "0792967A-4289-42E9-961A-61E260B3AD65",
+     "name": "Psychobabble with Tyler Oakley & Korey Kuhl",
+     "affinity": 0.957,
+     "popularity": 0.983,
+     "image": "https://images.qloo.com/i/0792967A-4289-42E9-961A-61E260B3AD65-420x-auto.jpg",
+     "description": "Tyler Oakley and Korey Kuhl share unfiltered gossip, pop culture insights, and untold stories in their weekly podcast."
+    },
+    {
+     "id": "ED9D4C2F-37B4-476F-B3DE-5F5EEB95E859",
+     "name": "Getting Curious with Jonathan Van Ness",
+     "affinity": 0.948,
+     "popularity": 0.993,
+     "image": "https://images.qloo.com/i/ED9D4C2F-37B4-476F-B3DE-5F5EEB95E859-420x-auto.jpg",
+     "description": "Jonathan Van Ness explores diverse topics with experts, from science to entertainment, in an engaging and curious format."
+    },
+    {
+     "id": "7A8D49C3-3540-459E-8093-1AA706BDFB00",
+     "name": "Not Too Deep with Grace Helbig",
+     "affinity": 0.947,
+     "popularity": 0.985,
+     "image": "https://images.qloo.com/i/7A8D49C3-3540-459E-8093-1AA706BDFB00-420x-auto.jpg",
+     "description": "A humorous interview podcast where Grace Helbig hosts famous guests for lighthearted and silly conversations."
+    }
+   ],
+   "opener": {
+    "id": "345B890E-38F8-4E89-9CE6-A21201BA8893",
+    "name": "Daniela Andrade",
+    "affinity": 0.953,
+    "popularity": 0.977,
+    "image": "https://images.qloo.com/i/345B890E-38F8-4E89-9CE6-A21201BA8893-420x-auto.jpg"
+   }
+  }
+ ],
+ "openers": {
+  "shortlist": [
+   "Daniela Andrade",
+   "The Sam Willows",
+   "Jayesslee",
+   "Alextbh",
+   "HONNE",
+   "Jeff Bernat",
+   "Zee Avi",
+   "Giselle"
+  ],
+  "board": [
+   {
+    "id": "345B890E-38F8-4E89-9CE6-A21201BA8893",
+    "name": "Daniela Andrade",
+    "avg_rank": 1.8,
+    "first_in": 3,
+    "cities": 5,
+    "user": false
+   },
+   {
+    "id": "F74972E5-F3BF-47C6-84B5-913D5558E15F",
+    "name": "Alextbh",
+    "avg_rank": 2.33,
+    "first_in": 0,
+    "cities": 3,
+    "user": false
+   },
+   {
+    "id": "BC5AF895-7162-4395-8D42-75C6481B0E60",
+    "name": "Zee Avi",
+    "avg_rank": 3,
+    "first_in": 2,
+    "cities": 3,
+    "user": false
+   },
+   {
+    "id": "FF2E980F-4BA0-4E2B-8BA8-20BC30DE4F9A",
+    "name": "The Sam Willows",
+    "avg_rank": 3.75,
+    "first_in": 0,
+    "cities": 4,
+    "user": false
+   },
+   {
+    "id": "0B56A7A9-3438-41CF-B2A3-723FA85F1BB4",
+    "name": "HONNE",
+    "avg_rank": 4,
+    "first_in": 0,
+    "cities": 4,
+    "user": false
+   },
+   {
+    "id": "0D85212C-DEA2-40A7-B2B4-19DBD210B650",
+    "name": "Jayesslee",
+    "avg_rank": 5.2,
+    "first_in": 0,
+    "cities": 5,
+    "user": false
+   },
+   {
+    "id": "A8C5EA6D-BE89-4FE4-86F2-7C73EA6EFCC4",
+    "name": "Giselle",
+    "avg_rank": 5.2,
+    "first_in": 0,
+    "cities": 5,
+    "user": false
+   },
+   {
+    "id": "7AFC0B14-0285-457C-8C5B-30C1174E500E",
+    "name": "Jeff Bernat",
+    "avg_rank": 5.25,
+    "first_in": 0,
+    "cities": 4,
+    "user": false
+   }
+  ],
+  "perCity": {
+   "Penang": [
+    "Zee Avi",
+    "Alextbh",
+    "Daniela Andrade",
+    "The Sam Willows",
+    "Jayesslee",
+    "Giselle"
+   ],
+   "Kuala Lumpur": [
+    "Zee Avi",
+    "Alextbh",
+    "Daniela Andrade",
+    "The Sam Willows",
+    "Jayesslee",
+    "Giselle",
+    "Jeff Bernat",
+    "HONNE"
+   ],
+   "Jakarta": [
+    "Daniela Andrade",
+    "HONNE",
+    "Jeff Bernat",
+    "Giselle",
+    "Jayesslee"
+   ],
+   "Singapore": [
+    "Daniela Andrade",
+    "The Sam Willows",
+    "Alextbh",
+    "HONNE",
+    "Jayesslee",
+    "Giselle",
+    "Zee Avi",
+    "Jeff Bernat"
+   ],
+   "Bangkok": [
+    "Daniela Andrade",
+    "HONNE",
+    "Jeff Bernat",
+    "Giselle",
+    "The Sam Willows",
+    "Jayesslee"
+   ]
+  }
+ },
+ "compare": {
+  "with": "Daniela Andrade",
+  "shared": [
+   {
+    "name": "Emotional",
+    "score": 0.855256089609846
+   },
+   {
+    "name": "Simple Chord Progressions",
+    "score": 0.855256089609846
+   },
+   {
+    "name": "Melodic",
+    "score": 0.855256089609846
+   },
+   {
+    "name": "Folk",
+    "score": 0.855256089609846
+   },
+   {
+    "name": "Indie",
+    "score": 0.7309812497448915
+   },
+   {
+    "name": "Acoustic",
+    "score": 0.7308388143893573
+   },
+   {
+    "name": "Engaging",
+    "score": 0.7300645416298027
+   },
+   {
+    "name": "Love",
+    "score": 0.7297661168313316
+   },
+   {
+    "name": "Loyal",
+    "score": 0.7294879979555896
+   },
+   {
+    "name": "Guitar",
+    "score": 0.7294629086685711
+   }
+  ]
+ },
+ "copy": {
+  "source": "llm",
+  "stops": [
+   {
+    "city": "Jakarta",
+    "generic": "Experience Yuna live in concert for an unforgettable night of music and emotion.",
+    "hook": "See Daniela Andrade open the show! Match your Coach bag with a meetup at Double Chin Restaurant & Bar.",
+    "caption": "Jakarta, get ready for an emotional night of music with Yuna!",
+    "references": [
+     "Daniela Andrade",
+     "Double Chin Restaurant & Bar",
+     "Coach"
+    ]
+   },
+   {
+    "city": "Singapore",
+    "generic": "Experience Yuna live in concert for an unforgettable night of music and emotion.",
+    "hook": "Daniela Andrade sets the mood. Wear your Uniqlo best and meet at JUMBO Seafood - The Riverwalk!",
+    "caption": "Fall in love all over again with Yuna live in Singapore.",
+    "references": [
+     "Daniela Andrade",
+     "JUMBO Seafood - The Riverwalk",
+     "Uniqlo"
+    ]
+   },
+   {
+    "city": "Kuala Lumpur",
+    "generic": "Experience Yuna live in concert for an unforgettable night of music and emotion.",
+    "hook": "Zee Avi opens the night! Rock your Uniqlo style and grab a pre-show drink at Mamacina.",
+    "caption": "Yuna is bringing pure love and K-drama vibes to KL. Don't miss out!",
+    "references": [
+     "Zee Avi",
+     "Mamacina",
+     "Uniqlo"
+    ]
+   },
+   {
+    "city": "Penang",
+    "generic": "Experience Yuna live in concert for an unforgettable night of music and emotion.",
+    "hook": "Catch Zee Avi before Yuna hits the stage. Grab a Uniqlo outfit and meet at Hin Bus Depot first!",
+    "caption": "Feel the love with Yuna live in Penang! Get your tickets now.",
+    "references": [
+     "Zee Avi",
+     "Hin Bus Depot",
+     "Uniqlo"
+    ]
+   },
+   {
+    "city": "Bangkok",
+    "generic": "Experience Yuna live in concert for an unforgettable night of music and emotion.",
+    "hook": "Daniela Andrade opens! Grab a Starbucks coffee, wear your Uniqlo fit, and head to NOVEMBER BANGKOK.",
+    "caption": "Yuna brings her romantic soundscapes to Bangkok. See you there!",
+    "references": [
+     "Daniela Andrade",
+     "NOVEMBER BANGKOK",
+     "Starbucks",
+     "Uniqlo"
+    ]
+   }
+  ]
+ },
+ "brief": "Yuna's Southeast Asia and Australia tour routes through Penang (99), Kuala Lumpur (100), Singapore (100), Jakarta (98), and Bangkok (100), focusing entirely on top-scoring ASEAN markets with intimate room viability while dropping lower-scoring Australian cities like Sydney (83) and Melbourne (83). Manila (98) and Ho Chi Minh City (98) were also dropped due to lower fan affinity or prioritization of core hubs compared to the kept markets. Daniela Andrade supports the run, sharing musical taste in emotional, simple chord progressions, melodic, and folk styles."
+}

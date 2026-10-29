@@ -32,6 +32,16 @@
         </label>
 
         <fieldset class="field">
+          <legend>The act is a</legend>
+          <div id="kinds" class="chips" role="radiogroup">
+            <button type="button" role="radio" data-kind="person" aria-checked="false">Comedian</button>
+            <button type="button" role="radio" data-kind="artist" aria-checked="false">Musician</button>
+            <button type="button" role="radio" data-kind="podcast" aria-checked="false">Podcast</button>
+            <button type="button" role="radio" data-kind="" aria-checked="true">Not sure</button>
+          </div>
+        </fieldset>
+
+        <fieldset class="field">
           <legend>Region</legend>
           <div id="regions" class="chips" role="radiogroup"></div>
         </fieldset>
@@ -69,7 +79,7 @@
         <div id="map" role="img" aria-label="Map of candidate cities, Qloo heat and the chosen route"></div>
         <div class="legend">
           <span><i class="k route"></i>Route</span>
-          <span><i class="k city"></i>Candidate city, sized by fan score</span>
+          <span><i class="k city"></i>Candidate city, sized by fan affinity</span>
           <span><i class="k heat"></i>Qloo heat for this act</span>
         </div>
       </div>
@@ -110,7 +120,7 @@
               <div id="demo" class="demo"></div>
             </div>
             <div>
-              <h4>Momentum, last 20 weeks</h4>
+              <h4>Popularity trend, last 20 weeks</h4>
               <div id="trend" class="trend"></div>
             </div>
           </div>
@@ -133,7 +143,7 @@
           </form>
         </section>
 
-        <p class="fineprint">Qloo results describe aggregate audience affinities, not individuals. TourSmith's scores are its own interpretation of Qloo's heatmap affinity (75%) and popularity (25%).</p>
+        <p class="fineprint">Qloo results describe aggregate audience affinities, not individuals. A city's fan affinity is TourSmith's reading of Qloo's region heatmap: the mean affinity of the three strongest grid cells within 50 km.</p>
       </article>
     </section>
   </main>

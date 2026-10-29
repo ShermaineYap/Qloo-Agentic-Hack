@@ -1,0 +1,26 @@
+[
+  {
+    "preset": "comedy-us",
+    "id": "0039e0626d",
+    "act": "Nate Bargatze",
+    "region": "United States",
+    "stops": 6,
+    "mock": false
+  },
+  {
+    "preset": "music-apac",
+    "id": "4174c3696f",
+    "act": "Yuna",
+    "region": "Southeast Asia & Australia",
+    "stops": 5,
+    "mock": false
+  },
+  {
+    "preset": "music-uk",
+    "id": "d2fa7b6fb3",
+    "act": "Phoebe Bridgers",
+    "region": "UK & Ireland",
+    "stops": 5,
+    "mock": false
+  }
+]
