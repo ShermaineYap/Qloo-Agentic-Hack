@@ -80,7 +80,9 @@ No Qloo key? `npm run mock` runs the whole app on sample data, marked as such ev
 
 ## Deploy
 
-`qloo mcp` is a long-running stdio process, so deploy to a container host, not serverless.
+`qloo mcp` is a long-running stdio process, so deploy to a container host, not serverless (Vercel and Netlify functions won't work).
+
+**Hugging Face Spaces (free, no card):** create a Space with the Docker SDK and `app_port: 3000` in its README header, then push this repo to it. Add `QLOO_API_KEY` and `GEMINI_API_KEY` as Space secrets, and `QLOO_BASE_URL` and `QLOO_TRUSTED_BASE_URL` as variables. Free Spaces sleep after 48 hours without visitors and wake on the next visit.
 
 **Railway:** New project → Deploy from GitHub repo → it uses `Dockerfile` and `railway.json`. Add the variables `QLOO_API_KEY`, `QLOO_BASE_URL`, `QLOO_TRUSTED_BASE_URL` and `GEMINI_API_KEY`. Then generate a public domain under Settings → Networking.
 
