@@ -316,6 +316,12 @@ function onEvent(e) {
     case "done":
       T.id = e.id;
       T.mock = e.mock;
+      if (e.tour) {
+        T.full = e.tour;
+        try {
+          localStorage.setItem(`toursmith:${e.id}`, JSON.stringify(e.tour));
+        } catch {}
+      }
       history.replaceState(null, "", `/tour/${e.id}`);
       $("#actions").hidden = false;
       $("#askPanel").hidden = false;
@@ -536,7 +542,12 @@ function renderCompare() {
 // ---------------------------------------------------------------- saved tour view
 async function openSaved(id) {
   document.body.classList.add("view");
-  const tour = await fetch(`/api/tour/${encodeURIComponent(id)}`).then((r) => (r.ok ? r.json() : null));
+  let tour = await fetch(`/api/tour/${encodeURIComponent(id)}`).then((r) => (r.ok ? r.json() : null)).catch(() => null);
+  if (!tour) {
+    try {
+      tour = JSON.parse(localStorage.getItem(`toursmith:${id}`) || "null");
+    } catch {}
+  }
   if (!tour) {
     $("#empty").innerHTML = `<p class="big">That tour isn't here.</p><p>It may have been planned on another server. <a href="/">Plan a new tour</a>.</p>`;
     return;
@@ -591,7 +602,7 @@ $("#ask").addEventListener("submit", async (e) => {
   chat.appendChild(a);
   const trail = [];
   try {
-    const res = await fetch(`/api/tour/${T.id}/ask`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ question: q, history: chatHistory }) });
+    const res = await fetch(`/api/tour/${T.id}/ask`, { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ question: q, history: chatHistory, tour: tourSummary() }) });
     if (!res.ok) throw new Error((await res.json().catch(() => ({}))).error || "Request failed");
     await readStream(res, (ev) => {
       if (ev.type === "tool") {
@@ -607,3 +618,18 @@ $("#ask").addEventListener("submit", async (e) => {
     a.textContent = err.message;
   }
 });
+
+// What the tour-manager chat needs to know about this tour, sent with each
+// question so any server instance can answer it.
+function tourSummary() {
+  const t = T?.full || T;
+  if (!t?.act) return undefined;
+  return {
+    act: { name: t.act.name, id: t.act.id, kind: t.act.kind },
+    region: { label: t.region?.label },
+    route: (t.route || []).map((r) => ({ name: r.name, query: r.query, score: r.score })),
+    dropped: (t.dropped || []).map((d) => ({ city: d.city, score: d.score })),
+    stops: (t.stops || []).filter(Boolean).map((s) => ({ name: s.name, opener: s.opener ? { name: s.opener.name } : null })),
+    profile: { tags: (t.profile?.tags || []).map((x) => ({ name: x.name })) },
+  };
+}

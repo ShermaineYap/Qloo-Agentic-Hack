@@ -22,7 +22,9 @@ import { REGIONS, orderRoute, scoreCities } from "./cities.js";
 import { completeJSON, complete, hasLLM, llmInfo } from "./llm.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-export const RUNS_DIR = process.env.RUNS_DIR || path.join(ROOT, "data", "runs");
+export const BUNDLED_RUNS = path.join(ROOT, "data", "runs");
+// Serverless file systems are read-only except /tmp.
+export const RUNS_DIR = process.env.RUNS_DIR || (process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME ? "/tmp/toursmith/runs" : BUNDLED_RUNS);
 const INSIGHTS_TYPES = new Set(["artist", "book", "brand", "movie", "person", "place", "podcast", "tv_show", "videogame"]);
 
 const num = (v) => (typeof v === "number" && Number.isFinite(v) ? v : undefined);
@@ -291,9 +293,13 @@ export async function planTour(input, emit) {
   tour.brief = await writeBrief(tour);
   emit({ type: "brief", brief: tour.brief });
 
-  await mkdir(RUNS_DIR, { recursive: true });
-  await writeFile(path.join(RUNS_DIR, `${tour.id}.json`), JSON.stringify(tour, null, 1));
-  emit({ type: "done", id: tour.id, calls: tour.calls, mock: tour.mock });
+  try {
+    await mkdir(RUNS_DIR, { recursive: true });
+    await writeFile(path.join(RUNS_DIR, `${tour.id}.json`), JSON.stringify(tour, null, 1));
+  } catch (err) {
+    console.warn("[plan] could not save tour:", err.message);
+  }
+  emit({ type: "done", id: tour.id, calls: tour.calls, mock: tour.mock, tour });
   return tour;
 }
 

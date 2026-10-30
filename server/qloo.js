@@ -20,9 +20,20 @@ import { existsSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { mockCall } from "./mock.js";
+// The harness's validated Qloo workflows, loaded in-process. This is the same
+// code `qloo mcp` and `qloo exec` run, without a child process, so it also
+// works on serverless hosts. (Imported by file path: the package's export
+// map only exposes its CLI entry point.)
+import { createQlooToolsFromEnvironment } from "../node_modules/@qloo/qloo-harness/dist/qloo-tools.js";
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const CACHE_DIR = process.env.CACHE_DIR || path.join(ROOT, "data", "cache");
+export const IS_SERVERLESS = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
+// Serverless file systems are read-only except /tmp: write there, and still
+// read the results pre-run into data/cache and shipped with the app.
+const BUNDLED_CACHE = path.join(ROOT, "data", "cache");
+const CACHE_DIR = process.env.CACHE_DIR || (IS_SERVERLESS ? "/tmp/toursmith/cache" : BUNDLED_CACHE);
+const CACHE_READ_DIRS = [...new Set([CACHE_DIR, BUNDLED_CACHE])];
+if (IS_SERVERLESS && !process.env.QLOO_HOME) process.env.QLOO_HOME = "/tmp/toursmith/qloo";
 
 const API_BASE = (process.env.QLOO_BASE_URL || "https://api.qloo.com").replace(/\/+$/, "");
 
@@ -38,7 +49,9 @@ export const QLOO_TOOL_NAMES = [
   "qloo_trends",
 ];
 
-let client = null;
+let client = null; // MCP client (QLOO_TRANSPORT=mcp)
+let inproc = new Map(); // in-process harness tools (default)
+let transport = "inproc";
 let tools = [];
 let ready = false;
 let mode = "starting"; // live | mock | cache-only
@@ -74,28 +87,59 @@ function sortKeys(v) {
   return v;
 }
 async function cacheGet(name, args) {
-  const file = path.join(CACHE_DIR, `${cacheKey(name, args)}.json`);
-  if (!existsSync(file)) return null;
-  try {
-    return JSON.parse(await readFile(file, "utf8"));
-  } catch {
-    return null;
+  const key = `${cacheKey(name, args)}.json`;
+  for (const dir of CACHE_READ_DIRS) {
+    const file = path.join(dir, key);
+    if (!existsSync(file)) continue;
+    try {
+      return JSON.parse(await readFile(file, "utf8"));
+    } catch {}
   }
+  return null;
 }
 async function cachePut(name, args, envelope) {
-  await mkdir(CACHE_DIR, { recursive: true });
-  const file = path.join(CACHE_DIR, `${cacheKey(name, args)}.json`);
-  // Store only the envelope fields the app uses; never credentials.
-  const { execution, ...rest } = envelope;
-  await writeFile(file, JSON.stringify({ tool: name, args, envelope: rest, cached_at: new Date().toISOString() }));
+  try {
+    await mkdir(CACHE_DIR, { recursive: true });
+    const file = path.join(CACHE_DIR, `${cacheKey(name, args)}.json`);
+    // Store only the envelope fields the app uses; never credentials.
+    const { execution, ...rest } = envelope;
+    await writeFile(file, JSON.stringify({ tool: name, args, envelope: rest, cached_at: new Date().toISOString() }));
+  } catch (err) {
+    console.warn("[cache] write failed:", err.message);
+  }
 }
 
 // --- lifecycle ------------------------------------------------------------
-export async function startQloo() {
+let starting = null;
+export function startQloo() {
+  if (!starting) starting = start();
+  return starting;
+}
+
+async function start() {
+  transport = process.env.QLOO_TRANSPORT === "mcp" ? "mcp" : "inproc";
   if (process.env.QLOO_MOCK === "1") {
     mode = "mock";
     ready = true;
     tools = await loadToolSchemasOffline();
+    return status();
+  }
+  if (transport === "inproc") {
+    try {
+      const all = createQlooToolsFromEnvironment();
+      for (const t of all) if (QLOO_TOOL_NAMES.includes(t.name)) inproc.set(t.name, t);
+      tools = [...inproc.values()].map((t) => ({ name: t.name, description: t.description, inputSchema: JSON.parse(JSON.stringify(t.parameters)) }));
+      // Without a credential the harness exposes only its capabilities tool.
+      if (!tools.length) {
+        tools = await loadToolSchemasOffline();
+        mode = "cache-only";
+      } else mode = "live";
+    } catch (err) {
+      startError = err.message;
+      mode = "cache-only";
+      tools = await loadToolSchemasOffline();
+    }
+    ready = true;
     return status();
   }
   try {
@@ -137,7 +181,7 @@ async function loadToolSchemasOffline() {
 }
 
 export function status() {
-  return { mode, ready, tools: tools.map((t) => t.name), error: startError };
+  return { mode, transport, ready, tools: tools.map((t) => t.name), error: startError };
 }
 
 export function toolSchemas() {
@@ -165,8 +209,15 @@ export async function callQloo(name, args = {}) {
   try {
     let envelope;
     for (let attempt = 0; attempt < 2; attempt++) {
-      const res = await client.callTool({ name, arguments: args }, undefined, { timeout: 60000 });
-      envelope = res.structuredContent ?? safeParse(res.content?.[0]?.text) ?? {};
+      if (transport === "inproc") {
+        const tool = inproc.get(name);
+        if (!tool) throw new Error(`Unknown Qloo tool ${name}`);
+        const res = await tool.execute(`toursmith-${Date.now().toString(36)}`, args, AbortSignal.timeout(60000));
+        envelope = res?.details ?? safeParse(res?.content?.[0]?.text) ?? {};
+      } else {
+        const res = await client.callTool({ name, arguments: args }, undefined, { timeout: 60000 });
+        envelope = res.structuredContent ?? safeParse(res.content?.[0]?.text) ?? {};
+      }
       if (envelope.status === undefined) envelope = { status: "error", summary: "Unparseable Qloo result", error: { code: "UNKNOWN", retryable: false } };
       if (envelope.status === "error" && envelope.error?.retryable && attempt === 0) {
         await new Promise((r) => setTimeout(r, 1500));

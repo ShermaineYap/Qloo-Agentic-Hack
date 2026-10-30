@@ -46,14 +46,15 @@ Rank scores from separate `qloo_rank` calls aren't comparable either, so the ope
 ## Architecture
 
 ```
-browser ──fetch (NDJSON stream)──▶ Express server ──stdio MCP──▶ qloo mcp (@qloo/qloo-harness) ──▶ Qloo API
+browser ──fetch (NDJSON stream)──▶ Express app ──▶ @qloo/qloo-harness workflows (in-process, or qloo mcp over stdio) ──▶ Qloo API
                                         ├──HTTPS──▶ Qloo Insights API (region heatmap)
                                         └──▶ Gemini / Claude / any OpenAI-compatible LLM
 ```
 
 - `server/pipeline.js`: the tour-planning agent run.
 - `server/copilot.js`: the "Ask your tour manager" tool-using agent.
-- `server/qloo.js`: starts `qloo mcp`, passes its tool schemas to the LLM, makes the region heatmap call, caches results and limits concurrency.
+- `server/qloo.js`: loads the harness's Qloo workflows in-process (or starts `qloo mcp` with `QLOO_TRANSPORT=mcp`), passes their tool schemas to the LLM, makes the region heatmap call, caches results and limits concurrency.
+- `server/app.js`: the Express app; `server/index.js` runs it locally or in a container, `api/index.js` runs it on Vercel.
 - `server/cities.js`: candidate markets and region boundaries, plus city scoring.
 - `server/llm.js`: Gemini, Anthropic or OpenAI-compatible adapter with a tool-use loop. Falls back across Gemini models when one is overloaded.
 - `server/mock.js`: clearly labelled sample data for development without a key.
@@ -80,13 +81,9 @@ No Qloo key? `npm run mock` runs the whole app on sample data, marked as such ev
 
 ## Deploy
 
-`qloo mcp` is a long-running stdio process, so deploy to a container host, not serverless (Vercel and Netlify functions won't work).
+**Vercel (free Hobby plan):** import the GitHub repo, then add the environment variables `QLOO_API_KEY`, `QLOO_BASE_URL`, `QLOO_TRUSTED_BASE_URL` and `GEMINI_API_KEY`. No other settings are needed: `vercel.json` serves `public/` from the CDN and routes `/api/*` to one function (`api/index.js`). That function runs the Qloo harness's workflows in-process, since Vercel functions can't host the `qloo mcp` child process, and it bundles the pre-run demo tours in `data/`.
 
-**Hugging Face Spaces (free, no card):** create a Space with the Docker SDK and `app_port: 3000` in its README header, then push this repo to it. Add `QLOO_API_KEY` and `GEMINI_API_KEY` as Space secrets, and `QLOO_BASE_URL` and `QLOO_TRUSTED_BASE_URL` as variables. Free Spaces sleep after 48 hours without visitors and wake on the next visit.
-
-**Railway:** New project → Deploy from GitHub repo → it uses `Dockerfile` and `railway.json`. Add the variables `QLOO_API_KEY`, `QLOO_BASE_URL`, `QLOO_TRUSTED_BASE_URL` and `GEMINI_API_KEY`. Then generate a public domain under Settings → Networking.
-
-**Render:** New → Blueprint → this repo (uses `render.yaml`). Set the two secret keys when prompted. Avoid the free plan for judging: it sleeps after 15 minutes.
+**Any container host (Render, Railway, Fly.io, a VM):** use the `Dockerfile`. Set `QLOO_TRANSPORT=mcp` to run Qloo through the `qloo mcp` stdio server instead of in-process; both paths execute the same harness workflows.
 
 The demo tours in `data/` were pre-run against live Qloo, so they load instantly and don't use quota. Refresh them with `npm run warm`.
 
