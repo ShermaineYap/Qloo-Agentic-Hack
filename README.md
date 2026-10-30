@@ -4,7 +4,7 @@
 
 Built for the [Qloo Agentic Hackathon](https://qloo.devpost.com/) (Sept 30 – Oct 30, 2026).
 
-- **Live demo:** _add your deployed URL here_
+- **Live demo:** https://toursmith.vercel.app (no login; three tours are pre-planned on the home page)
 - **License:** MIT
 
 ## What it finds that an LLM can't

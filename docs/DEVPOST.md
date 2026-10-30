@@ -1,6 +1,6 @@
 # Devpost submission text
 
-Paste each section into the matching Devpost field. Replace [DEMO URL] once deployed.
+Paste each section into the matching Devpost field. Live demo: https://toursmith.vercel.app
 
 ## Project name
 
@@ -35,7 +35,7 @@ Example, Nate Bargatze across the US: a chatbot says New York, LA, Chicago. Qloo
 - Qloo through the official `@qloo/qloo-harness` MCP server (`qloo mcp`), started by a Node backend over stdio. All nine Qloo workflows are passed to the chat agent as tools; the planning run uses describe, entity tags, demographics, trends, recommend, rank and compare.
 - The region heatmap goes straight to the Insights API (`urn:heatmap` with a WKT boundary). That returns the full grid, which makes cross-city scores comparable.
 - Gemini for entity disambiguation, route decisions, copy and the chat agent. Claude or any OpenAI-compatible model also works, and it falls back across Gemini models when one is overloaded.
-- Express streaming agent events as NDJSON, a vanilla JS + Leaflet front end, Docker on [Railway/Render].
+- Express streaming agent events as NDJSON and a vanilla JS + Leaflet front end, deployed on Vercel. Vercel functions can't host `qloo mcp` as a child process, so the deployed app runs the harness's validated workflows in-process; locally or in Docker, it can use the `qloo mcp` stdio server instead.
 - A disk cache in front of Qloo, so the demo tours load instantly and spend no quota.
 
 ## What makes it Qloo-powered
@@ -61,7 +61,7 @@ Calendar-aware routing with venue capacities, and a two-sided marketplace: perfo
 
 ## Try it
 
-- Demo: [DEMO URL] (no login; three tours are pre-planned on the home page, and you can plan a new one)
+- Demo: https://toursmith.vercel.app (no login; three tours are pre-planned on the home page, and you can plan a new one)
 - Code: https://github.com/ShermaineYap/qloo-agentic-hack (MIT)
 
 ## Limits we're upfront about
